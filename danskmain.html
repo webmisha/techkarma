@@ -4,26 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dansk • Флешкарты союзов и связок</title>
-    <meta name="theme-color" content="#0ea5e9" />
+    <meta name="theme-color" content="#000000" />
     <style>
       :root {
-        --bg: #ffffff;
-        --surface: #f8fafc; /* slate-50 */
-        --card: #ffffff;
-        --muted: #475569; /* slate-600 */
-        --text: #0f172a; /* slate-900 */
-        --accent: #0ea5e9; /* sky-500 */
-        --good: #16a34a; /* green-600 */
-        --warn: #d97706; /* amber-600 */
-        --bad: #dc2626;  /* red-600 */
-        --ring: 14 165 233;
+        --bg: #000000;
+        --surface: #111111; /* dark surface */
+        --card: #1a1a1a;
+        --muted: #888888; /* light gray for muted text */
+        --text: #ffffff; /* white text */
+        --accent: #3b82f6; /* blue accent */
+        --good: #22c55e; /* green-500 */
+        --warn: #f59e0b; /* amber-500 */
+        --bad: #ef4444;  /* red-500 */
+        --ring: 59 130 246;
       }
       html, body {
         height: 100%;
         margin: 0;
-        background: radial-gradient(1200px 700px at 0% 0%, #eef6ff, transparent),
-                    radial-gradient(900px 500px at 100% 0%, #f5f9ff, transparent),
-                    radial-gradient(900px 500px at 50% 100%, #f8fbff, transparent),
+        background: radial-gradient(1200px 700px at 0% 0%, #1a1a2e, transparent),
+                    radial-gradient(900px 500px at 100% 0%, #16213e, transparent),
+                    radial-gradient(900px 500px at 50% 100%, #0f0f23, transparent),
                     var(--bg);
         color: var(--text);
         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Apple Color Emoji", "Segoe UI Emoji";
@@ -63,9 +63,9 @@
         align-items: center;
       }
       .pill {
-        background: rgba(14, 165, 233, 0.10);
+        background: rgba(59, 130, 246, 0.15);
         color: var(--accent);
-        border: 1px solid rgba(14, 165, 233, 0.30);
+        border: 1px solid rgba(59, 130, 246, 0.40);
         padding: 6px 10px;
         border-radius: 999px;
         font-size: 12px;
@@ -76,9 +76,9 @@
         flex-wrap: wrap;
       }
       .stats .pill {
-        border-color: rgba(15, 23, 42, 0.12);
+        border-color: rgba(255, 255, 255, 0.20);
         color: var(--muted);
-        background: rgba(2, 6, 23, 0.04);
+        background: rgba(255, 255, 255, 0.08);
       }
       .grid {
         display: grid;
@@ -93,17 +93,17 @@
       .card {
         width: min(720px, 100%);
         aspect-ratio: 16 / 10;
-        background: linear-gradient(180deg, rgba(2,6,23,0.02), rgba(2,6,23,0.0)), var(--card);
-        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.0)), var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.15);
         border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         position: relative;
         transform-style: preserve-3d;
         transition: transform 600ms cubic-bezier(.2,.8,.2,1), box-shadow 200ms;
         cursor: pointer;
         outline: none;
       }
-      .card:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
+      .card:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.5); }
       .card.is-flipped { transform: rotateY(180deg); }
       .face {
         position: absolute;
@@ -134,8 +134,8 @@
         max-width: 88%;
       }
       .mark {
-        background: rgba(14,165,233,0.20);
-        color: #0c4a6e;
+        background: rgba(59,130,246,0.30);
+        color: #93c5fd;
         padding: 0 4px;
         border-radius: 6px;
       }
@@ -163,9 +163,9 @@
         gap: 10px;
       }
       .controls button {
-        background: linear-gradient(180deg, rgba(2,6,23,0.03), rgba(2,6,23,0.0));
+        background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.0));
         color: var(--text);
-        border: 1px solid rgba(15, 23, 42, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.20);
         border-radius: 12px;
         padding: 12px 14px;
         font-size: 15px;
@@ -179,10 +179,10 @@
       }
       .controls button:hover { transform: translateY(-1px); }
       .controls button:active { transform: translateY(0); }
-      .controls .ok { border-color: rgba(22,163,74,.45); }
-      .controls .nok { border-color: rgba(220,38,38,.45); }
-      .controls .flip { border-color: rgba(217,119,6,.45); }
-      .controls .shuffle { border-color: rgba(14,165,233,.45); }
+      .controls .ok { border-color: rgba(34,197,94,.6); }
+      .controls .nok { border-color: rgba(239,68,68,.6); }
+      .controls .flip { border-color: rgba(245,158,11,.6); }
+      .controls .shuffle { border-color: rgba(59,130,246,.6); }
 
       .progress {
         display: grid;
@@ -192,10 +192,10 @@
       }
       .bar {
         height: 10px;
-        background: rgba(15, 23, 42, 0.08);
+        background: rgba(255, 255, 255, 0.15);
         border-radius: 999px;
         overflow: hidden;
-        border: 1px solid rgba(15, 23, 42, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.20);
       }
       .bar > span {
         display: block;
@@ -210,7 +210,7 @@
       }
       .muted-link {
         color: var(--muted);
-        text-decoration: underline dotted rgba(148, 163, 184, 0.35);
+        text-decoration: underline dotted rgba(255, 255, 255, 0.35);
         cursor: pointer;
       }
 
@@ -538,9 +538,9 @@
         el.style.bottom = "16px";
         el.style.left = "50%";
         el.style.transform = "translateX(-50%)";
-        el.style.background = "rgba(17,24,39,0.9)";
-        el.style.border = "1px solid rgba(148,163,184,0.25)";
-        el.style.color = "#e5e7eb";
+        el.style.background = "rgba(0,0,0,0.9)";
+        el.style.border = "1px solid rgba(255,255,255,0.25)";
+        el.style.color = "#ffffff";
         el.style.padding = "10px 12px";
         el.style.borderRadius = "10px";
         el.style.zIndex = "40";
