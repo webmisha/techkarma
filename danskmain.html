@@ -571,6 +571,30 @@
           speechSynthesis.onvoiceschanged = loadVoices;
         }
 
+        // Mobile unlock (iOS/Android) to enable audio/TTS after first user gesture
+        let audioUnlocked = false;
+        function unlockAudioOnce() {
+          if (audioUnlocked) return;
+          audioUnlocked = true;
+          try { if (window.speechSynthesis) { window.speechSynthesis.resume(); } } catch {}
+          try {
+            const silent = new SpeechSynthesisUtterance(" ");
+            silent.volume = 0;
+            window.speechSynthesis.speak(silent);
+            window.speechSynthesis.cancel();
+          } catch {}
+          try {
+            const a = new Audio();
+            a.muted = true;
+            const playPromise = a.play();
+            if (playPromise && typeof playPromise.then === "function") {
+              playPromise.then(() => { try { a.pause(); } catch {} }).catch(() => {});
+            }
+          } catch {}
+        }
+        document.addEventListener("touchstart", unlockAudioOnce, { once: true, passive: true });
+        document.addEventListener("click", unlockAudioOnce, { once: true });
+
         function selectVoice(lang) {
           const lower = (s) => (s || "").toLowerCase();
           const candidatesByName = lang === "da" ? [
@@ -656,7 +680,7 @@
           try { audioEl.pause(); audioEl.currentTime = 0; } catch {}
           if (window.speechSynthesis) window.speechSynthesis.cancel();
 
-          const base = `/Users/mazukhov/Documents/DanskExercise/audio`;
+          const base = `audio`;
           const name = slugify(item.da);
           const fileCandidates = [
             `${base}/${name}-${kind}.mp3`,
@@ -703,5 +727,3 @@
     </script>
   </body>
   </html>
-
-
