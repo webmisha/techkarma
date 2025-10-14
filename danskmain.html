@@ -623,9 +623,8 @@
 
         function normalizeText(text, langPrefer, targetWord) {
           if (!text) return text;
-          // Remove emojis/symbols and normalize spaces
-          let t = String(text).replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, "");
-          t = t.replace(/\s+/g, " ").trim();
+          // Mobile/Safari-safe: collapse spaces only (no Unicode property regex)
+          let t = String(text).replace(/\s+/g, " ").trim();
           if (langPrefer === "da" && targetWord) {
             // Insert a short pause after the connector if missing punctuation
             const esc = targetWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -727,3 +726,5 @@
     </script>
   </body>
   </html>
+
+
