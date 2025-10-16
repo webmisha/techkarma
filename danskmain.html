@@ -642,12 +642,35 @@
         // Audio (TTS)
         const synth = window.speechSynthesis;
         let voices = [];
+        let voicesLoaded = false;
+        
         function loadVoices() {
           voices = synth.getVoices();
+          console.log('Loaded voices:', voices.length);
+          if (voices.length > 0) {
+            voicesLoaded = true;
+          }
         }
+        
+        // Initial load
         loadVoices();
+        
+        // iOS requires user interaction to load voices
         if (typeof speechSynthesis !== "undefined") {
           speechSynthesis.onvoiceschanged = loadVoices;
+          
+          // Also try to load voices after user interaction
+          document.addEventListener('touchstart', () => {
+            setTimeout(loadVoices, 100);
+            setTimeout(loadVoices, 500);
+            setTimeout(loadVoices, 1000);
+          }, { once: true });
+          
+          document.addEventListener('click', () => {
+            setTimeout(loadVoices, 100);
+            setTimeout(loadVoices, 500);
+            setTimeout(loadVoices, 1000);
+          }, { once: true });
         }
 
         // Mobile unlock (iOS/Android) to enable audio/TTS after first user gesture
@@ -694,6 +717,12 @@
         document.addEventListener("click", unlockAudioOnce, { once: true });
 
         function selectVoice(lang) {
+          console.log(`Selecting voice for ${lang}, available voices:`, voices.length);
+          if (voices.length === 0) {
+            console.log('No voices available');
+            return null;
+          }
+          
           const lower = (s) => (s || "").toLowerCase();
           const candidatesByName = lang === "da" ? [
             // Common high-quality Danish voices (browsers/OS vary)
@@ -701,21 +730,37 @@
           ] : lang === "ru" ? [
             "microsoft ekaterina", "ekaterina", "google русский", "google russian", "milena", "ru-ru"
           ] : [];
+          
           // Exact lang match first
           const langCode = lang === "da" ? "da-dk" : lang === "ru" ? "ru-ru" : (lang || "").toLowerCase();
           const exactLang = voices.filter(v => lower(v.lang).startsWith(langCode));
+          console.log(`Found ${exactLang.length} voices for ${langCode}`);
+          
           // Sort exact by preferred names
           for (const namePart of candidatesByName) {
             const v = exactLang.find(vv => lower(vv.name).includes(namePart));
-            if (v) return v;
+            if (v) {
+              console.log(`Selected preferred voice: ${v.name} (${v.lang})`);
+              return v;
+            }
           }
+          
           // Fallback: any exact lang
-          if (exactLang[0]) return exactLang[0];
+          if (exactLang[0]) {
+            console.log(`Selected fallback voice: ${exactLang[0].name} (${exactLang[0].lang})`);
+            return exactLang[0];
+          }
+          
           // Fallback: any voice that mentions language in name
           for (const namePart of candidatesByName) {
             const v = voices.find(vv => lower(vv.name).includes(namePart));
-            if (v) return v;
+            if (v) {
+              console.log(`Selected name-based voice: ${v.name} (${v.lang})`);
+              return v;
+            }
           }
+          
+          console.log(`Using default voice: ${voices[0].name} (${voices[0].lang})`);
           return voices[0];
         }
 
@@ -736,7 +781,7 @@
         }
 
         function voicesReady() {
-          return Array.isArray(voices) && voices.length > 0;
+          return voicesLoaded || (Array.isArray(voices) && voices.length > 0);
         }
 
         function speak(text, langPrefer, targetWord) {
