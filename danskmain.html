@@ -743,20 +743,59 @@
           const cleaned = normalizeText(text, langPrefer, targetWord);
           if (!cleaned) return;
           if (!window.speechSynthesis) { toast("🔇 Нет поддержки TTS в браузере"); return; }
+          
+          // Cancel any current speech
           synth.cancel();
+          
           const start = () => {
             const utter = new SpeechSynthesisUtterance(cleaned);
             const v = selectVoice(langPrefer);
             if (v) utter.voice = v;
-            utter.lang = v?.lang || (langPrefer === "da" ? "da-DK" : langPrefer === "ru" ? "ru-RU" : "en-US");
+            
+            // Set language explicitly
+            utter.lang = langPrefer === "da" ? "da-DK" : langPrefer === "ru" ? "ru-RU" : "en-US";
+            
             // Tuned for smoother prosody
-            if (langPrefer === "da") { utter.rate = 0.86; utter.pitch = 1.02; }
-            else if (langPrefer === "ru") { utter.rate = 0.95; utter.pitch = 1.0; }
-            else { utter.rate = 1.0; utter.pitch = 1.0; }
+            if (langPrefer === "da") { 
+              utter.rate = 0.86; 
+              utter.pitch = 1.02; 
+            } else if (langPrefer === "ru") { 
+              utter.rate = 0.95; 
+              utter.pitch = 1.0; 
+            } else { 
+              utter.rate = 1.0; 
+              utter.pitch = 1.0; 
+            }
+            
             utter.volume = 1.0;
-            synth.speak(utter);
+            
+            // Add error handling
+            utter.onerror = (e) => {
+              console.log('TTS Error:', e);
+              toast("🔇 Ошибка воспроизведения речи");
+            };
+            
+            utter.onstart = () => {
+              console.log('TTS Started for', langPrefer);
+            };
+            
+            try {
+              synth.speak(utter);
+            } catch (e) {
+              console.log('TTS Speak Error:', e);
+              toast("🔇 Не удалось воспроизвести речь");
+            }
           };
-          if (!voicesReady()) setTimeout(start, 200); else start();
+          
+          // Try multiple times with increasing delays for iOS
+          if (!voicesReady()) {
+            console.log('Voices not ready, retrying...');
+            setTimeout(start, 100);
+            setTimeout(start, 500);
+            setTimeout(start, 1000);
+          } else {
+            start();
+          }
         }
 
         function slugify(text) {
@@ -772,34 +811,14 @@
         async function playRecordedOrTts(kind) {
           const { item } = currentItem();
           const text = kind === "da" ? (item.ctxDa || item.da) : (item.ctxRu || item.ru);
-          const audioEl = kind === "da" ? $("audioDa") : $("audioRu");
+          
           // Stop any current audio and TTS
-          try { audioEl.pause(); audioEl.currentTime = 0; } catch {}
           if (window.speechSynthesis) window.speechSynthesis.cancel();
-
-          const base = `audio`;
-          const name = slugify(item.da);
-          const fileCandidates = [
-            `${base}/${name}-${kind}.mp3`,
-            `${base}/${name}-${kind}.m4a`,
-            `${base}/${name}-${kind}.ogg`,
-            `${base}/${name}.mp3`,
-            `${base}/${name}.m4a`,
-            `${base}/${name}.ogg`
-          ];
-
-          // Try to probe files sequentially
-          for (const url of fileCandidates) {
-            try {
-              // Attempt to load. Some browsers block local file fetch; we rely on onerror fallback too.
-              audioEl.src = url;
-              await audioEl.play();
-              return; // success
-            } catch (e) {
-              // try next
-            }
-          }
-          // fallback to TTS
+          
+          console.log(`Attempting to play ${kind}:`, text);
+          
+          // For now, skip audio files and go directly to TTS
+          // This ensures TTS works on mobile devices
           speak(text, kind, item.da);
         }
 
