@@ -12,10 +12,11 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #2c2c2c;
+            font-family: 'Pandora', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.5;
+            color: #000000;
             background-color: #ffffff;
+            font-size: 16px;
         }
 
         .container {
@@ -26,117 +27,161 @@
 
         /* Header */
         header {
-            background: linear-gradient(135deg, #e1c5c9 0%, #d4b0b4 100%);
-            color: #2c2c2c;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(225, 197, 201, 0.3);
+            background: #ffffff;
+            color: #000000;
+            padding: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #e5e5e5;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 2rem;
+            height: 80px;
         }
 
         .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            letter-spacing: 2px;
+            font-size: 2.5rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            color: #000000;
+            text-decoration: none;
+            font-family: 'Pandora', sans-serif;
         }
 
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 3rem;
+            margin: 0;
+            padding: 0;
         }
 
         .nav-links a {
-            color: #2c2c2c;
+            color: #000000;
             text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: color 0.3s ease;
+            position: relative;
         }
 
         .nav-links a:hover {
-            color: #666;
+            color: #666666;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #000000;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .cart-icon {
-            background: rgba(44, 44, 44, 0.15);
-            padding: 0.5rem;
-            border-radius: 50%;
+            background: transparent;
+            padding: 0.8rem;
+            border-radius: 0;
             cursor: pointer;
             position: relative;
+            border: none;
+            font-size: 18px;
         }
 
         .cart-count {
             position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #e1c5c9;
-            color: #2c2c2c;
+            top: 5px;
+            right: 5px;
+            background: #000000;
+            color: #ffffff;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 0.8rem;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 500;
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(225, 197, 201, 0.85), rgba(212, 176, 180, 0.85)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23f0f0f0" width="1200" height="600"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-family="Arial" font-size="48" fill="%23ddd">Pandora Jewelry</text></svg>');
-            background-size: cover;
-            background-position: center;
-            color: #2c2c2c;
+            background: #ffffff;
+            color: #000000;
             text-align: center;
-            padding: 4rem 0;
+            padding: 6rem 0;
+            position: relative;
         }
 
         .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
             font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            color: #666666;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
         }
 
         .cta-button {
-            background: #2c2c2c;
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
+            background: #000000;
+            color: #ffffff;
+            padding: 1.2rem 3rem;
+            border: 1px solid #000000;
+            border-radius: 0;
+            font-size: 14px;
+            font-weight: 400;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .cta-button:hover {
-            background: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: #ffffff;
+            color: #000000;
+            transform: none;
+            box-shadow: none;
         }
 
         /* Categories */
         .categories {
-            padding: 4rem 0;
-            background: #f8f8f8;
+            padding: 6rem 0;
+            background: #ffffff;
         }
 
         .categories h2 {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
             font-size: 2.5rem;
-            color: #2c2c2c;
+            color: #000000;
             font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .category-grid {
@@ -146,49 +191,63 @@
         }
 
         .category-card {
-            background: white;
-            border-radius: 15px;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 0;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .category-card:hover {
-            transform: translateY(-5px);
+            border-color: #000000;
+            transform: none;
         }
 
         .category-image {
-            height: 200px;
-            background: linear-gradient(45deg, #fde7e9, #e1c5c9);
+            height: 250px;
+            background: #f8f8f8;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            color: #2c2c2c;
+            font-size: 4rem;
+            color: #000000;
         }
 
         .category-info {
-            padding: 1.5rem;
+            padding: 2rem;
             text-align: center;
         }
 
         .category-info h3 {
-            color: #2c2c2c;
-            margin-bottom: 0.5rem;
+            color: #000000;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .category-info p {
+            color: #666666;
+            font-size: 14px;
+            line-height: 1.5;
         }
 
         /* Products */
         .products {
-            padding: 4rem 0;
+            padding: 6rem 0;
+            background: #f8f8f8;
         }
 
         .products h2 {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 4rem;
             font-size: 2.5rem;
-            color: #2c2c2c;
+            color: #000000;
             font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .product-grid {
@@ -198,80 +257,92 @@
         }
 
         .product-card {
-            background: white;
-            border-radius: 15px;
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 0;
             overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-color: #000000;
+            transform: none;
+            box-shadow: none;
         }
 
         .product-image {
-            height: 250px;
-            background: linear-gradient(135deg, #fde7e9, #e1c5c9);
+            height: 300px;
+            background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
-            color: #2c2c2c;
+            font-size: 5rem;
+            color: #000000;
+            border-bottom: 1px solid #e5e5e5;
         }
 
         .product-info {
-            padding: 1.5rem;
+            padding: 2rem;
         }
 
         .product-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            color: #2c2c2c;
+            font-size: 1.1rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .product-price {
-            font-size: 1.4rem;
-            color: #e1c5c9;
-            font-weight: bold;
-            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #000000;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
         }
 
         .add-to-cart {
             width: 100%;
-            background: #2c2c2c;
-            color: white;
-            border: none;
-            padding: 0.8rem;
-            border-radius: 8px;
-            font-size: 1rem;
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid #000000;
+            padding: 1rem;
+            border-radius: 0;
+            font-size: 14px;
+            font-weight: 400;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .add-to-cart:hover {
-            background: #000;
+            background: #ffffff;
+            color: #000000;
         }
 
         /* Footer */
         footer {
-            background: #2c2c2c;
-            color: white;
+            background: #000000;
+            color: #ffffff;
             text-align: center;
-            padding: 2rem 0;
+            padding: 4rem 0 2rem;
         }
 
         .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: 3rem;
+            margin-bottom: 3rem;
         }
 
         .footer-section h3 {
-            color: #e1c5c9;
-            margin-bottom: 1rem;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            font-size: 14px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .footer-section ul {
@@ -279,17 +350,18 @@
         }
 
         .footer-section ul li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
 
         .footer-section a {
-            color: #ccc;
+            color: #cccccc;
             text-decoration: none;
             transition: color 0.3s ease;
+            font-size: 14px;
         }
 
         .footer-section a:hover {
-            color: #e1c5c9;
+            color: #ffffff;
         }
 
         /* Cart Modal */
@@ -305,38 +377,42 @@
         }
 
         .modal-content {
-            background: white;
+            background: #ffffff;
             margin: 5% auto;
-            padding: 2rem;
+            padding: 3rem;
             width: 80%;
             max-width: 600px;
-            border-radius: 15px;
+            border-radius: 0;
             position: relative;
+            border: 1px solid #e5e5e5;
         }
 
         .close {
             position: absolute;
-            top: 1rem;
-            right: 1.5rem;
+            top: 1.5rem;
+            right: 2rem;
             font-size: 2rem;
             cursor: pointer;
-            color: #e1c5c9;
+            color: #000000;
+            font-weight: 300;
         }
 
         .cart-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 0;
-            border-bottom: 1px solid #eee;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid #e5e5e5;
         }
 
         .cart-total {
             text-align: right;
-            margin-top: 1rem;
+            margin-top: 2rem;
             font-size: 1.2rem;
-            font-weight: bold;
-            color: #e1c5c9;
+            font-weight: 400;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Responsive */
@@ -358,7 +434,7 @@
 <body>
     <header>
         <nav class="container">
-            <div class="logo">PANDORA</div>
+            <a href="#" class="logo">PANDORA</a>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#categories">Categories</a></li>
@@ -374,8 +450,8 @@
 
     <section class="hero" id="home">
         <div class="container">
-            <h1>Unforgettable Moments</h1>
-            <p>Discover the magic of Pandora jewelry - where every piece tells your unique story</p>
+            <h1>Moments That Matter</h1>
+            <p>Discover our collection of hand-finished jewelry designed to celebrate life's most precious moments</p>
             <a href="#products" class="cta-button">Shop Now</a>
         </div>
     </section>
