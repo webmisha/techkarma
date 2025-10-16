@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pandora - Official Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #2c2c2c;
+            background-color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #e1c5c9 0%, #d4b0b4 100%);
+            color: #2c2c2c;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(225, 197, 201, 0.3);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: #2c2c2c;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #666;
+        }
+
+        .cart-icon {
+            background: rgba(44, 44, 44, 0.15);
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e1c5c9;
+            color: #2c2c2c;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(225, 197, 201, 0.85), rgba(212, 176, 180, 0.85)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23f0f0f0" width="1200" height="600"/><text x="50%" y="50%" text-anchor="middle" dy=".3em" font-family="Arial" font-size="48" fill="%23ddd">Pandora Jewelry</text></svg>');
+            background-size: cover;
+            background-position: center;
+            color: #2c2c2c;
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: #2c2c2c;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Categories */
+        .categories {
+            padding: 4rem 0;
+            background: #f8f8f8;
+        }
+
+        .categories h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: #2c2c2c;
+            font-weight: 300;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-image {
+            height: 200px;
+            background: linear-gradient(45deg, #fde7e9, #e1c5c9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #2c2c2c;
+        }
+
+        .category-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .category-info h3 {
+            color: #2c2c2c;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Products */
+        .products {
+            padding: 4rem 0;
+        }
+
+        .products h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: #2c2c2c;
+            font-weight: 300;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            height: 250px;
+            background: linear-gradient(135deg, #fde7e9, #e1c5c9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #2c2c2c;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #2c2c2c;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            color: #e1c5c9;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            background: #2c2c2c;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .add-to-cart:hover {
+            background: #000;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c2c2c;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #e1c5c9;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #e1c5c9;
+        }
+
+        /* Cart Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #e1c5c9;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-total {
+            text-align: right;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #e1c5c9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .categories h2, .products h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">PANDORA</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#categories">Categories</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="cart-icon" onclick="toggleCart()">
+                🛒
+                <span class="cart-count" id="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Unforgettable Moments</h1>
+            <p>Discover the magic of Pandora jewelry - where every piece tells your unique story</p>
+            <a href="#products" class="cta-button">Shop Now</a>
+        </div>
+    </section>
+
+    <section class="categories" id="categories">
+        <div class="container">
+            <h2>Collections</h2>
+            <div class="category-grid">
+                <div class="category-card" onclick="filterProducts('charms')">
+                    <div class="category-image">🔗</div>
+                    <div class="category-info">
+                        <h3>Charms</h3>
+                        <p>Express yourself with our iconic charm collection</p>
+                    </div>
+                </div>
+                <div class="category-card" onclick="filterProducts('bracelets')">
+                    <div class="category-image">📿</div>
+                    <div class="category-info">
+                        <h3>Bracelets</h3>
+                        <p>Beautiful bracelets for every occasion</p>
+                    </div>
+                </div>
+                <div class="category-card" onclick="filterProducts('rings')">
+                    <div class="category-image">💍</div>
+                    <div class="category-info">
+                        <h3>Rings</h3>
+                        <p>Elegant rings that capture life's moments</p>
+                    </div>
+                </div>
+                <div class="category-card" onclick="filterProducts('necklaces')">
+                    <div class="category-image">📿</div>
+                    <div class="category-info">
+                        <h3>Necklaces</h3>
+                        <p>Stunning necklaces to complete your look</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="products" id="products">
+        <div class="container">
+            <h2>Featured Products</h2>
+            <div class="product-grid" id="product-grid">
+                <div class="product-card" data-category="charms">
+                    <div class="product-image">🌟</div>
+                    <div class="product-info">
+                        <div class="product-name">Star Charm</div>
+                        <div class="product-price">$65</div>
+                        <button class="add-to-cart" onclick="addToCart('Star Charm', 65)">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card" data-category="bracelets">
+                    <div class="product-image">💎</div>
+                    <div class="product-info">
+                        <div class="product-name">Moments Bracelet</div>
+                        <div class="product-price">$99</div>
+                        <button class="add-to-cart" onclick="addToCart('Moments Bracelet', 99)">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card" data-category="rings">
+                    <div class="product-image">💍</div>
+                    <div class="product-info">
+                        <div class="product-name">Sparkling Ring</div>
+                        <div class="product-price">$125</div>
+                        <button class="add-to-cart" onclick="addToCart('Sparkling Ring', 125)">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card" data-category="necklaces">
+                    <div class="product-image">✨</div>
+                    <div class="product-info">
+                        <div class="product-name">Timeless Necklace</div>
+                        <div class="product-price">$150</div>
+                        <button class="add-to-cart" onclick="addToCart('Timeless Necklace', 150)">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card" data-category="charms">
+                    <div class="product-image">❤️</div>
+                    <div class="product-info">
+                        <div class="product-name">Heart Charm</div>
+                        <div class="product-price">$55</div>
+                        <button class="add-to-cart" onclick="addToCart('Heart Charm', 55)">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card" data-category="bracelets">
+                    <div class="product-image">🌸</div>
+                    <div class="product-info">
+                        <div class="product-name">Garden Bracelet</div>
+                        <div class="product-price">$89</div>
+                        <button class="add-to-cart" onclick="addToCart('Garden Bracelet', 89)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Pandora</h3>
+                    <ul>
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">Craftsmanship</a></li>
+                        <li><a href="#">Sustainability</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Returns</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <ul>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Newsletter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p>&copy; 2024 Pandora. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Modal -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleCart()">&times;</span>
+            <h2>Shopping Cart</h2>
+            <div id="cart-items"></div>
+            <div class="cart-total" id="cart-total">Total: $0</div>
+            <button class="cta-button" style="margin-top: 1rem; width: 100%;" onclick="checkout()">Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let cartCount = 0;
+        let cartTotal = 0;
+
+        function addToCart(name, price) {
+            cart.push({ name, price });
+            cartCount++;
+            cartTotal += price;
+            
+            document.getElementById('cart-count').textContent = cartCount;
+            updateCartDisplay();
+            
+            // Show success feedback
+            event.target.textContent = 'Added!';
+            event.target.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                event.target.textContent = 'Add to Cart';
+                event.target.style.background = '#8B4A9C';
+            }, 1000);
+        }
+
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            
+            cartItems.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Your cart is empty</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'cart-item';
+                    cartItem.innerHTML = `
+                        <span>${item.name}</span>
+                        <span>$${item.price}</span>
+                        <button onclick="removeFromCart(${index})" style="background: #ff6b6b; color: white; border: none; padding: 0.5rem; border-radius: 5px; cursor: pointer;">Remove</button>
+                    `;
+                    cartItems.appendChild(cartItem);
+                });
+            }
+            
+            cartTotalElement.textContent = `Total: $${cartTotal}`;
+        }
+
+        function removeFromCart(index) {
+            cartTotal -= cart[index].price;
+            cart.splice(index, 1);
+            cartCount--;
+            
+            document.getElementById('cart-count').textContent = cartCount;
+            updateCartDisplay();
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            if (modal.style.display === 'block') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'block';
+                updateCartDisplay();
+            }
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            
+            alert(`Thank you for your purchase! Total: $${cartTotal}`);
+            cart = [];
+            cartCount = 0;
+            cartTotal = 0;
+            document.getElementById('cart-count').textContent = '0';
+            toggleCart();
+        }
+
+        function filterProducts(category) {
+            const products = document.querySelectorAll('.product-card');
+            products.forEach(product => {
+                if (product.dataset.category === category || category === 'all') {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('cart-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Add some animation on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.product-card, .category-card');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+
+        // Initialize animations
+        window.addEventListener('scroll', animateOnScroll);
+        
+        // Set initial state for animations
+        document.querySelectorAll('.product-card, .category-card').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = 'all 0.6s ease';
+        });
+
+        // Trigger initial animation check
+        setTimeout(animateOnScroll, 100);
+    </script>
+</body>
+</html>
