@@ -550,14 +550,27 @@
       }
 
       // Sound effects for button taps (iOS/iPad compatible)
+      let audioContextReady = false;
+      
       function playButtonSound(type = 'tap') {
+        // Only play sounds if audio context is ready (after user interaction)
+        if (!audioContextReady || !window.audioContext) {
+          return;
+        }
+        
         try {
-          // Create audio context if not exists
-          if (!window.audioContext) {
-            window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          const ctx = window.audioContext;
+          
+          // Ensure context is running (required for iOS)
+          if (ctx.state === 'suspended') {
+            ctx.resume().then(() => {
+              playButtonSound(type); // Retry after resume
+            }).catch(() => {
+              // Silent fail
+            });
+            return;
           }
           
-          const ctx = window.audioContext;
           const now = ctx.currentTime;
           
           if (type === 'tap') {
@@ -571,7 +584,7 @@
             oscillator.frequency.setValueAtTime(800, now);
             oscillator.frequency.exponentialRampToValueAtTime(400, now + 0.1);
             
-            gainNode.gain.setValueAtTime(0.1, now);
+            gainNode.gain.setValueAtTime(0.15, now);
             gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
             
             oscillator.start(now);
@@ -587,7 +600,7 @@
             oscillator.frequency.setValueAtTime(600, now);
             oscillator.frequency.exponentialRampToValueAtTime(900, now + 0.2);
             
-            gainNode.gain.setValueAtTime(0.1, now);
+            gainNode.gain.setValueAtTime(0.15, now);
             gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
             
             oscillator.start(now);
@@ -603,7 +616,7 @@
             oscillator.frequency.setValueAtTime(600, now);
             oscillator.frequency.exponentialRampToValueAtTime(300, now + 0.15);
             
-            gainNode.gain.setValueAtTime(0.1, now);
+            gainNode.gain.setValueAtTime(0.15, now);
             gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
             
             oscillator.start(now);
@@ -611,7 +624,7 @@
           }
         } catch (e) {
           // Silently fail if audio context is not available
-          console.debug('Audio context not available:', e);
+          console.debug('Audio context error:', e);
         }
       }
 
@@ -664,9 +677,18 @@
             }
             // Resume audio context if suspended (required for iOS)
             if (window.audioContext.state === 'suspended') {
-              window.audioContext.resume();
+              window.audioContext.resume().then(() => {
+                audioContextReady = true;
+                console.log('Audio context ready for button sounds');
+              }).catch(() => {
+                console.log('Failed to resume audio context');
+              });
+            } else {
+              audioContextReady = true;
             }
-          } catch {}
+          } catch (e) {
+            console.log('Failed to initialize audio context:', e);
+          }
         }
         document.addEventListener("touchstart", unlockAudioOnce, { once: true, passive: true });
         document.addEventListener("click", unlockAudioOnce, { once: true });
