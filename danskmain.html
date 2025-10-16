@@ -304,84 +304,244 @@
     <script>
       const DATA = [
         {
-          da: "herudover",
-          ru: "кроме того, к тому же",
-          note: "Bruges til at tilføje information.",
-          emoji: "➕",
-          ctxDa: "Vi har kaffe og te, og herudover tilbyder vi snacks.",
-          ctxRu: "У нас есть кофе и чай, и кроме того мы предлагаем снеки."
-        },
-        {
           da: "derudover",
           ru: "кроме того, сверх того",
-          note: "Lignende funktion som herudover.",
-          emoji: "🧩",
-          ctxDa: "Hun arbejder fuld tid, og derudover studerer hun om aftenen.",
-          ctxRu: "Она работает полный день, и кроме того учится по вечерам."
+          note: "Bruges til at tilføje information.",
+          emoji: "➕",
+          ctxDa: "Derudover arbejder mange mennesker hjemmefra i dag.",
+          ctxRu: "Кроме того, многие люди сегодня работают из дома."
+        },
+        {
+          da: "dog",
+          ru: "однако",
+          note: "Udtrykker modsætning eller forbehold.",
+          emoji: "⚠️",
+          ctxDa: "Dog mener nogle, at det gør samarbejdet sværere.",
+          ctxRu: "Однако некоторые считают, что это усложняет сотрудничество."
+        },
+        {
+          da: "til gengæld",
+          ru: "зато, взамен",
+          note: "Udtrykker modsætning med positiv vinkel.",
+          emoji: "⚖️",
+          ctxDa: "Til gengæld giver det mere fleksibilitet.",
+          ctxRu: "Зато это дает больше гибкости."
+        },
+        {
+          da: "alligevel",
+          ru: "тем не менее",
+          note: "Udtrykker modsætning til forventning.",
+          emoji: "🔄",
+          ctxDa: "Alligevel savner mange den daglige kontakt med kolleger.",
+          ctxRu: "Тем не менее многие скучают по ежедневному общению с коллегами."
+        },
+        {
+          da: "tværtimod",
+          ru: "наоборот",
+          note: "Udtrykker direkte modsætning.",
+          emoji: "🔄",
+          ctxDa: "Tværtimod føler nogle sig mere produktive derhjemme.",
+          ctxRu: "Наоборот, некоторые чувствуют себя более продуктивными дома."
+        },
+        {
+          da: "ikke desto mindre",
+          ru: "тем не менее",
+          note: "Formel måde at udtrykke modsætning.",
+          emoji: "📝",
+          ctxDa: "Ikke desto mindre er balancen vigtig.",
+          ctxRu: "Тем не менее баланс важен."
         },
         {
           da: "desuden",
-          ru: "к тому же, более того",
-          note: "Kan bruges til at tilføje ekstra pointe.",
+          ru: "кроме того, к тому же",
+          note: "Tilføjer yderligere information.",
           emoji: "✨",
-          ctxDa: "Desuden er det billigere om vinteren.",
-          ctxRu: "К тому же зимой это дешевле."
+          ctxDa: "Desuden spiller motion en stor rolle for sundheden.",
+          ctxRu: "Кроме того, физическая активность играет большую роль для здоровья."
         },
         {
-          da: "ovenikøbet",
-          ru: "вдобавок, сверх того",
-          note: "Ofte lidt mere uformel end desuden.",
-          emoji: "🎁",
-          ctxDa: "De kom for sent, og ovenikøbet havde de glemt billetterne.",
-          ctxRu: "Они опоздали, и вдобавок забыли билеты."
+          da: "samtidig",
+          ru: "одновременно",
+          note: "Udtrykker parallelle begivenheder.",
+          emoji: "⏰",
+          ctxDa: "Samtidig bliver folk mere opmærksomme på stress.",
+          ctxRu: "Одновременно люди становятся более внимательными к стрессу."
         },
         {
-          da: "tilmed",
-          ru: "вдобавок, также",
-          note: "Ligner desuden, bruges til ekstra info.",
-          emoji: "➕",
-          ctxDa: "Han taler dansk og engelsk, tilmed tysk.",
-          ctxRu: "Он говорит по-датски и по-английски, вдобавок по-немецки."
-        },
-        {
-          da: "samt",
-          ru: "и, вместе с",
-          note: "Binder to elementer sammen.",
+          da: "derfor",
+          ru: "поэтому",
+          note: "Udtrykker årsag og konsekvens.",
           emoji: "🔗",
-          ctxDa: "Bogen indeholder teori samt øvelser.",
-          ctxRu: "Книга содержит теорию и упражнения."
+          ctxDa: "Derfor forsøger mange virksomheder at skabe bedre arbejdsmiljø.",
+          ctxRu: "Поэтому многие компании стараются создать лучшую рабочую среду."
         },
         {
-          da: "endvidere",
-          ru: "далее, кроме того",
-          note: "Formelt, bruges i skriftlige tekster.",
-          emoji: "📄",
-          ctxDa: "Endvidere viser resultaterne en klar tendens.",
-          ctxRu: "Далее, результаты показывают ясную тенденцию."
+          da: "for eksempel",
+          ru: "например",
+          note: "Introducerer eksempel eller illustration.",
+          emoji: "💡",
+          ctxDa: "For eksempel tilbyder de fleksible arbejdstider.",
+          ctxRu: "Например, они предлагают гибкий график."
         },
         {
-          da: "ydermere",
-          ru: "более того, кроме того",
-          note: "Formelt, akademisk stil.",
-          emoji: "🎓",
-          ctxDa: "Ydermere kan metoden anvendes i praksis.",
-          ctxRu: "Более того, метод можно применять на практике."
+          da: "derimod",
+          ru: "напротив",
+          note: "Udtrykker kontrast eller modsætning.",
+          emoji: "↔️",
+          ctxDa: "Derimod er nogle imod hjemmearbejde.",
+          ctxRu: "Напротив, некоторые выступают против работы из дома."
         },
         {
-          da: "i tillæg",
-          ru: "в дополнение, вдобавок",
-          note: "Bruges til at angive ekstra information.",
-          emoji: "📎",
-          ctxDa: "I tillæg til frokosten får du en dessert.",
-          ctxRu: "В дополнение к обеду ты получаешь десерт."
+          da: "selv om",
+          ru: "хотя",
+          note: "Udtrykker indrømmelse eller modsætning.",
+          emoji: "🤔",
+          ctxDa: "Selv om vejret i Danmark ofte er gråt, cykler folk stadig.",
+          ctxRu: "Хотя погода в Дании часто серая, люди всё равно ездят на велосипедах."
         },
         {
-          da: "udover det",
-          ru: "кроме этого",
-          note: "Kan introducere ny information.",
-          emoji: "📌",
-          ctxDa: "Udover det vil vi gerne sige tak for hjælpen.",
-          ctxRu: "Кроме этого, мы хотим сказать спасибо за помощь."
+          da: "endda",
+          ru: "даже",
+          note: "Forstærker et udsagn.",
+          emoji: "💪",
+          ctxDa: "Endda om vinteren ser man mange på cykel.",
+          ctxRu: "Даже зимой можно увидеть многих на велосипедах."
+        },
+        {
+          da: "til sidst",
+          ru: "наконец",
+          note: "Markerer afslutning eller konklusion.",
+          emoji: "🏁",
+          ctxDa: "Til sidst bør vi tale om miljøet.",
+          ctxRu: "Наконец, нам стоит поговорить об экологии."
+        },
+        {
+          da: "mens",
+          ru: "в то время как",
+          note: "Udtrykker parallelle begivenheder med kontrast.",
+          emoji: "⏳",
+          ctxDa: "Mens nogle fokuserer på klimaet, tænker andre på økonomien.",
+          ctxRu: "В то время как одни думают о климате, другие — об экономике."
+        },
+        {
+          da: "på den ene side",
+          ru: "с одной стороны",
+          note: "Introducerer første del af kontrast.",
+          emoji: "📊",
+          ctxDa: "På den ene side ønsker man vækst, på den anden side bæredygtighed.",
+          ctxRu: "С одной стороны хотят роста, с другой — устойчивости."
+        },
+        {
+          da: "i øvrigt",
+          ru: "кстати",
+          note: "Introducerer yderligere information.",
+          emoji: "💬",
+          ctxDa: "I øvrigt har Danmark mange grønne initiativer.",
+          ctxRu: "Кстати, в Дании много зелёных инициатив."
+        },
+        {
+          da: "for øvrigt",
+          ru: "кстати",
+          note: "Lignende funktion som i øvrigt.",
+          emoji: "💭",
+          ctxDa: "For øvrigt er det dyrt at eje bil i Danmark.",
+          ctxRu: "Кстати, владеть машиной в Дании дорого."
+        },
+        {
+          da: "dermed",
+          ru: "тем самым",
+          note: "Udtrykker konsekvens eller resultat.",
+          emoji: "🎯",
+          ctxDa: "Dermed prøver mange at bruge offentlig transport.",
+          ctxRu: "Тем самым многие стараются пользоваться общественным транспортом."
+        },
+        {
+          da: "både",
+          ru: "и",
+          note: "Kombinerer to elementer.",
+          emoji: "🤝",
+          ctxDa: "Både unge og ældre går mere op i sund mad.",
+          ctxRu: "И молодые, и пожилые больше заботятся о здоровом питании."
+        },
+        {
+          da: "ikke kun",
+          ru: "не только",
+          note: "Udtrykker inklusion af flere elementer.",
+          emoji: "📈",
+          ctxDa: "Ikke kun i byerne, men også på landet.",
+          ctxRu: "Не только в городах, но и в сельской местности."
+        },
+        {
+          da: "netop derfor",
+          ru: "именно поэтому",
+          note: "Forstærker årsag og konsekvens.",
+          emoji: "⭐",
+          ctxDa: "Netop derfor er økologiske varer blevet populære.",
+          ctxRu: "Именно поэтому органические продукты стали популярными."
+        },
+        {
+          da: "faktisk",
+          ru: "на самом деле",
+          note: "Udtrykker sandhed eller realitet.",
+          emoji: "✅",
+          ctxDa: "Faktisk køber over halvdelen af danskerne økologisk mælk.",
+          ctxRu: "На самом деле более половины датчан покупают органическое молоко."
+        },
+        {
+          da: "på trods af",
+          ru: "несмотря на",
+          note: "Udtrykker modsætning til forventning.",
+          emoji: "🛡️",
+          ctxDa: "På trods af høje priser rejser danskerne meget.",
+          ctxRu: "Несмотря на высокие цены, датчане много путешествуют."
+        },
+        {
+          da: "især",
+          ru: "особенно",
+          note: "Fremhæver et særligt tilfælde.",
+          emoji: "🔍",
+          ctxDa: "Især om sommeren tager de på ferie til Sydeuropa.",
+          ctxRu: "Особенно летом они едут в Южную Европу."
+        },
+        {
+          da: "selvom",
+          ru: "хотя",
+          note: "Udtrykker indrømmelse.",
+          emoji: "🤷",
+          ctxDa: "Selvom sundhedssystemet er godt, er ventetiden lang.",
+          ctxRu: "Хотя система здравоохранения хорошая, время ожидания долгое."
+        },
+        {
+          da: "imidlertid",
+          ru: "однако",
+          note: "Formel måde at udtrykke modsætning.",
+          emoji: "📋",
+          ctxDa: "Imidlertid har ikke alle råd til det.",
+          ctxRu: "Однако не у всех есть на это средства."
+        },
+        {
+          da: "ligeledes",
+          ru: "точно так же",
+          note: "Udtrykker lighed eller parallel.",
+          emoji: "🔄",
+          ctxDa: "Ligeledes er uddannelse gratis, hvilket hjælper mange.",
+          ctxRu: "Точно так же образование бесплатно, что помогает многим."
+        },
+        {
+          da: "endelig",
+          ru: "наконец",
+          note: "Markerer afslutning eller konklusion.",
+          emoji: "🎊",
+          ctxDa: "Endelig føler mange sig mere frie uden storbyens stress.",
+          ctxRu: "Наконец, многие чувствуют себя свободнее без городского стресса."
+        },
+        {
+          da: "ikke kun",
+          ru: "не только",
+          note: "Udtrykker udvidet omfang.",
+          emoji: "🌐",
+          ctxDa: "Ikke kun fritid, men også socialt liv ændres.",
+          ctxRu: "Меняется не только досуг, но и социальная жизнь."
         }
       ];
 
