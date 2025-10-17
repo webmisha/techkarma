@@ -134,10 +134,10 @@
       }
 
       .context {
-        font-size: clamp(18px, 4.5vw, 24px);
-        font-weight: 400;
-        line-height: 1.6;
-        opacity: 0.95;
+        font-size: clamp(24px, 6vw, 36px);
+        font-weight: 500;
+        line-height: 1.5;
+        opacity: 0.98;
         letter-spacing: -0.01em;
       }
       
@@ -148,19 +148,19 @@
       }
 
       .mark {
-        background: rgba(56, 189, 248, 0.3);
-        color: #38bdf8;
-        padding: 3px 8px;
-        border-radius: 6px;
-        font-weight: 600;
+        background: rgba(56, 189, 248, 0.35);
+        color: #7dd3fc;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-weight: 700;
       }
 
       .translation {
-        font-size: clamp(22px, 5.5vw, 32px);
+        font-size: clamp(24px, 6vw, 36px);
         font-weight: 500;
-        line-height: 1.4;
+        line-height: 1.5;
         margin-top: 20px;
-        opacity: 0.95;
+        opacity: 0.98;
         letter-spacing: -0.01em;
       }
 
@@ -820,15 +820,10 @@
                   <div class="counter">${index + 1} / ${total}</div>
                 </div>
                 <div class="main-content">
-                  <div class="word-display">
-                    <span>${item.da}</span>
-                    <span class="emoji">${item.emoji || "✨"}</span>
-                  </div>
                   <div class="context">${ctxHtml}</div>
                 </div>
                 <div class="actions">
                   <button class="btn btn-primary speak-da-btn" data-index="${index}">🇩🇰</button>
-                  <button class="btn btn-primary flip-btn">🪄 Translate</button>
                   <button class="btn btn-primary speak-ru-btn" data-index="${index}">🇷🇺</button>
                 </div>
               </div>
@@ -864,14 +859,6 @@
             if (e.target.tagName !== 'BUTTON') {
               flipCard(card);
             }
-          });
-        });
-
-        document.querySelectorAll('.flip-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const card = e.target.closest('.card');
-            flipCard(card);
           });
         });
 
