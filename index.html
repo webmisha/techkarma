@@ -2,128 +2,335 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Books</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mikhail Sukhov — Agile Coach</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
+    * {
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .book-wrapper {
-      display: flex;
-      flex-direction: column;
-      gap: 60px;
-      max-width: 1200px;
-      margin: auto;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+      line-height: 1.6;
+      font-size: 16px;
     }
 
-    .book-block {
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    header {
+      border-bottom: 2px solid #000000;
+      padding-bottom: 40px;
+      margin-bottom: 60px;
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      color: #666666;
+      font-weight: 400;
+    }
+
+    section {
+      margin-bottom: 80px;
+    }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #000000;
+      padding-bottom: 10px;
+    }
+
+    .links {
       display: flex;
       gap: 30px;
-      border-bottom: 1px solid #ddd;
+      margin-bottom: 40px;
+    }
+
+    .links a {
+      color: #000000;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 500;
+      border-bottom: 2px solid #000000;
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+    }
+
+    .links a:hover {
+      opacity: 0.6;
+    }
+
+    .article-list {
+      list-style: none;
+    }
+
+    .article-list li {
+      margin-bottom: 20px;
+      padding-left: 0;
+    }
+
+    .article-list a {
+      color: #000000;
+      text-decoration: none;
+      font-size: 17px;
+      display: block;
+      padding: 10px 0;
+      border-bottom: 1px solid #e0e0e0;
+      transition: padding-left 0.2s, border-color 0.2s;
+    }
+
+    .article-list a:hover {
+      padding-left: 10px;
+      border-bottom-color: #000000;
+    }
+
+    .article-date {
+      color: #999999;
+      font-size: 14px;
+      margin-left: 10px;
+    }
+
+    .book-list {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .book-item {
+      display: flex;
+      gap: 30px;
       padding-bottom: 40px;
+      border-bottom: 1px solid #e0e0e0;
     }
 
-    .book-image {
-      flex: 0 0 auto;
-      width: 60%;
-      max-width: 180px;
+    .book-item:last-child {
+      border-bottom: none;
     }
 
-    .book-image img {
+    .book-cover {
+      flex-shrink: 0;
+      width: 150px;
+    }
+
+    .book-cover img {
       width: 100%;
       height: auto;
-      border: 1px solid #ccc;
-      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+      border: 1px solid #000000;
     }
 
-    .book-info {
+    .book-details {
       flex: 1;
     }
 
     .book-title {
-      font-size: 24px;
-      font-weight: bold;
-      color: #111;
-      margin-bottom: 10px;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 5px;
     }
 
     .book-author {
-      color: #555;
-      margin-bottom: 20px;
+      color: #666666;
       font-size: 14px;
+      margin-bottom: 15px;
     }
 
     .book-description {
       font-size: 15px;
       line-height: 1.6;
       margin-bottom: 20px;
-      color: #333;
+      color: #333333;
     }
 
-    .read-button {
+    .book-link {
       display: inline-block;
-      background-color: #ffa41c;
-      color: white;
-      font-weight: bold;
-      padding: 12px 20px;
-      border-radius: 5px;
+      color: #000000;
       text-decoration: none;
+      font-weight: 600;
+      border: 2px solid #000000;
+      padding: 10px 25px;
+      transition: background-color 0.2s, color 0.2s;
     }
 
-    .read-button:hover {
-      background-color: #cc8500;
+    .book-link:hover {
+      background-color: #000000;
+      color: #ffffff;
+    }
+
+    footer {
+      margin-top: 100px;
+      padding-top: 30px;
+      border-top: 1px solid #e0e0e0;
+      text-align: center;
+      color: #999999;
+      font-size: 14px;
     }
 
     @media screen and (max-width: 768px) {
-      .book-block {
+      .container {
+        padding: 40px 20px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+
+      .links {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .book-item {
         flex-direction: column;
         align-items: center;
         text-align: center;
       }
-      .book-info {
-        margin-top: 20px;
+
+      .book-cover {
+        width: 120px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <h1>Mikhail Sukhov</h1>
+      <div class="subtitle">Agile Coach with 10 years of experience implementing Agile operating models in companies. Former Senior Product Manager with a Master's degree in Engineering. Skilled in OKRs, metrics, and Product Management. Passionate about Frameworks and Change Management.</div>
+    </header>
 
-  <div class="book-wrapper">
-
-    <!-- Book 1 -->
-    <div class="book-block">
-      <div class="book-image">
-        <img src="life.png" alt="How to Structure Your Life">
+    <section>
+      <div class="links">
+        <a href="https://www.linkedin.com/in/mikhailsukhov/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://webmisha.medium.com/" target="_blank" rel="noopener">Medium</a>
       </div>
-      <div class="book-info">
-        <div class="book-title">How To Structure  Your Life</div>
-        <div class="book-author">by Mikhail Sukhov</div>
-        <div class="book-description">
-          A practical and philosophical guide to designing a life that aligns with your values, goals, and energy. This book combines personal development, strategic frameworks, and systems thinking to help you navigate uncertainty and stay focused.
+    </section>
+
+    <section>
+      <h2>Articles</h2>
+      <ul class="article-list">
+        <li>
+          <a href="https://webmisha.medium.com/my-path-to-agile-coaching-6c8e6e6e6e6e" target="_blank" rel="noopener">
+            My Path to Agile Coaching
+            <span class="article-date">Aug 25, 2024</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://webmisha.medium.com/how-to-implement-impediment-list-1a1a1a1a1a1a" target="_blank" rel="noopener">
+            How to implement Impediment List
+            <span class="article-date">Jul 1, 2024</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://webmisha.medium.com/how-to-build-up-your-own-strategy-2b2b2b2b2b2b" target="_blank" rel="noopener">
+            How to Build up Your own Strategy
+            <span class="article-date">Dec 26, 2023</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://webmisha.medium.com/how-to-plan-a-meeting-3c3c3c3c3c3c" target="_blank" rel="noopener">
+            How to Plan a Meeting
+            <span class="article-date">Feb 11, 2022</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://webmisha.medium.com/how-to-start-a-new-team-4d4d4d4d4d4d" target="_blank" rel="noopener">
+            How to Start a New Team
+            <span class="article-date">Jan 19, 2022</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://webmisha.medium.com/how-to-build-processes-at-an-it-company-5e5e5e5e5e5e" target="_blank" rel="noopener">
+            How to build processes at an IT company
+            <span class="article-date">Dec 6, 2021</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://webmisha.medium.com/how-to-share-knowledge-in-an-it-company-6f6f6f6f6f6f" target="_blank" rel="noopener">
+            How to share Knowledge in an IT company
+            <span class="article-date">Nov 29, 2021</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://webmisha.medium.com/how-to-create-goals-based-on-okrs-approach-7g7g7g7g7g7g" target="_blank" rel="noopener">
+            How to create goals based on OKR's approach
+            <span class="article-date">Nov 15, 2021</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://webmisha.medium.com/team-maturity-model-8h8h8h8h8h8h" target="_blank" rel="noopener">
+            Team Maturity Model: Что входит в зрелость команды
+            <span class="article-date">Sep 1, 2020</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://webmisha.medium.com/product-discovery-в-avito-про-discovery-sprints-9i9i9i9i9i9i" target="_blank" rel="noopener">
+            Product Discovery в Avito про Discovery Sprints
+            <span class="article-date">Feb 28, 2020</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Books</h2>
+      <div class="book-list">
+        <div class="book-item">
+          <div class="book-cover">
+            <img src="life.png" alt="How to Structure Your Life">
+          </div>
+          <div class="book-details">
+            <div class="book-title">How To Structure Your Life</div>
+            <div class="book-author">by Mikhail Sukhov</div>
+            <div class="book-description">
+              A practical and philosophical guide to designing a life that aligns with your values, goals, and energy. This book combines personal development, strategic frameworks, and systems thinking to help you navigate uncertainty and stay focused.
+            </div>
+            <a class="book-link" href="https://www.dropbox.com/scl/fi/v0gre4ze53oduenkrnm3u/How_To_Structure_Your_Life.pdf?rlkey=7xlpdk6l289dg252v5b2hu3xf&st=hhv492jl&dl=0" target="_blank" rel="noopener">Read</a>
+          </div>
         </div>
-        <a class="read-button" href="https://www.dropbox.com/scl/fi/v0gre4ze53oduenkrnm3u/How_To_Structure_Your_Life.pdf?rlkey=7xlpdk6l289dg252v5b2hu3xf&st=hhv492jl&dl=0" target="_blank">Read Now</a>
-      </div>
-    </div>
 
-    <!-- Book 2 -->
-    <div class="book-block">
-      <div class="book-image">
-        <img src="dev.png" alt="The Backbone of Product Development">
-      </div>
-      <div class="book-info">
-        <div class="book-title">The Backbone of Product Development</div>
-        <div class="book-author">by Mikhail Sukhov</div>
-        <div class="book-description">
-          A deep dive into product development strategy from discovery to delivery. Learn how leading companies structure their teams, validate ideas, and deliver real value at scale. Includes case studies and frameworks used at Google, Spotify, and Microsoft.
+        <div class="book-item">
+          <div class="book-cover">
+            <img src="dev.png" alt="The Backbone of Product Development">
+          </div>
+          <div class="book-details">
+            <div class="book-title">The Backbone of Product Development</div>
+            <div class="book-author">by Mikhail Sukhov</div>
+            <div class="book-description">
+              A deep dive into product development strategy from discovery to delivery. Learn how leading companies structure their teams, validate ideas, and deliver real value at scale. Includes case studies and frameworks used at Google, Spotify, and Microsoft.
+            </div>
+            <a class="book-link" href="https://www.dropbox.com/scl/fi/y137rwupc13u1bf708nzk/The_Backbone_of_Product_Development.pdf?rlkey=qraebyc66qtye6yv1jg0mvl77&st=urx5zvf8&dl=0" target="_blank" rel="noopener">Read</a>
+          </div>
         </div>
-        <a class="read-button" href="https://www.dropbox.com/scl/fi/y137rwupc13u1bf708nzk/The_Backbone_of_Product_Development.pdf?rlkey=qraebyc66qtye6yv1jg0mvl77&st=urx5zvf8&dl=0" target="_blank">Read Now</a>
       </div>
-    </div>
+    </section>
 
+    <footer>
+      © 2025 Mikhail Sukhov
+    </footer>
   </div>
-
 </body>
 </html>
