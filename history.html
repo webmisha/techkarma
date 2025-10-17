@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>История Дании • Тест</title>
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        height: 100%;
+        overflow: hidden;
+        background: #000000;
+        color: #ffffff;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        touch-action: none;
+      }
+
+      .container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      .container::-webkit-scrollbar {
+        display: none;
+      }
+
+      .card-slide {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1400px;
+      }
+
+      .card {
+        position: relative;
+        width: 90%;
+        max-width: 500px;
+        aspect-ratio: 9 / 16;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 24px;
+        padding: 32px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      }
+
+      .question-number {
+        background: rgba(255,255,255,0.15);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        letter-spacing: 0.02em;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .question-text {
+        font-size: clamp(24px, 6vw, 32px);
+        font-weight: 400;
+        line-height: 1.4;
+        opacity: 0.98;
+        letter-spacing: -0.02em;
+        margin-bottom: 30px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        text-align: center;
+      }
+
+      .answers {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .answer-btn {
+        background: rgba(255,255,255,0.15);
+        border: 2px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 16px;
+        font-size: clamp(16px, 4vw, 20px);
+        font-weight: 500;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s;
+        user-select: none;
+        text-align: left;
+        letter-spacing: -0.01em;
+      }
+
+      .answer-btn:active {
+        transform: scale(0.98);
+      }
+
+      .answer-btn.correct {
+        background: rgba(34, 197, 94, 0.3);
+        border-color: rgba(34, 197, 94, 0.6);
+        color: #86efac;
+        font-weight: 600;
+      }
+
+      .answer-btn.incorrect {
+        background: rgba(239, 68, 68, 0.3);
+        border-color: rgba(239, 68, 68, 0.6);
+        color: #fca5a5;
+        font-weight: 600;
+      }
+
+      .answer-btn.disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+      }
+
+      /* Timer */
+      .timer-container {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .timer-display {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 12px 20px;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #ffffff;
+        min-width: 120px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .timer-display.running {
+        background: rgba(34, 197, 94, 0.2);
+        border-color: rgba(34, 197, 94, 0.4);
+        color: #86efac;
+      }
+
+      .timer-display.finished {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.4);
+        color: #fca5a5;
+        animation: pulse-timer 1s ease-in-out infinite;
+      }
+
+      @keyframes pulse-timer {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.05); }
+      }
+
+      .timer-controls {
+        display: flex;
+        gap: 8px;
+      }
+
+      .timer-btn {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: all 0.2s;
+        user-select: none;
+        flex: 1;
+      }
+
+      .timer-btn:active {
+        transform: scale(0.95);
+      }
+
+      .timer-btn.start {
+        background: rgba(34, 197, 94, 0.2);
+        border-color: rgba(34, 197, 94, 0.4);
+      }
+
+      .timer-btn.reset {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.4);
+      }
+
+      /* Progress bar */
+      .progress-bar {
+        position: fixed;
+        bottom: env(safe-area-inset-bottom, 20px);
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+        left: 20px;
+        right: 20px;
+        height: 4px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 2px;
+        overflow: hidden;
+        z-index: 100;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #22c55e, #38bdf8);
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      @media (max-width: 640px) {
+        .card {
+          padding: 24px 20px;
+        }
+        .question-text {
+          font-size: clamp(20px, 5vw, 28px);
+        }
+        .answer-btn {
+          padding: 14px 16px;
+          font-size: clamp(14px, 3.5vw, 18px);
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Timer -->
+    <div class="timer-container">
+      <div class="timer-display" id="timerDisplay">05:00</div>
+      <div class="timer-controls">
+        <button class="timer-btn start" id="timerStart">▶</button>
+        <button class="timer-btn reset" id="timerReset">↻</button>
+      </div>
+    </div>
+
+    <div class="container" id="container">
+      <!-- Cards will be inserted here by JavaScript -->
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <script>
+      const DATA = [
+        {q: "Hvor mange års undervisning skal alle børn som minimum have i Danmark?", a: ["Otte år", "Fem år", "Ti år"], c: 2},
+        {q: "Er folkeskolen i Danmark gratis for alle børn?", a: ["Ja", "Nej, forældrene skal betale et mindre beløb", "Kun for børn af forældre med lav indkomst"], c: 0},
+        {q: "Hvor lang tid varer skolegangen i folkeskolen?", a: ["9 år", "11 år", "10 år"], c: 2},
+        {q: "Hvilken alder starter børn normalt i børnehaveklassen?", a: ["Omkring tre år gamle", "Omkring seks år gamle", "Omkring syv år gamle"], c: 1},
+        {q: "Hvilke klassetrin følger efter børnehaveklassen i folkeskolen?", a: ["1. – 9. klasse", "1. – 10. klasse", "4. – 10. klasse"], c: 0},
+        {q: "Fra hvilken klasse får eleverne karakterer i folkeskolen (i en række fag)?", a: ["Fra 6. klasse", "Fra 7. klasse", "Fra 8. klasse"], c: 2},
+        {q: "Hvad er den højeste karakter på 7-trins-skalaen, der anvendes i Danmark?", a: ["12", "10", "7"], c: 0},
+        {q: "Hvad er den laveste karakter på 7-trins-skalaen?", a: ["0", "-3", "-5"], c: 1},
+        {q: "Hvad står forkortelsen FGU for?", a: ["Forberedende grunduddannelse", "Fritids Grundlæggende Undervisning", "Faglig Guide til Uddannelse"], c: 0},
+        {q: "Hvor mange år varer stx-, hhx- og htx-uddannelserne?", a: ["To år", "Tre år", "Fire år"], c: 1},
+        {q: "Hvor lang tid varer hf-uddannelsen?", a: ["Et år", "Tre år", "To år"], c: 2},
+        {q: "Hvor mange forskellige erhvervsuddannelser findes der cirka?", a: ["Cirka 50", "Mellem 50 og 100", "Mere end 100"], c: 2},
+        {q: "Hvor lang tid kan en erhvervsuddannelse tage?", a: ["Mellem 1 og 3 år", "Mellem 2 og 4 år", "Mellem 1½ og 5½ år"], c: 2},
+        {q: "Hvor lang tid tager en professionsbacheloruddannelse normalt?", a: ["1-2 år", "3-4 år", "5 år"], c: 1},
+        {q: "Hvor lang tid tager en bacheloruddannelse på et universitet typisk?", a: ["Omkring 3 år", "Omkring 4 år", "Omkring 5 år"], c: 0},
+        {q: "Hvor lang tid tager en efterfølgende kandidatuddannelse på et universitet typisk?", a: ["Omkring 1 år", "Omkring 2 år", "Omkring 3 år"], c: 1},
+        {q: "Hvor mange universiteter er der i Danmark?", a: ["Seks", "Otte", "Ti"], c: 1},
+        {q: "Hvad er SU en forkortelse for i forbindelse med økonomisk støtte til uddannelse?", a: ["Statens Uddannelsesstøtte", "Social Understøttelse", "Skattefri Uddannelsesydelse"], c: 0},
+        {q: "Hvad står forkortelsen AMU for (korte kurser primært rettet mod faglærte og ufaglærte)?", a: ["Almen Mellemlang Uddannelse", "Akademisk Mentor Uddannelse", "Arbejdsmarkedsuddannelser"], c: 2},
+        {q: "Hvilken alder skal en voksen normalt være fyldt for at kunne blive optaget på FVU-kurser (Fx læsning/staveproblemer)?", a: ["18 år", "20 år", "25 år"], c: 2},
+        {q: "Hvilket dagtilbud er for børn fra cirka tre år og op til seks år?", a: ["Vuggestue", "Børnehave", "Dagpleje"], c: 1},
+        {q: "Hvilken alder er typisk for børn i dagpleje?", a: ["Cirka seks måneder til cirka et år", "Cirka seks måneder til cirka tre år", "Cirka tre år til seks år"], c: 1},
+        {q: "Hvad står SFO for?", a: ["SkoleFritidsOrdning", "Social Fritids Oplysning", "Sport og Fritidsklub Organisation"], c: 0},
+        {q: "Hvor stor en andel af borgerne i Danmark mellem 15 og 64 år har et arbejde (ifølge 2023-kilden)?", a: ["Cirka halvdelen", "Cirka tre ud af fire", "Cirka ni ud af ti"], c: 1},
+        {q: "Hvad er den mest almindelige ugentlige arbejdstid for almindeligt lønarbejde i Danmark?", a: ["30 timer", "35 timer", "37 timer"], c: 2},
+        {q: "I hvilken periode har man normalt ret til at holde tre ugers ferie i sammenhæng?", a: ["Mellem den 1. juni og den 31. august", "Hele året", "Mellem den 1. maj og den 30. september"], c: 2},
+        {q: "Hvilket område repræsenterer fagforeningen HK primært?", a: ["Handel eller kontor", "Social- og sundhedsområdet", "Industri og byggeri"], c: 0},
+        {q: "Hvilket område repræsenterer fagforeningen FOA primært?", a: ["Industrien", "Hjemmeplejen, SOSU-assistenter og brandmænd", "Handel og transport"], c: 1},
+        {q: "Hvilket område repræsenterer fagforeningen 3F typisk?", a: ["Kontor og administration", "Sundhed og pædagogik", "Industri, transport og byggeri"], c: 2},
+        {q: "Cirka hvor stor en andel af landbrugsarealet i Danmark drives økologisk?", a: ["11 procent", "20 procent", "5 procent"], c: 0},
+        {q: "Hvor mange lande ejer Arla i dag?", a: ["Tre", "Syv", "Ti"], c: 1},
+        {q: "Hvilken dansk medicinalvirksomhed er kendt for at fremstille insulin?", a: ["GN Store Nord", "Lundbeck", "Novo Nordisk"], c: 2},
+        {q: "Hvad hedder verdens største vindmølleproducent (2024), som ligger i Danmark?", a: ["Vestas", "Siemens Gamesa", "Ørsted"], c: 0},
+        {q: "Hvilket dansk rederi er et af verdens to største, der sejler med containere?", a: ["DFDS", "Mærsk", "Royal Arctic Line"], c: 1},
+        {q: "Hvor mange medarbejdere beskæftiger servicevirksomheden ISS cirka verden over?", a: ["Omkring 100.000", "Omkring 300.000", "En halv million"], c: 2},
+        {q: "Hvilket land importerer Danmark mest fra (ifølge 2025-kilden)?", a: ["Tyskland", "USA", "Sverige"], c: 0},
+        {q: "Hvilket land eksporterer Danmark mest til (ifølge 2025-kilden)?", a: ["Holland", "USA", "Storbritannien"], c: 1},
+        {q: "Hvad er den danske moms (VAT) på varer?", a: ["15 procent", "20 procent", "25 procent"], c: 2},
+        {q: "Hvilken alder kan man tidligst blive gift i Danmark?", a: ["16 år", "18 år", "21 år"], c: 1},
+        {q: "Inden slutningen af hvilken graviditetsuge har en kvinde ret til at få en abort (ifølge 2025-kilden)?", a: ["8. graviditetsuge", "12. graviditetsuge", "18. graviditetsuge"], c: 2},
+        {q: "Hvilken aldersgrænse gælder for lønnet arbejde uden for hjemmet for børn?", a: ["Børn under 13 år må normalt ikke have det", "Børn under 15 år må ikke have det", "Børn under 18 år må ikke have det"], c: 0},
+        {q: "Det er forbudt at have sex med unge under en bestemt alder. Hvad er aldersgrænsen?", a: ["Under 18 år", "Under 15 år", "Under 16 år"], c: 1},
+        {q: "Hvor gammel skal man være for at købe almindelig øl i Danmark?", a: ["15 år", "16 år", "18 år"], c: 1},
+        {q: "Hvor gammel skal man være for at købe vin, spiritus eller cigaretter?", a: ["18 år", "16 år", "21 år"], c: 0},
+        {q: "Hvornår er unge ifølge loven myndige?", a: ["Når de fylder 16 år", "Når de fylder 18 år", "Når de fylder 21 år"], c: 1},
+        {q: "Hvor mange forskellige højskoler er der cirka i Danmark?", a: ["Omkring 30", "Omkring 50", "Omkring 70"], c: 2},
+        {q: "Hvem inspirerede udviklingen af højskoler i Danmark?", a: ["Nikolai Frederik Severin Grundtvig", "Ludvig Holberg", "H.C. Andersen"], c: 0},
+        {q: "Er der eksamen på en aftenskole eller højskole?", a: ["Ja, der er eksamen for alle fag", "Nej", "Kun i sprogfag"], c: 1},
+        {q: "Hvor længe kan børn og unge i Danmark få gratis tandpleje (ifølge 2025-kilden)?", a: ["Til og med 21 år", "Til og med 18 år", "Til og med 15 år"], c: 0},
+        {q: "Hvilken farve har Sundhedskortet (\"det gule kort\")?", a: ["Rødt", "Blåt", "Gult"], c: 2},
+        {q: "Er behandling på et privat sygehus gratis, hvis man henvises fra et offentligt sygehus på grund af lang ventetid?", a: ["Nej, man skal betale en del selv", "Ja", "Kun hvis man er medlem af sikringsgruppe 2"], c: 1},
+        {q: "Hvem får forældre til nyfødte besøg af i hjemmet (gratis)?", a: ["En sundhedsplejerske", "En socialrådgiver", "En praktiserende læge"], c: 0},
+        {q: "Er det forbudt at ryge indendørs på offentlige steder?", a: ["Nej, kun på skoler", "Kun på arbejdspladser", "Ja (ifølge rygeloven)"], c: 2},
+        {q: "Hvad er et symbol for LBGT+-personer i Danmark?", a: ["Det røde kors", "Regnbueflaget", "Valmuen"], c: 1},
+        {q: "Hvilket år blev den nuværende grundlov vedtaget?", a: ["1953", "1849", "1949"], c: 0},
+        {q: "Hvem underskriver lovforslag, efter de er vedtaget af Folketinget?", a: ["Justitsministeren", "Statsministeren", "Kongen/Dronningen og en minister"], c: 2},
+        {q: "Hvem er Danmarks statsoverhoved i 2025?", a: ["Dronning Margrethe 2.", "Kong Frederik 10.", "Statsministeren"], c: 1},
+        {q: "Hvem arver tronen, når monarken dør?", a: ["Det ældste barn", "Den ældste søn", "En kandidat valgt af Folketinget"], c: 0},
+        {q: "Hvem udgør den lovgivende magt i Danmark?", a: ["Regeringen alene", "Domstolene og Folketinget", "Regeringen og Folketinget i forening"], c: 2},
+        {q: "Hvem har den udøvende magt i Danmark?", a: ["Regeringen", "Folketinget", "Domstolene"], c: 0},
+        {q: "Hvem har den dømmende magt i Danmark?", a: ["Regeringen", "Domstolene", "Folketinget"], c: 1},
+        {q: "Hvor mange folkeafstemninger er der afholdt, siden den nuværende grundlov blev vedtaget i 1953 (ifølge 2025-kilden)?", a: ["10", "15", "16"], c: 2},
+        {q: "Hvis en person anholdes, hvor længe må personen maksimalt være fængslet uden at stilles for en dommer?", a: ["Inden for 24 timer", "Inden for 48 timer", "En uge"], c: 0},
+        {q: "Hvor gamle skal børn være for at kunne straffes med bøder eller fængsel?", a: ["13 år eller derover", "15 år eller derover", "18 år eller derover"], c: 1},
+        {q: "Hvad er den hårdeste straf i Danmark?", a: ["40 års fængsel", "Dødsstraf", "Fængsel på livstid"], c: 2},
+        {q: "Er der dødsstraf i Danmark?", a: ["Nej", "Ja, for særligt alvorlige forbrydelser", "Kun i krigstid"], c: 0},
+        {q: "Hvor mange byretter er der fordelt over hele landet (ekskl. Sø- og Handelsretten)?", a: ["10", "24", "55"], c: 1},
+        {q: "Hvor mange landsretter er der i Danmark?", a: ["En", "Tre", "To"], c: 2},
+        {q: "Hvor mange medlemmer har Folketinget i alt?", a: ["175", "179", "185"], c: 1},
+        {q: "Hvilke partier udgør flertalsregeringen siden 2022?", a: ["Socialdemokratiet, Venstre og Moderaterne", "Venstre, Konservative og Liberal Alliance", "Socialdemokratiet og Socialistisk Folkeparti"], c: 0},
+        {q: "Hvad kaldes en regering, hvis regeringspartierne ikke har flertal i Folketinget?", a: ["Mindretalsregering", "Koalitionsregering", "Teknokratregering"], c: 0},
+        {q: "Hvor mange kommuner er der i Danmark?", a: ["55", "98", "105"], c: 1},
+        {q: "Hvor mange regioner er Danmark opdelt i?", a: ["Fire", "Seks", "Fem"], c: 2},
+        {q: "Hvad kaldes formanden for kommunalbestyrelsen i København?", a: ["Overborgmesteren", "Regionsrådsformanden", "Statsforvalter"], c: 0},
+        {q: "Hvem har ansvar for driften af de offentlige sygehuse?", a: ["Kommunerne", "Regionerne", "Staten"], c: 1},
+        {q: "Hvor ofte holdes der valg til kommunalbestyrelser og regionsråd?", a: ["Hvert fjerde år", "Hvert tredje år", "Hvert femte år"], c: 0},
+        {q: "Hvor ofte er der valg til Europa-Parlamentet?", a: ["Hvert fjerde år", "Hvert femte år", "Hvert sjette år"], c: 1},
+        {q: "Hvor mange medlemmer vælger Danmark til Europa-Parlamentet (ifølge 2025-kilden)?", a: ["12", "14", "15"], c: 2},
+        {q: "Hvad betyder det at stemme blankt ved et valg?", a: ["Man sætter ikke et kryds på stemmesedlen", "Man stemmer på det mindste parti", "Man stemmer på alle kandidater"], c: 0},
+        {q: "Hvilke to pligter har borgerne i Danmark ifølge Fakta-ark 16?", a: ["Skattepligt og mødepligt", "Skattepligt og værnepligt", "Bopælspligt og stemmepligt"], c: 1},
+        {q: "Hvem har pligt til at være med til at forsvare landet (værnepligt) ifølge 2025-kilden?", a: ["Alle mænd over 18 år", "Alle mænd og kvinder over 18 år", "Alle mænd og kvinder over 18 år med dansk statsborgerskab"], c: 2},
+        {q: "Hvor mange måneder skal værnepligtige som udgangspunkt gøre tjeneste fra 2026 (ifølge 2025-kilden)?", a: ["11 måneder", "9 måneder", "4 måneder"], c: 0},
+        {q: "Hvornår blev religionsfriheden stadfæstet i Grundloven?", a: ["1915", "1849", "1953"], c: 1},
+        {q: "Hvilken kirke er ifølge Grundloven den danske folkekirke?", a: ["Den romersk-katolske kirke", "Den ortodokse kirke", "Den evangelisk-lutherske kirke"], c: 2},
+        {q: "I hvilket år brød Danmark med den katolske kirke (Reformationen)?", a: ["1536", "1660", "1849"], c: 0},
+        {q: "Cirka hvor stor en del af borgerne i Danmark er medlem af folkekirken (2025)?", a: ["Cirka 50 procent", "Cirka 71 procent", "Cirka 90 procent"], c: 1},
+        {q: "Hvor mange anerkendte trossamfund og menigheder findes der cirka i Danmark (ifølge 2025-kilden)?", a: ["150", "350", "436"], c: 2},
+        {q: "I hvilket år blev Danmark medlem af EU (dengang EF)?", a: ["1973", "1993", "2004"], c: 0},
+        {q: "Hvor mange af de 27 EU-lande har Euroen som fælles valuta?", a: ["15", "19", "27"], c: 1},
+        {q: "Hvornår blev FN (De Forenede Nationer) grundlagt?", a: ["1945", "1953", "1968"], c: 0},
+        {q: "Hvor stor en procentdel af BNI betaler Danmark i udviklingsbistand?", a: ["0,7 procent", "1,0 procent", "2,0 procent"], c: 0},
+        {q: "Hvad er Danmarks areal (uden Grønland og Færøerne)?", a: ["10.000 km²", "Lidt mere end 43.000 km²", "90.000 km²"], c: 1},
+        {q: "Hvor mange større og mindre øer består Danmark af?", a: ["Cirka 100", "Cirka 250", "Over 400"], c: 2},
+        {q: "Hvad er Danmarks cirka kystlinje?", a: ["2.500 km", "5.000 km", "7.300 km"], c: 2},
+        {q: "Hvad er Danmarks største ø?", a: ["Fyn", "Sjælland", "Vendsyssel-Thy"], c: 1},
+        {q: "Hvad kaldes det nordligste punkt i Danmark?", a: ["Gedser Odde", "Blåvands Huk", "Grenen"], c: 2},
+        {q: "Hvad hedder det højeste naturlige punkt i Danmark?", a: ["Himmelbjerget", "Rødding Højskole", "Møllehøj"], c: 2},
+        {q: "Hvor mange mennesker bor der cirka i Danmark (ifølge 2025-kilden)?", a: ["Cirka 4,5 millioner", "Cirka 6 millioner", "Cirka 7 millioner"], c: 1},
+        {q: "Hvor mange mennesker bor cirka i hovedstadsområdet?", a: ["Cirka 1 million", "Cirka 1,5 millioner", "Cirka 2 millioner"], c: 2},
+        {q: "Hvad er Danmarks næststørste by?", a: ["Odense", "Aarhus", "Aalborg"], c: 1}
+      ];
+
+      const state = {
+        order: [],
+        currentIndex: 0,
+        answered: []
+      };
+
+      let container;
+
+      function shuffle(array) {
+        const a = array.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function createCard(item, index, total) {
+        const answersHtml = item.a.map((answer, i) => 
+          `<button class="answer-btn" data-index="${index}" data-answer="${i}">${answer}</button>`
+        ).join('');
+        
+        return `
+          <div class="card-slide" data-index="${index}">
+            <div class="card">
+              <div class="question-number">${index + 1} / ${total}</div>
+              <div class="question-text">${item.q}</div>
+              <div class="answers">
+                ${answersHtml}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderCards() {
+        const total = state.order.length;
+        const html = state.order.map((dataIndex, i) => 
+          createCard(DATA[dataIndex], i, total)
+        ).join('');
+        container.innerHTML = html;
+
+        // Add event listeners for answers
+        document.querySelectorAll('.answer-btn').forEach(btn => {
+          btn.addEventListener('click', handleAnswer);
+        });
+
+        updateStats();
+      }
+
+      function handleAnswer(e) {
+        const cardIndex = parseInt(e.target.dataset.index);
+        const answerIndex = parseInt(e.target.dataset.answer);
+        const dataIndex = state.order[cardIndex];
+        const question = DATA[dataIndex];
+        
+        // Mark as answered
+        if (state.answered[cardIndex]) return;
+        state.answered[cardIndex] = true;
+
+        // Get all answer buttons for this card
+        const slide = e.target.closest('.card-slide');
+        const buttons = slide.querySelectorAll('.answer-btn');
+
+        // Check if answer is correct
+        const isCorrect = answerIndex === question.c;
+
+        buttons.forEach((btn, i) => {
+          btn.classList.add('disabled');
+          if (i === question.c) {
+            btn.classList.add('correct');
+          } else if (i === answerIndex && !isCorrect) {
+            btn.classList.add('incorrect');
+          }
+        });
+
+        // Show toast
+        if (isCorrect) {
+          showToast('✅ Правильно!');
+        } else {
+          showToast('❌ Неправильно');
+        }
+      }
+
+      function updateStats() {
+        const total = DATA.length;
+        const current = Math.floor(container.scrollTop / window.innerHeight) + 1;
+        
+        const progress = (current / total) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+      }
+
+      function reset() {
+        state.order = shuffle([...DATA.keys()]);
+        state.currentIndex = 0;
+        state.answered = [];
+        renderCards();
+        container.scrollTop = 0;
+      }
+
+      function init() {
+        container = document.getElementById('container');
+        
+        // Always shuffle cards on load
+        reset();
+
+        // Update stats on scroll
+        container.addEventListener('scroll', () => {
+          updateStats();
+        });
+      }
+
+      function showToast(message) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0,0,0,0.8);
+          color: white;
+          padding: 12px 24px;
+          border-radius: 24px;
+          z-index: 1000;
+          backdrop-filter: blur(10px);
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      // Timer functionality
+      let timerInterval = null;
+      let timeRemaining = 5 * 60;
+      let isTimerRunning = false;
+      const TIMER_DURATION = 5 * 60;
+
+      function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }
+
+      function updateTimerDisplay() {
+        const display = document.getElementById('timerDisplay');
+        display.textContent = formatTime(timeRemaining);
+        
+        if (timeRemaining === 0) {
+          display.classList.add('finished');
+          display.classList.remove('running');
+        } else if (isTimerRunning) {
+          display.classList.add('running');
+          display.classList.remove('finished');
+        } else {
+          display.classList.remove('running', 'finished');
+        }
+      }
+
+      function playAlarmSound() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const notes = [523.25, 659.25, 783.99];
+        
+        notes.forEach((freq, index) => {
+          setTimeout(() => {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = freq;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.8);
+          }, index * 300);
+        });
+        
+        showToast('⏰ Время истекло!');
+      }
+
+      function startTimer() {
+        if (isTimerRunning) {
+          clearInterval(timerInterval);
+          isTimerRunning = false;
+          document.getElementById('timerStart').textContent = '▶';
+          updateTimerDisplay();
+          return;
+        }
+
+        if (timeRemaining === 0) {
+          timeRemaining = TIMER_DURATION;
+        }
+
+        isTimerRunning = true;
+        document.getElementById('timerStart').textContent = '⏸';
+        
+        timerInterval = setInterval(() => {
+          timeRemaining--;
+          updateTimerDisplay();
+          
+          if (timeRemaining === 0) {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            document.getElementById('timerStart').textContent = '▶';
+            playAlarmSound();
+          }
+        }, 1000);
+      }
+
+      function resetTimer() {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        timeRemaining = TIMER_DURATION;
+        document.getElementById('timerStart').textContent = '▶';
+        updateTimerDisplay();
+      }
+
+      function initTimer() {
+        document.getElementById('timerStart').addEventListener('click', startTimer);
+        document.getElementById('timerReset').addEventListener('click', resetTimer);
+        updateTimerDisplay();
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        init();
+        initTimer();
+      });
+    </script>
+  </body>
+</html>
+
