@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>At skrive • Фразы для письма</title>
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        height: 100%;
+        overflow: hidden;
+        background: #000000;
+        color: #ffffff;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        touch-action: none;
+      }
+
+      .container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      .container::-webkit-scrollbar {
+        display: none;
+      }
+
+      .card-slide {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1400px;
+      }
+
+      .card {
+        position: relative;
+        width: 90%;
+        max-width: 500px;
+        aspect-ratio: 9 / 16;
+        transform-style: preserve-3d;
+        transition: transform 600ms cubic-bezier(.2,.8,.2,1);
+        cursor: pointer;
+      }
+
+      .card.is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      .face {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 24px;
+        padding: 32px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      }
+
+      .face.back {
+        transform: rotateY(180deg);
+        background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+      }
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .phrase-da {
+        font-size: clamp(28px, 7vw, 40px);
+        font-weight: 400;
+        line-height: 1.3;
+        opacity: 0.98;
+        letter-spacing: -0.02em;
+      }
+
+      .phrase-ru {
+        font-size: clamp(24px, 6vw, 34px);
+        font-weight: 700;
+        line-height: 1.3;
+        opacity: 0.98;
+        letter-spacing: -0.02em;
+        color: #7dd3fc;
+      }
+
+      .category {
+        background: rgba(255,255,255,0.15);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        letter-spacing: 0.02em;
+        margin-bottom: 20px;
+      }
+
+      .audio-controls {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+      }
+
+      .btn-audio {
+        width: 52px;
+        height: 52px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.25);
+        color: white;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+      }
+
+      .btn-audio:active {
+        transform: scale(0.9);
+      }
+
+      .btn-audio:hover {
+        background: rgba(255,255,255,0.25);
+      }
+
+      /* Timer */
+      .timer-container {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .timer-display {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 12px 20px;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #ffffff;
+        min-width: 120px;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .timer-display.running {
+        background: rgba(34, 197, 94, 0.2);
+        border-color: rgba(34, 197, 94, 0.4);
+        color: #86efac;
+      }
+
+      .timer-display.finished {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.4);
+        color: #fca5a5;
+        animation: pulse-timer 1s ease-in-out infinite;
+      }
+
+      @keyframes pulse-timer {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.05); }
+      }
+
+      .timer-controls {
+        display: flex;
+        gap: 8px;
+      }
+
+      .timer-btn {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: all 0.2s;
+        user-select: none;
+        flex: 1;
+      }
+
+      .timer-btn:active {
+        transform: scale(0.95);
+      }
+
+      .timer-btn.start {
+        background: rgba(34, 197, 94, 0.2);
+        border-color: rgba(34, 197, 94, 0.4);
+      }
+
+      .timer-btn.reset {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.4);
+      }
+
+      /* Progress bar */
+      .progress-bar {
+        position: fixed;
+        bottom: env(safe-area-inset-bottom, 20px);
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+        left: 20px;
+        right: 20px;
+        height: 4px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 2px;
+        overflow: hidden;
+        z-index: 100;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #22c55e, #38bdf8);
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+
+      @media (max-width: 640px) {
+        .card {
+          padding: 24px 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Timer -->
+    <div class="timer-container">
+      <div class="timer-display" id="timerDisplay">05:00</div>
+      <div class="timer-controls">
+        <button class="timer-btn start" id="timerStart">▶</button>
+        <button class="timer-btn reset" id="timerReset">↻</button>
+      </div>
+    </div>
+
+    <div class="container" id="container">
+      <!-- Cards will be inserted here by JavaScript -->
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <script>
+      const DATA = [
+        {da: "Det var hyggeligt at høre fra dig.", ru: "Было приятно услышать от тебя.", cat: "Приветствие"},
+        {da: "Tak for din mail.", ru: "Спасибо за твоё письмо.", cat: "Приветствие"},
+        {da: "Jeg håber, du har det godt.", ru: "Надеюсь, у тебя всё хорошо.", cat: "Приветствие"},
+        {da: "Jeg vil gerne svare på dine spørgsmål.", ru: "Я хочу ответить на твои вопросы.", cat: "Введение"},
+        {da: "Jeg vil gerne dele mine tanker om ...", ru: "Хочу поделиться своими мыслями о ...", cat: "Введение"},
+        {da: "Mht. [emne] spurgte du, om ...", ru: "Относительно [темы] ты спросил(а), ...", cat: "Введение"},
+        {da: "Når det kommer til [emne], synes jeg, at ...", ru: "Что касается [темы], я думаю, что ...", cat: "Мнение"},
+        {da: "Du bad mig fortælle om ...", ru: "Ты попросил(а) рассказать о ...", cat: "Введение"},
+        {da: "I forhold til [emne] vil jeg sige, at ...", ru: "Что касается [темы], я бы сказал(а), что ...", cat: "Мнение"},
+        {da: "Jeg mener, at ...", ru: "Я считаю, что ...", cat: "Мнение"},
+        {da: "Jeg synes, det er vigtigt, at ...", ru: "Думаю, важно, чтобы ...", cat: "Мнение"},
+        {da: "Det kan være svært, men ...", ru: "Это может быть сложно, но ...", cat: "Аргументация"},
+        {da: "Det afhænger af situationen.", ru: "Это зависит от ситуации.", cat: "Аргументация"},
+        {da: "For eksempel ...", ru: "Например ...", cat: "Примеры"},
+        {da: "Jeg håber, at mine svar kan hjælpe dig.", ru: "Надеюсь, мои ответы помогут тебе.", cat: "Заключение"},
+        {da: "Hvad siger du til det?", ru: "Что ты об этом думаешь?", cat: "Вопрос"},
+        {da: "Mange hilsner", ru: "С наилучшими пожеланиями", cat: "Прощание"},
+        {da: "Jeg er enig i, at ...", ru: "Я согласен с тем, что ...", cat: "Согласие"},
+        {da: "Jeg er ikke helt enig.", ru: "Я не совсем согласен.", cat: "Несогласие"},
+        {da: "Jeg kan godt forstå, at ...", ru: "Я хорошо понимаю, что ...", cat: "Понимание"},
+        {da: "Jeg synes, det er en god idé.", ru: "Думаю, это хорошая идея.", cat: "Мнение"},
+        {da: "Det har både fordele og ulemper.", ru: "У этого есть и плюсы, и минусы.", cat: "Анализ"},
+        {da: "Det kræver tid og energi.", ru: "Это требует времени и энергии.", cat: "Аргументация"},
+        {da: "Jeg håber, du kan bruge mine idéer.", ru: "Надеюсь, мои идеи тебе пригодятся.", cat: "Заключение"},
+        {da: "Pas godt på dig selv.", ru: "Береги себя.", cat: "Прощание"},
+        {da: "Diagrammet viser ...", ru: "Диаграмма показывает ...", cat: "Диаграмма"},
+        {da: "Ifølge diagrammet ...", ru: "Согласно диаграмме ...", cat: "Диаграмма"},
+        {da: "Tallene viser, at ...", ru: "Цифры показывают, что ...", cat: "Данные"},
+        {da: "Der er en stigning i ...", ru: "Наблюдается рост в ...", cat: "Тенденции"},
+        {da: "Der er et fald i ...", ru: "Наблюдается падение в ...", cat: "Тенденции"},
+        {da: "Antallet af ... er steget siden ...", ru: "Количество ... выросло с ...", cat: "Статистика"},
+        {da: "Antallet af ... er faldet siden ...", ru: "Количество ... снизилось с ...", cat: "Статистика"},
+        {da: "Den største gruppe er ...", ru: "Самая большая группа — ...", cat: "Группы"},
+        {da: "Den mindste gruppe er ...", ru: "Самая маленькая группа — ...", cat: "Группы"},
+        {da: "I alt er der ... personer.", ru: "Всего ... человек.", cat: "Итоги"},
+        {da: "Udviklingen viser, at ...", ru: "Развитие показывает, что ...", cat: "Тенденции"},
+        {da: "Sammenlignet med ...", ru: "По сравнению с ...", cat: "Сравнение"},
+        {da: "I 2010 var tallet ... men i 2020 ...", ru: "В 2010 году число было ..., а в 2020 ...", cat: "Сравнение"},
+        {da: "Det ser ud til, at ...", ru: "Кажется, что ...", cat: "Наблюдение"},
+        {da: "Der er en tydelig tendens til, at ...", ru: "Есть явная тенденция к тому, что ...", cat: "Тенденции"},
+        {da: "Man kan se en positiv udvikling.", ru: "Можно увидеть положительное развитие.", cat: "Оценка"},
+        {da: "Man kan se en negativ udvikling.", ru: "Можно увидеть отрицательную динамику.", cat: "Оценка"},
+        {da: "Der er store forskelle mellem ...", ru: "Есть большие различия между ...", cat: "Различия"},
+        {da: "Der er kun små ændringer.", ru: "Есть лишь небольшие изменения.", cat: "Изменения"},
+        {da: "Det er interessant, at ...", ru: "Интересно, что ...", cat: "Комментарий"},
+        {da: "Det overrasker mig, at ...", ru: "Меня удивляет, что ...", cat: "Комментарий"},
+        {da: "En mulig forklaring kan være, at ...", ru: "Возможное объяснение может быть в том, что ...", cat: "Объяснение"},
+        {da: "En anden årsag kan være, at ...", ru: "Другая причина может заключаться в том, что ...", cat: "Причины"},
+        {da: "Det skyldes måske, at ...", ru: "Возможно, это объясняется тем, что ...", cat: "Объяснение"},
+        {da: "Grunden til det er, at ...", ru: "Причина этого в том, что ...", cat: "Причины"},
+        {da: "Et muligt resultat er, at ...", ru: "Возможный результат заключается в том, что ...", cat: "Результаты"},
+        {da: "En fordel ved denne udvikling er, at ...", ru: "Преимущество этой тенденции в том, что ...", cat: "Плюсы"},
+        {da: "En anden fordel er, at ...", ru: "Другое преимущество состоит в том, что ...", cat: "Плюсы"},
+        {da: "En ulempe er, at ...", ru: "Недостаток заключается в том, что ...", cat: "Минусы"},
+        {da: "En anden ulempe er, at ...", ru: "Ещё один недостаток заключается в том, что ...", cat: "Минусы"},
+        {da: "Denne udvikling har både fordele og ulemper.", ru: "У этой тенденции есть и плюсы, и минусы.", cat: "Анализ"},
+        {da: "Det kan have positive konsekvenser.", ru: "Это может иметь положительные последствия.", cat: "Последствия"},
+        {da: "Det kan også have negative konsekvenser.", ru: "Это может иметь и отрицательные последствия.", cat: "Последствия"},
+        {da: "Det er vigtigt at bemærke, at ...", ru: "Важно отметить, что ...", cat: "Акцент"},
+        {da: "Det viser tydeligt, at ...", ru: "Это ясно показывает, что ...", cat: "Выводы"},
+        {da: "Det er et tydeligt eksempel på, at ...", ru: "Это очевидный пример того, что ...", cat: "Примеры"},
+        {da: "Jeg synes, det er en interessant udvikling.", ru: "Думаю, это интересная тенденция.", cat: "Мнение"},
+        {da: "Jeg tror, det fortsætter i fremtiden.", ru: "Думаю, это продолжится в будущем.", cat: "Прогноз"},
+        {da: "Det afhænger af mange faktorer.", ru: "Это зависит от многих факторов.", cat: "Факторы"},
+        {da: "Man kan diskutere, hvorfor ...", ru: "Можно обсудить, почему ...", cat: "Дискуссия"},
+        {da: "Måske skyldes det ...", ru: "Возможно, это связано с ...", cat: "Предположение"},
+        {da: "Der er flere grunde til det.", ru: "Есть несколько причин для этого.", cat: "Причины"},
+        {da: "En af grundene er, at ...", ru: "Одна из причин заключается в том, что ...", cat: "Причины"},
+        {da: "For det første ...", ru: "Во-первых ...", cat: "Структура"},
+        {da: "For det andet ...", ru: "Во-вторых ...", cat: "Структура"},
+        {da: "Desuden ...", ru: "Кроме того ...", cat: "Дополнение"},
+        {da: "Derudover ...", ru: "Помимо этого ...", cat: "Дополнение"},
+        {da: "På den ene side ...", ru: "С одной стороны ...", cat: "Контраст"},
+        {da: "På den anden side ...", ru: "С другой стороны ...", cat: "Контраст"},
+        {da: "Samlet set kan man sige, at ...", ru: "В целом можно сказать, что ...", cat: "Итог"},
+        {da: "Generelt viser tallene, at ...", ru: "В общем, данные показывают, что ...", cat: "Выводы"},
+        {da: "Det er et tegn på, at ...", ru: "Это знак того, что ...", cat: "Индикатор"},
+        {da: "Det kan være et problem, fordi ...", ru: "Это может быть проблемой, потому что ...", cat: "Проблемы"},
+        {da: "Det kan være en fordel, fordi ...", ru: "Это может быть преимуществом, потому что ...", cat: "Преимущества"},
+        {da: "Det kan have indflydelse på ...", ru: "Это может повлиять на ...", cat: "Влияние"},
+        {da: "Det hænger sammen med ...", ru: "Это связано с ...", cat: "Связь"},
+        {da: "Resultatet viser en klar tendens.", ru: "Результат показывает явную тенденцию.", cat: "Результаты"},
+        {da: "Der ses en stigning blandt unge.", ru: "Наблюдается рост среди молодёжи.", cat: "Группы"},
+        {da: "Der ses et fald blandt ældre.", ru: "Наблюдается спад среди пожилых.", cat: "Группы"},
+        {da: "Flere og flere ...", ru: "Всё больше и больше ...", cat: "Рост"},
+        {da: "Færre og færre ...", ru: "Всё меньше и меньше ...", cat: "Спад"},
+        {da: "Næsten halvdelen af ...", ru: "Почти половина ...", cat: "Пропорции"},
+        {da: "Omkring en tredjedel af ...", ru: "Примерно треть ...", cat: "Пропорции"},
+        {da: "En stor del af ...", ru: "Значительная часть ...", cat: "Доли"},
+        {da: "Kun en lille del af ...", ru: "Лишь небольшая часть ...", cat: "Доли"},
+        {da: "Udviklingen går i den rigtige retning.", ru: "Развитие идёт в правильном направлении.", cat: "Оценка"},
+        {da: "Udviklingen er bekymrende.", ru: "Эта тенденция вызывает беспокойство.", cat: "Оценка"},
+        {da: "Det er positivt, at ...", ru: "Позитивно то, что ...", cat: "Позитив"},
+        {da: "Det er negativt, at ...", ru: "Негативно то, что ...", cat: "Негатив"},
+        {da: "Jeg synes, det er vigtigt at følge udviklingen.", ru: "Думаю, важно следить за развитием ситуации.", cat: "Мнение"},
+        {da: "Det vil sige, at ...", ru: "То есть ...", cat: "Уточнение"},
+        {da: "Med andre ord ...", ru: "Другими словами ...", cat: "Перефраз"},
+        {da: "Som man kan se på figuren ...", ru: "Как видно на рисунке ...", cat: "Диаграмма"},
+        {da: "Ifølge undersøgelsen ...", ru: "Согласно исследованию ...", cat: "Источник"},
+        {da: "Jeg håber, tallene kan hjælpe med at forstå situationen bedre.", ru: "Надеюсь, эти данные помогут лучше понять ситуацию.", cat: "Заключение"}
+      ];
+
+      const appStateKey = "dansk-atskrive-v1";
+      const state = {
+        order: [],
+        currentIndex: 0
+      };
+
+      let container;
+      let audioContextReady = false;
+
+      function shuffle(array) {
+        const a = array.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function getCardColor(category) {
+        const colorMap = {
+          'Приветствие': 'linear-gradient(135deg, #1e40af 0%, #2563eb 100%)',
+          'Введение': 'linear-gradient(135deg, #0369a1 0%, #0284c7 100%)',
+          'Мнение': 'linear-gradient(135deg, #7e22ce 0%, #9333ea 100%)',
+          'Аргументация': 'linear-gradient(135deg, #ca8a04 0%, #eab308 100%)',
+          'Примеры': 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)',
+          'Заключение': 'linear-gradient(135deg, #be185d 0%, #db2777 100%)',
+          'Вопрос': 'linear-gradient(135deg, #6b21a8 0%, #7c3aed 100%)',
+          'Прощание': 'linear-gradient(135deg, #1f2937 0%, #374151 100%)',
+          'Согласие': 'linear-gradient(135deg, #047857 0%, #059669 100%)',
+          'Несогласие': 'linear-gradient(135deg, #be123c 0%, #e11d48 100%)',
+          'Понимание': 'linear-gradient(135deg, #0e7490 0%, #0891b2 100%)',
+          'Анализ': 'linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%)',
+          'Диаграмма': 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)',
+          'Данные': 'linear-gradient(135deg, #065f46 0%, #047857 100%)',
+          'Тенденции': 'linear-gradient(135deg, #92400e 0%, #b45309 100%)',
+          'Статистика': 'linear-gradient(135deg, #134e4a 0%, #115e59 100%)',
+          'Группы': 'linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%)',
+          'Итоги': 'linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)',
+          'Сравнение': 'linear-gradient(135deg, #0c4a6e 0%, #075985 100%)',
+          'Наблюдение': 'linear-gradient(135deg, #475569 0%, #64748b 100%)',
+          'Оценка': 'linear-gradient(135deg, #d97706 0%, #f59e0b 100%)',
+          'Различия': 'linear-gradient(135deg, #9f1239 0%, #be123c 100%)',
+          'Изменения': 'linear-gradient(135deg, #0f766e 0%, #0d9488 100%)',
+          'Комментарий': 'linear-gradient(135deg, #be123c 0%, #e11d48 100%)',
+          'Объяснение': 'linear-gradient(135deg, #ca8a04 0%, #eab308 100%)',
+          'Причины': 'linear-gradient(135deg, #92400e 0%, #b45309 100%)',
+          'Результаты': 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)',
+          'Плюсы': 'linear-gradient(135deg, #047857 0%, #059669 100%)',
+          'Минусы': 'linear-gradient(135deg, #b91c1c 0%, #dc2626 100%)',
+          'Последствия': 'linear-gradient(135deg, #6b21a8 0%, #7c3aed 100%)',
+          'Акцент': 'linear-gradient(135deg, #d97706 0%, #f59e0b 100%)',
+          'Выводы': 'linear-gradient(135deg, #1e40af 0%, #2563eb 100%)',
+          'Прогноз': 'linear-gradient(135deg, #7e22ce 0%, #9333ea 100%)',
+          'Факторы': 'linear-gradient(135deg, #0369a1 0%, #0284c7 100%)',
+          'Дискуссия': 'linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%)',
+          'Предположение': 'linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%)',
+          'Структура': 'linear-gradient(135deg, #1f2937 0%, #374151 100%)',
+          'Дополнение': 'linear-gradient(135deg, #134e4a 0%, #115e59 100%)',
+          'Контраст': 'linear-gradient(135deg, #be123c 0%, #e11d48 100%)',
+          'Индикатор': 'linear-gradient(135deg, #ca8a04 0%, #eab308 100%)',
+          'Проблемы': 'linear-gradient(135deg, #b91c1c 0%, #dc2626 100%)',
+          'Преимущества': 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)',
+          'Влияние': 'linear-gradient(135deg, #6b21a8 0%, #7c3aed 100%)',
+          'Связь': 'linear-gradient(135deg, #0e7490 0%, #0891b2 100%)',
+          'Рост': 'linear-gradient(135deg, #047857 0%, #059669 100%)',
+          'Спад': 'linear-gradient(135deg, #be123c 0%, #e11d48 100%)',
+          'Пропорции': 'linear-gradient(135deg, #0c4a6e 0%, #075985 100%)',
+          'Доли': 'linear-gradient(135deg, #475569 0%, #64748b 100%)',
+          'Позитив': 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)',
+          'Негатив': 'linear-gradient(135deg, #b91c1c 0%, #dc2626 100%)',
+          'Уточнение': 'linear-gradient(135deg, #0369a1 0%, #0284c7 100%)',
+          'Перефраз': 'linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%)',
+          'Источник': 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)'
+        };
+        return colorMap[category] || 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)';
+      }
+
+      function createCard(item, index, total) {
+        const bgColor = getCardColor(item.cat);
+        
+        return `
+          <div class="card-slide" data-index="${index}">
+            <div class="card" data-index="${index}">
+              <div class="face front" style="background: ${bgColor}">
+                <div class="category">${item.cat}</div>
+                <div class="main-content">
+                  <div class="phrase-da">${item.da}</div>
+                </div>
+                <div class="audio-controls">
+                  <button class="btn-audio speak-da-btn" data-index="${index}">🇩🇰</button>
+                  <button class="btn-audio speak-ru-btn" data-index="${index}">🇷🇺</button>
+                </div>
+              </div>
+              <div class="face back" style="background: ${bgColor}; filter: brightness(0.85);">
+                <div class="category">${item.cat}</div>
+                <div class="main-content">
+                  <div class="phrase-ru">${item.ru}</div>
+                </div>
+                <div class="audio-controls">
+                  <button class="btn-audio speak-da-btn" data-index="${index}">🇩🇰</button>
+                  <button class="btn-audio speak-ru-btn" data-index="${index}">🇷🇺</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderCards() {
+        const total = state.order.length;
+        const html = state.order.map((dataIndex, i) => 
+          createCard(DATA[dataIndex], i, total)
+        ).join('');
+        container.innerHTML = html;
+
+        // Add event listeners
+        document.querySelectorAll('.card').forEach((card, index) => {
+          card.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'BUTTON') {
+              flipCard(card);
+            }
+          });
+        });
+
+        document.querySelectorAll('.speak-da-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(e.target.dataset.index);
+            const dataIndex = state.order[index];
+            const item = DATA[dataIndex];
+            speak(item.da, 'da');
+          });
+        });
+
+        document.querySelectorAll('.speak-ru-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(e.target.dataset.index);
+            const dataIndex = state.order[index];
+            const item = DATA[dataIndex];
+            speak(item.ru, 'ru');
+          });
+        });
+
+        updateStats();
+      }
+
+      function flipCard(card) {
+        card.classList.toggle('is-flipped');
+      }
+
+      function updateStats() {
+        const total = DATA.length;
+        const current = Math.floor(container.scrollTop / window.innerHeight) + 1;
+        
+        const progress = (current / total) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+      }
+
+      function reset(doShuffle = true) {
+        state.order = doShuffle ? shuffle([...DATA.keys()]) : [...DATA.keys()];
+        state.currentIndex = 0;
+        renderCards();
+        container.scrollTop = 0;
+      }
+
+      // Speech synthesis
+      let voicesLoaded = false;
+      let availableVoices = [];
+        
+      function loadVoices() {
+        availableVoices = window.speechSynthesis.getVoices();
+        if (availableVoices.length > 0) {
+          voicesLoaded = true;
+          console.log('Loaded voices:', availableVoices.map(v => `${v.name} (${v.lang})`));
+        }
+      }
+        
+      if (window.speechSynthesis) {
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        
+        document.addEventListener('click', () => {
+          setTimeout(loadVoices, 100);
+        }, { once: true });
+      }
+
+      function selectBestVoice(lang) {
+        if (!voicesLoaded || availableVoices.length === 0) {
+          console.warn('No voices loaded yet');
+          return null;
+        }
+
+        const langCode = lang === 'da' ? 'da' : 'ru';
+        
+        const danishVoices = [
+          'sara', 'ida', 'christel', 'magnus', 'freja',
+          'google dansk', 'google danish',
+          'microsoft christel', 'dansk', 'danish', 'da-dk'
+        ];
+        const russianVoices = [
+          'yuri', 'milena', 'katya', 'ekaterina',
+          'google русский', 'google russian',
+          'microsoft ekaterina', 'russian', 'русский', 'ru-ru'
+        ];
+        
+        const preferredNames = lang === 'da' ? danishVoices : russianVoices;
+        
+        const exactMatches = availableVoices.filter(v => 
+          v.lang.toLowerCase().startsWith(langCode)
+        );
+        
+        const localVoices = exactMatches.filter(v => v.localService);
+        const remoteVoices = exactMatches.filter(v => !v.localService);
+        
+        for (const prefName of preferredNames) {
+          let voice = localVoices.find(v => 
+            v.name.toLowerCase().includes(prefName)
+          );
+          if (voice) return voice;
+          
+          voice = remoteVoices.find(v => 
+            v.name.toLowerCase().includes(prefName)
+          );
+          if (voice) return voice;
+        }
+        
+        if (localVoices.length > 0) return localVoices[0];
+        if (exactMatches.length > 0) return exactMatches[0];
+        
+        return null;
+      }
+
+      function cleanTextForSpeech(text, lang) {
+        if (!text) return text;
+        
+        let cleaned = text.trim();
+        cleaned = cleaned.replace(/<[^>]*>/g, '');
+        cleaned = cleaned.replace(/\s+/g, ' ');
+        
+        if (lang === 'da' || lang === 'ru') {
+          cleaned = cleaned.replace(/([,;:])/g, '$1 ');
+          cleaned = cleaned.replace(/\s+/g, ' ');
+        }
+        
+        if (!/[.!?…]$/.test(cleaned)) {
+          cleaned += '.';
+        }
+        
+        return cleaned;
+      }
+
+      function speak(text, lang) {
+        if (!window.speechSynthesis || !text) {
+          console.error('Speech synthesis not available');
+          return;
+        }
+        
+        const synth = window.speechSynthesis;
+        
+        if (synth.speaking) {
+          synth.cancel();
+        }
+        
+        setTimeout(() => {
+          const cleanedText = cleanTextForSpeech(text, lang);
+          
+          const utterance = new SpeechSynthesisUtterance(cleanedText);
+          utterance.lang = lang === 'da' ? 'da-DK' : 'ru-RU';
+          
+          const voice = selectBestVoice(lang);
+          if (voice) {
+            utterance.voice = voice;
+            console.log(`Speaking with voice: ${voice.name} (${voice.lang})`);
+          } else { 
+            console.warn(`No voice found for ${lang}, using default`);
+          }
+          
+          if (lang === 'da') {
+            utterance.rate = 0.82;
+            utterance.pitch = 1.05;
+            utterance.volume = 1.0;
+          } else if (lang === 'ru') {
+            utterance.rate = 0.88;
+            utterance.pitch = 0.98;
+            utterance.volume = 1.0;
+          }
+          
+          utterance.onerror = (event) => {
+            console.error('Speech error:', event.error, event);
+            if (event.error !== 'canceled') {
+              showToast('🔇 Ошибка воспроизведения');
+            }
+          };
+          
+          if (synth.paused) {
+            synth.resume();
+          }
+          
+          try {
+            synth.speak(utterance);
+            
+            setTimeout(() => {
+              if (synth.paused) {
+                synth.resume();
+              }
+            }, 100);
+          } catch (error) {
+            console.error('Failed to speak:', error);
+            showToast('🔇 Не удалось воспроизвести');
+          }
+        }, 150);
+      }
+
+      function init() {
+        container = document.getElementById('container');
+        
+        reset(true);
+
+        container.addEventListener('scroll', () => {
+          updateStats();
+        });
+
+        document.addEventListener('click', () => {
+          if (!audioContextReady) {
+            try {
+              if (window.speechSynthesis) {
+                window.speechSynthesis.resume();
+              }
+              audioContextReady = true;
+            } catch {}
+          }
+        }, { once: true });
+      }
+
+      function showToast(message) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0,0,0,0.8);
+          color: white;
+          padding: 12px 24px;
+          border-radius: 24px;
+          z-index: 1000;
+          backdrop-filter: blur(10px);
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      // Timer functionality
+      let timerInterval = null;
+      let timeRemaining = 5 * 60;
+      let isTimerRunning = false;
+      const TIMER_DURATION = 5 * 60;
+
+      function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      }
+
+      function updateTimerDisplay() {
+        const display = document.getElementById('timerDisplay');
+        display.textContent = formatTime(timeRemaining);
+        
+        if (timeRemaining === 0) {
+          display.classList.add('finished');
+          display.classList.remove('running');
+        } else if (isTimerRunning) {
+          display.classList.add('running');
+          display.classList.remove('finished');
+        } else {
+          display.classList.remove('running', 'finished');
+        }
+      }
+
+      function playAlarmSound() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const notes = [523.25, 659.25, 783.99];
+        
+        notes.forEach((freq, index) => {
+          setTimeout(() => {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = freq;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.8);
+          }, index * 300);
+        });
+        
+        showToast('⏰ Время истекло!');
+      }
+
+      function startTimer() {
+        if (isTimerRunning) {
+          clearInterval(timerInterval);
+          isTimerRunning = false;
+          document.getElementById('timerStart').textContent = '▶';
+          updateTimerDisplay();
+          return;
+        }
+
+        if (timeRemaining === 0) {
+          timeRemaining = TIMER_DURATION;
+        }
+
+        isTimerRunning = true;
+        document.getElementById('timerStart').textContent = '⏸';
+        
+        timerInterval = setInterval(() => {
+          timeRemaining--;
+          updateTimerDisplay();
+          
+          if (timeRemaining === 0) {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            document.getElementById('timerStart').textContent = '▶';
+            playAlarmSound();
+          }
+        }, 1000);
+      }
+
+      function resetTimer() {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        timeRemaining = TIMER_DURATION;
+        document.getElementById('timerStart').textContent = '▶';
+        updateTimerDisplay();
+      }
+
+      function initTimer() {
+        document.getElementById('timerStart').addEventListener('click', startTimer);
+        document.getElementById('timerReset').addEventListener('click', resetTimer);
+        updateTimerDisplay();
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        init();
+        initTimer();
+      });
+    </script>
+  </body>
+</html>
+
