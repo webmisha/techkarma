@@ -318,23 +318,22 @@
     <div class="top-stats">
       <div class="stat-pill" id="totalCount">0</div>
       <div class="stat-pill" id="progressText">0/0</div>
-      <div class="stat-pill" id="knownText">✓ 0</div>
-    </div>
+        </div>
 
     <div class="sidebar">
       <div>
         <div class="sidebar-btn" id="btnSpeakDa" title="Датский">🇩🇰</div>
         <div class="sidebar-label">Danish</div>
-      </div>
+              </div>
       <div>
         <div class="sidebar-btn" id="btnSpeakRu" title="Русский">🇷🇺</div>
         <div class="sidebar-label">Russian</div>
-      </div>
-    </div>
+              </div>
+        </div>
 
     <div class="container" id="container">
       <!-- Cards will be inserted here by JavaScript -->
-    </div>
+        </div>
 
     <div class="progress-bar">
       <div class="progress-fill" id="progressFill"></div>
@@ -739,7 +738,6 @@
       const appStateKey = "dansk-trainer-tiktok-v1";
       const state = {
         order: [],
-        known: new Set(),
         currentIndex: 0
       };
 
@@ -825,16 +823,13 @@
                   <div class="counter">${index + 1} / ${total}</div>
                 </div>
                 <div class="main-content">
+                  <div class="word-display">
+                    <span>${item.da}</span>
+                    <span class="emoji">${item.emoji || "✨"}</span>
+                  </div>
                   <div class="translation">${item.ru}</div>
-                  <div class="context">${item.ctxRu || ""} <span class="context-emoji">${item.emoji || "✨"}</span></div>
-                  <div class="note">${item.note || ""}</div>
                 </div>
                 <div class="actions">
-                  <button class="btn btn-success know-btn">👍 Знаю</button>
-                  <button class="btn btn-error dontknow-btn">🤔 Не знаю</button>
-                  <button class="btn btn-primary flip-btn">🔙 Назад</button>
-                  <button class="btn btn-primary speak-da-btn" data-index="${index}">🇩🇰</button>
-                  <button class="btn btn-primary speak-ru-btn" data-index="${index}">🇷🇺</button>
                 </div>
               </div>
             </div>
@@ -866,22 +861,6 @@
           });
         });
 
-        document.querySelectorAll('.know-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const index = parseInt(e.target.closest('.card-slide').dataset.index);
-            markCard(index, true);
-          });
-        });
-
-        document.querySelectorAll('.dontknow-btn').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const index = parseInt(e.target.closest('.card-slide').dataset.index);
-            markCard(index, false);
-          });
-        });
-
         document.querySelectorAll('.speak-da-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -909,37 +888,19 @@
         card.classList.toggle('is-flipped');
       }
 
-      function markCard(index, isKnown) {
-        const dataIndex = state.order[index];
-        if (isKnown) {
-          state.known.add(dataIndex);
-        }
-        persist();
-        updateStats();
-        
-        // Scroll to next card
-        const nextSlide = container.children[index + 1];
-        if (nextSlide) {
-          nextSlide.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-
       function updateStats() {
         const total = DATA.length;
-        const known = state.known.size;
         const current = Math.floor(container.scrollTop / window.innerHeight) + 1;
         
         document.getElementById('totalCount').textContent = `${total} карточек`;
         document.getElementById('progressText').textContent = `${current}/${state.order.length}`;
-        document.getElementById('knownText').textContent = `✓ ${known}`;
         
-        const progress = (known / total) * 100;
+        const progress = (current / total) * 100;
         document.getElementById('progressFill').style.width = progress + '%';
       }
 
       function reset(doShuffle = true) {
         state.order = doShuffle ? shuffle([...DATA.keys()]) : [...DATA.keys()];
-        state.known.clear();
         state.currentIndex = 0;
         persist();
         renderCards();
@@ -950,7 +911,6 @@
         try {
           localStorage.setItem(appStateKey, JSON.stringify({
             order: state.order,
-            known: Array.from(state.known),
             currentIndex: state.currentIndex
           }));
         } catch {}
@@ -964,7 +924,6 @@
           if (!Array.isArray(obj.order)) return false;
           state.order = obj.order.filter(x => x >= 0 && x < DATA.length);
           if (state.order.length !== DATA.length) return false;
-          state.known = new Set(obj.known || []);
           state.currentIndex = obj.currentIndex || 0;
           return true;
         } catch {
@@ -973,34 +932,34 @@
       }
 
       // Speech synthesis
-      let voicesLoaded = false;
+        let voicesLoaded = false;
       let availableVoices = [];
-
-      function loadVoices() {
+        
+        function loadVoices() {
         availableVoices = window.speechSynthesis.getVoices();
         if (availableVoices.length > 0) {
-          voicesLoaded = true;
+            voicesLoaded = true;
           console.log('Loaded voices:', availableVoices.map(v => `${v.name} (${v.lang})`));
+          }
         }
-      }
-
+        
       // Load voices on page load and when they change
       if (window.speechSynthesis) {
         loadVoices();
         window.speechSynthesis.onvoiceschanged = loadVoices;
         
         // Also try loading after user interaction (iOS requirement)
-        document.addEventListener('click', () => {
-          setTimeout(loadVoices, 100);
-        }, { once: true });
-      }
+          document.addEventListener('click', () => {
+            setTimeout(loadVoices, 100);
+          }, { once: true });
+        }
 
       function selectBestVoice(lang) {
         if (!voicesLoaded || availableVoices.length === 0) {
           console.warn('No voices loaded yet');
-          return null;
-        }
-
+            return null;
+          }
+          
         const langCode = lang === 'da' ? 'da' : 'ru';
         
         // Priority list of voice names for each language
@@ -1047,8 +1006,8 @@
         const synth = window.speechSynthesis;
         
         // Cancel any ongoing speech
-        synth.cancel();
-        
+          synth.cancel();
+          
         // Wait a bit for cancel to complete
         setTimeout(() => {
           const utterance = new SpeechSynthesisUtterance(text);
@@ -1061,7 +1020,7 @@
           if (voice) {
             utterance.voice = voice;
             console.log(`Speaking with voice: ${voice.name} (${voice.lang})`);
-          } else {
+            } else { 
             console.warn(`No voice found for ${lang}, using default`);
           }
           
@@ -1158,4 +1117,4 @@
       document.addEventListener('DOMContentLoaded', init);
     </script>
   </body>
-</html>
+  </html>
