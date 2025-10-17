@@ -323,20 +323,12 @@
 
     <div class="sidebar">
       <div>
-        <div class="sidebar-btn" id="btnShuffle" title="Перемешать">🔀</div>
-        <div class="sidebar-label">Shuffle</div>
-      </div>
-      <div>
         <div class="sidebar-btn" id="btnSpeakDa" title="Датский">🇩🇰</div>
         <div class="sidebar-label">Danish</div>
       </div>
       <div>
         <div class="sidebar-btn" id="btnSpeakRu" title="Русский">🇷🇺</div>
         <div class="sidebar-label">Russian</div>
-      </div>
-      <div>
-        <div class="sidebar-btn" id="btnReset" title="Сброс">🔁</div>
-        <div class="sidebar-label">Reset</div>
       </div>
     </div>
 
@@ -823,7 +815,9 @@
                   <div class="context">${ctxHtml}</div>
                 </div>
                 <div class="actions">
+                  <button class="btn btn-primary speak-da-btn" data-index="${index}">🇩🇰</button>
                   <button class="btn btn-primary flip-btn">🪄 Показать перевод</button>
+                  <button class="btn btn-primary speak-ru-btn" data-index="${index}">🇷🇺</button>
                 </div>
               </div>
               <div class="face back" style="background: ${bgColor}; filter: brightness(0.85);">
@@ -839,6 +833,8 @@
                   <button class="btn btn-success know-btn">👍 Знаю</button>
                   <button class="btn btn-error dontknow-btn">🤔 Не знаю</button>
                   <button class="btn btn-primary flip-btn">🔙 Назад</button>
+                  <button class="btn btn-primary speak-da-btn" data-index="${index}">🇩🇰</button>
+                  <button class="btn btn-primary speak-ru-btn" data-index="${index}">🇷🇺</button>
                 </div>
               </div>
             </div>
@@ -883,6 +879,26 @@
             e.stopPropagation();
             const index = parseInt(e.target.closest('.card-slide').dataset.index);
             markCard(index, false);
+          });
+        });
+
+        document.querySelectorAll('.speak-da-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(e.target.dataset.index);
+            const dataIndex = state.order[index];
+            const item = DATA[dataIndex];
+            speak(item.ctxDa || item.da, 'da');
+          });
+        });
+
+        document.querySelectorAll('.speak-ru-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(e.target.dataset.index);
+            const dataIndex = state.order[index];
+            const item = DATA[dataIndex];
+            speak(item.ctxRu || item.ru, 'ru');
           });
         });
 
@@ -990,11 +1006,6 @@
         });
 
         // Sidebar controls
-        document.getElementById('btnShuffle').addEventListener('click', () => {
-          reset(true);
-          showToast('🔀 Перемешано');
-        });
-
         document.getElementById('btnSpeakDa').addEventListener('click', () => {
           const card = getCurrentCard();
           if (card) speak(card.ctxDa || card.da, 'da');
@@ -1003,14 +1014,6 @@
         document.getElementById('btnSpeakRu').addEventListener('click', () => {
           const card = getCurrentCard();
           if (card) speak(card.ctxRu || card.ru, 'ru');
-        });
-
-        document.getElementById('btnReset').addEventListener('click', () => {
-          if (confirm('Сбросить весь прогресс?')) {
-            localStorage.removeItem(appStateKey);
-            reset(true);
-            showToast('🔁 Прогресс сброшен');
-          }
         });
 
         // Initialize audio context on first interaction
