@@ -973,18 +973,125 @@
       }
 
       // Speech synthesis
+      let voicesLoaded = false;
+      let availableVoices = [];
+
+      function loadVoices() {
+        availableVoices = window.speechSynthesis.getVoices();
+        if (availableVoices.length > 0) {
+          voicesLoaded = true;
+          console.log('Loaded voices:', availableVoices.map(v => `${v.name} (${v.lang})`));
+        }
+      }
+
+      // Load voices on page load and when they change
+      if (window.speechSynthesis) {
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        
+        // Also try loading after user interaction (iOS requirement)
+        document.addEventListener('click', () => {
+          setTimeout(loadVoices, 100);
+        }, { once: true });
+      }
+
+      function selectBestVoice(lang) {
+        if (!voicesLoaded || availableVoices.length === 0) {
+          console.warn('No voices loaded yet');
+          return null;
+        }
+
+        const langCode = lang === 'da' ? 'da' : 'ru';
+        
+        // Priority list of voice names for each language
+        const danishVoices = ['sara', 'ida', 'christel', 'dansk', 'danish', 'da-dk'];
+        const russianVoices = ['yuri', 'milena', 'katya', 'ekaterina', 'russian', 'русский', 'ru-ru'];
+        
+        const preferredNames = lang === 'da' ? danishVoices : russianVoices;
+        
+        // First, try to find voices that match the language code exactly
+        const exactMatches = availableVoices.filter(v => 
+          v.lang.toLowerCase().startsWith(langCode)
+        );
+        
+        console.log(`Found ${exactMatches.length} voices for ${langCode}:`, 
+          exactMatches.map(v => `${v.name} (${v.lang})`));
+        
+        // Try to find preferred voice by name
+        for (const prefName of preferredNames) {
+          const voice = exactMatches.find(v => 
+            v.name.toLowerCase().includes(prefName)
+          );
+          if (voice) {
+            console.log(`Selected preferred voice: ${voice.name} (${voice.lang})`);
+            return voice;
+          }
+        }
+        
+        // Fallback: use first exact match
+        if (exactMatches.length > 0) {
+          console.log(`Using fallback voice: ${exactMatches[0].name} (${exactMatches[0].lang})`);
+          return exactMatches[0];
+        }
+        
+        console.warn(`No ${langCode} voices found`);
+        return null;
+      }
+
       function speak(text, lang) {
-        if (!window.speechSynthesis || !text) return;
+        if (!window.speechSynthesis || !text) {
+          console.error('Speech synthesis not available');
+          return;
+        }
         
         const synth = window.speechSynthesis;
+        
+        // Cancel any ongoing speech
         synth.cancel();
         
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = lang === 'da' ? 'da-DK' : 'ru-RU';
-        utterance.rate = lang === 'da' ? 0.86 : 0.95;
-        utterance.pitch = 1.0;
-        
-        synth.speak(utterance);
+        // Wait a bit for cancel to complete
+        setTimeout(() => {
+          const utterance = new SpeechSynthesisUtterance(text);
+          
+          // Set language
+          utterance.lang = lang === 'da' ? 'da-DK' : 'ru-RU';
+          
+          // Try to select best voice
+          const voice = selectBestVoice(lang);
+          if (voice) {
+            utterance.voice = voice;
+            console.log(`Speaking with voice: ${voice.name} (${voice.lang})`);
+          } else {
+            console.warn(`No voice found for ${lang}, using default`);
+          }
+          
+          // Set speech parameters
+          utterance.rate = lang === 'da' ? 0.85 : 0.90;
+          utterance.pitch = 1.0;
+          utterance.volume = 1.0;
+          
+          // Error handling
+          utterance.onerror = (event) => {
+            console.error('Speech error:', event.error);
+            showToast('🔇 Ошибка воспроизведения');
+          };
+          
+          utterance.onstart = () => {
+            console.log(`Started speaking: "${text.substring(0, 50)}..."`);
+          };
+          
+          utterance.onend = () => {
+            console.log('Finished speaking');
+          };
+          
+          // Speak
+          try {
+            synth.speak(utterance);
+          } catch (error) {
+            console.error('Failed to speak:', error);
+            showToast('🔇 Не удалось воспроизвести');
+          }
+        }, 100);
       }
 
       function getCurrentCard() {
