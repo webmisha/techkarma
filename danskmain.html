@@ -832,11 +832,12 @@
         return a;
       }
 
-      function highlightContext(text, target) {
+      function highlightContext(text, target, emoji) {
         if (!text || !target) return text;
         const esc = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
         const re = new RegExp(`(\\b${esc}\\b)`, "i");
-        return text.replace(re, '<span class="mark">$1</span>');
+        const emojiHtml = emoji ? ` <span class="emoji">${emoji}</span>` : '';
+        return text.replace(re, `<span class="mark">$1</span>${emojiHtml}`);
       }
 
       function getCardColor(emoji) {
@@ -874,7 +875,7 @@
       }
 
       function createCard(item, index, total) {
-        const ctxHtml = highlightContext(item.ctxDa || item.da, item.da);
+        const ctxHtml = highlightContext(item.ctxDa || item.da, item.da, item.emoji);
         const bgColor = getCardColor(item.emoji);
         
         return `
