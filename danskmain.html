@@ -203,6 +203,40 @@
         flex-wrap: wrap;
       }
 
+      .audio-controls {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+      }
+
+      .btn-audio {
+        width: 52px;
+        height: 52px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.25);
+        color: white;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+      }
+
+      .btn-audio:active {
+        transform: scale(0.9);
+      }
+
+      .btn-audio:hover {
+        background: rgba(255,255,255,0.25);
+      }
+
       .btn {
         background: rgba(255,255,255,0.15);
         border: 1px solid rgba(255,255,255,0.2);
@@ -837,8 +871,10 @@
                   <div class="context">${ctxHtml}</div>
                 </div>
                 <div class="actions">
-                  <button class="btn btn-primary speak-da-btn" data-index="${index}">🇩🇰</button>
-                  <button class="btn btn-primary speak-ru-btn" data-index="${index}">🇷🇺</button>
+                </div>
+                <div class="audio-controls">
+                  <button class="btn-audio speak-da-btn" data-index="${index}">🇩🇰</button>
+                  <button class="btn-audio speak-ru-btn" data-index="${index}">🇷🇺</button>
                 </div>
               </div>
               <div class="face back" style="background: ${bgColor}; filter: brightness(0.85);">
@@ -854,6 +890,10 @@
                   ${item.mnemonic ? `<div class="mnemonic">💡 ${item.mnemonic}</div>` : ''}
                 </div>
                 <div class="actions">
+                </div>
+                <div class="audio-controls">
+                  <button class="btn-audio speak-da-btn" data-index="${index}">🇩🇰</button>
+                  <button class="btn-audio speak-ru-btn" data-index="${index}">🇷🇺</button>
                 </div>
               </div>
             </div>
