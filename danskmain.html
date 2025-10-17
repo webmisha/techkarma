@@ -1013,14 +1013,22 @@
       function selectBestVoice(lang) {
         if (!voicesLoaded || availableVoices.length === 0) {
           console.warn('No voices loaded yet');
-            return null;
-          }
-          
+          return null;
+        }
+
         const langCode = lang === 'da' ? 'da' : 'ru';
         
-        // Priority list of voice names for each language
-        const danishVoices = ['sara', 'ida', 'christel', 'dansk', 'danish', 'da-dk'];
-        const russianVoices = ['yuri', 'milena', 'katya', 'ekaterina', 'russian', 'русский', 'ru-ru'];
+        // Priority list of HIGH-QUALITY voice names for each language
+        const danishVoices = [
+          'sara', 'ida', 'christel', 'magnus', 'freja',  // macOS/iOS
+          'google dansk', 'google danish',                // Android/Chrome
+          'microsoft christel', 'dansk', 'danish', 'da-dk'
+        ];
+        const russianVoices = [
+          'yuri', 'milena', 'katya', 'ekaterina',        // macOS/iOS
+          'google русский', 'google russian',             // Android/Chrome  
+          'microsoft ekaterina', 'russian', 'русский', 'ru-ru'
+        ];
         
         const preferredNames = lang === 'da' ? danishVoices : russianVoices;
         
@@ -1030,20 +1038,39 @@
         );
         
         console.log(`Found ${exactMatches.length} voices for ${langCode}:`, 
-          exactMatches.map(v => `${v.name} (${v.lang})`));
+          exactMatches.map(v => `${v.name} (${v.lang}) [${v.localService ? 'local' : 'remote'}]`));
         
-        // Try to find preferred voice by name
+        // Prefer local voices (they're usually higher quality)
+        const localVoices = exactMatches.filter(v => v.localService);
+        const remoteVoices = exactMatches.filter(v => !v.localService);
+        
+        // Try to find preferred voice by name (prioritize local)
         for (const prefName of preferredNames) {
-          const voice = exactMatches.find(v => 
+          // First check local voices
+          let voice = localVoices.find(v => 
             v.name.toLowerCase().includes(prefName)
           );
           if (voice) {
-            console.log(`Selected preferred voice: ${voice.name} (${voice.lang})`);
+            console.log(`Selected local voice: ${voice.name} (${voice.lang})`);
+            return voice;
+          }
+          
+          // Then check remote voices
+          voice = remoteVoices.find(v => 
+            v.name.toLowerCase().includes(prefName)
+          );
+          if (voice) {
+            console.log(`Selected remote voice: ${voice.name} (${voice.lang})`);
             return voice;
           }
         }
         
-        // Fallback: use first exact match
+        // Fallback: prefer local voice if available
+        if (localVoices.length > 0) {
+          console.log(`Using fallback local voice: ${localVoices[0].name} (${localVoices[0].lang})`);
+          return localVoices[0];
+        }
+        
         if (exactMatches.length > 0) {
           console.log(`Using fallback voice: ${exactMatches[0].name} (${exactMatches[0].lang})`);
           return exactMatches[0];
@@ -1051,6 +1078,37 @@
         
         console.warn(`No ${langCode} voices found`);
         return null;
+      }
+
+      // Clean text for better speech quality
+      function cleanTextForSpeech(text, lang) {
+        if (!text) return text;
+        
+        let cleaned = text.trim();
+        
+        // Remove HTML tags if any
+        cleaned = cleaned.replace(/<[^>]*>/g, '');
+        
+        // Normalize spaces
+        cleaned = cleaned.replace(/\s+/g, ' ');
+        
+        // Add natural pauses for better prosody
+        if (lang === 'da') {
+          // Add pauses after Danish conjunctions
+          cleaned = cleaned.replace(/([,;:])/g, '$1 ');
+          cleaned = cleaned.replace(/\s+/g, ' ');
+        } else if (lang === 'ru') {
+          // Add pauses for Russian
+          cleaned = cleaned.replace(/([,;:])/g, '$1 ');
+          cleaned = cleaned.replace(/\s+/g, ' ');
+        }
+        
+        // Ensure proper sentence ending
+        if (!/[.!?…]$/.test(cleaned)) {
+          cleaned += '.';
+        }
+        
+        return cleaned;
       }
 
       function speak(text, lang) {
@@ -1061,14 +1119,19 @@
         
         const synth = window.speechSynthesis;
         
-        // Cancel any ongoing speech
+        // Cancel any ongoing speech smoothly
+        if (synth.speaking) {
           synth.cancel();
-          
-        // Wait a bit for cancel to complete
+        }
+        
+        // Wait for cancel to complete and voices to be ready
         setTimeout(() => {
-          const utterance = new SpeechSynthesisUtterance(text);
+          // Clean text for better quality
+          const cleanedText = cleanTextForSpeech(text, lang);
           
-          // Set language
+          const utterance = new SpeechSynthesisUtterance(cleanedText);
+          
+          // Set language explicitly
           utterance.lang = lang === 'da' ? 'da-DK' : 'ru-RU';
           
           // Try to select best voice
@@ -1076,37 +1139,65 @@
           if (voice) {
             utterance.voice = voice;
             console.log(`Speaking with voice: ${voice.name} (${voice.lang})`);
-            } else { 
+          } else {
             console.warn(`No voice found for ${lang}, using default`);
           }
           
-          // Set speech parameters
-          utterance.rate = lang === 'da' ? 0.85 : 0.90;
-          utterance.pitch = 1.0;
-          utterance.volume = 1.0;
+          // Optimized speech parameters for natural sound
+          if (lang === 'da') {
+            utterance.rate = 0.82;  // Slower for Danish
+            utterance.pitch = 1.05; // Slightly higher pitch
+            utterance.volume = 1.0;
+          } else if (lang === 'ru') {
+            utterance.rate = 0.88;  // Slower for Russian
+            utterance.pitch = 0.98; // Slightly lower pitch
+            utterance.volume = 1.0;
+          }
           
           // Error handling
           utterance.onerror = (event) => {
-            console.error('Speech error:', event.error);
-            showToast('🔇 Ошибка воспроизведения');
+            console.error('Speech error:', event.error, event);
+            if (event.error !== 'canceled') {
+              showToast('🔇 Ошибка воспроизведения');
+            }
           };
           
           utterance.onstart = () => {
-            console.log(`Started speaking: "${text.substring(0, 50)}..."`);
+            console.log(`Started speaking: "${cleanedText.substring(0, 50)}..."`);
           };
           
           utterance.onend = () => {
             console.log('Finished speaking');
           };
           
-          // Speak
+          utterance.onpause = () => {
+            console.log('Speech paused');
+          };
+          
+          utterance.onresume = () => {
+            console.log('Speech resumed');
+          };
+          
+          // Resume audio context if needed (iOS fix)
+          if (synth.paused) {
+            synth.resume();
+          }
+          
+          // Speak with error handling
           try {
             synth.speak(utterance);
+            
+            // iOS/Safari fix: resume after small delay
+            setTimeout(() => {
+              if (synth.paused) {
+                synth.resume();
+              }
+            }, 100);
           } catch (error) {
             console.error('Failed to speak:', error);
             showToast('🔇 Не удалось воспроизвести');
           }
-        }, 100);
+        }, 150);
       }
 
       function getCurrentCard() {
