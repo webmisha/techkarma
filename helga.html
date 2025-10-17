@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Helga AI • Your 24/7 AI Consultant</title>
+    <meta name="description" content="AI-powered mental health consultant available 24/7. Video consultations, automated social media content, and personalized support.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #fafafa;
+        --text-primary: #000000;
+        --text-secondary: #666666;
+        --accent: #0066ff;
+        --border: #e5e5e5;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+      
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      /* Header */
+      header {
+        padding: 30px 0;
+        border-bottom: 1px solid var(--border);
+        position: sticky;
+        top: 0;
+        background: var(--bg-primary);
+        z-index: 100;
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+        color: var(--text-primary);
+      }
+
+      .nav {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+      }
+
+      .nav a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+
+      .nav a:hover {
+        color: var(--text-primary);
+      }
+
+      .cta-button {
+        background: var(--text-primary);
+        color: var(--bg-primary);
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 15px;
+        transition: opacity 0.2s;
+      }
+
+      .cta-button:hover {
+        opacity: 0.8;
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 120px 0;
+        text-align: center;
+      }
+
+      .hero-badge {
+        display: inline-block;
+        background: var(--bg-secondary);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 30px;
+        letter-spacing: 0.02em;
+      }
+
+      h1 {
+        font-size: clamp(40px, 6vw, 72px);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        margin-bottom: 30px;
+      }
+
+      .hero-description {
+        font-size: clamp(18px, 2.5vw, 24px);
+        color: var(--text-secondary);
+        max-width: 800px;
+        margin: 0 auto 50px;
+        line-height: 1.5;
+      }
+
+      .hero-cta {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .primary-btn {
+        background: var(--text-primary);
+        color: var(--bg-primary);
+        padding: 16px 32px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 16px;
+        transition: transform 0.2s, opacity 0.2s;
+      }
+
+      .primary-btn:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+      }
+
+      .secondary-btn {
+        background: transparent;
+        color: var(--text-primary);
+        padding: 16px 32px;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 16px;
+        transition: border-color 0.2s;
+      }
+
+      .secondary-btn:hover {
+        border-color: var(--text-primary);
+      }
+
+      /* Features Section */
+      .features {
+        padding: 100px 0;
+        background: var(--bg-secondary);
+      }
+
+      .section-title {
+        font-size: clamp(32px, 4vw, 48px);
+        font-weight: 800;
+        margin-bottom: 60px;
+        letter-spacing: -0.02em;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 60px;
+      }
+
+      .feature {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .feature-icon {
+        font-size: 40px;
+        line-height: 1;
+      }
+
+      .feature h3 {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .feature p {
+        color: var(--text-secondary);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      /* Principles Section */
+      .principles {
+        padding: 100px 0;
+      }
+
+      .principle {
+        margin-bottom: 80px;
+      }
+
+      .principle:last-child {
+        margin-bottom: 0;
+      }
+
+      .principle h2 {
+        font-size: clamp(28px, 3vw, 36px);
+        font-weight: 700;
+        margin-bottom: 20px;
+        letter-spacing: -0.02em;
+      }
+
+      .principle-subtitle {
+        font-size: 18px;
+        font-style: italic;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+      }
+
+      .principle p {
+        font-size: 16px;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        max-width: 900px;
+      }
+
+      /* Use Cases */
+      .use-cases {
+        padding: 100px 0;
+        background: var(--bg-secondary);
+      }
+
+      .cases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 40px;
+      }
+
+      .case-card {
+        background: var(--bg-primary);
+        padding: 40px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+      }
+
+      .case-card h3 {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        letter-spacing: -0.01em;
+      }
+
+      .case-card p {
+        color: var(--text-secondary);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .case-feature {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+      }
+
+      .case-feature strong {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      /* Pricing */
+      .pricing {
+        padding: 100px 0;
+      }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 60px;
+      }
+
+      .pricing-card {
+        background: var(--bg-secondary);
+        padding: 40px 30px;
+        border-radius: 16px;
+        border: 2px solid var(--border);
+        transition: transform 0.2s, border-color 0.2s;
+      }
+
+      .pricing-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--text-primary);
+      }
+
+      .pricing-card.featured {
+        background: var(--text-primary);
+        color: var(--bg-primary);
+        border-color: var(--text-primary);
+      }
+
+      .pricing-card.featured .plan-name,
+      .pricing-card.featured .plan-price,
+      .pricing-card.featured .plan-features li {
+        color: var(--bg-primary);
+      }
+
+      .plan-name {
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 20px;
+      }
+
+      .plan-price {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 10px;
+        letter-spacing: -0.02em;
+      }
+
+      .plan-period {
+        font-size: 16px;
+        color: var(--text-secondary);
+        margin-bottom: 30px;
+      }
+
+      .pricing-card.featured .plan-period {
+        color: rgba(255,255,255,0.7);
+      }
+
+      .plan-features {
+        list-style: none;
+        margin-bottom: 30px;
+      }
+
+      .plan-features li {
+        padding: 10px 0;
+        font-size: 15px;
+        color: var(--text-secondary);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .pricing-card.featured .plan-features li {
+        border-bottom-color: rgba(255,255,255,0.2);
+      }
+
+      .plan-features li:last-child {
+        border-bottom: none;
+      }
+
+      .plan-cta {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        background: var(--text-primary);
+        color: var(--bg-primary);
+        text-align: center;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: opacity 0.2s;
+      }
+
+      .plan-cta:hover {
+        opacity: 0.8;
+      }
+
+      .pricing-card.featured .plan-cta {
+        background: var(--bg-primary);
+        color: var(--text-primary);
+      }
+
+      /* Footer */
+      footer {
+        padding: 80px 0 40px;
+        border-top: 1px solid var(--border);
+        background: var(--bg-secondary);
+      }
+
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 60px;
+        margin-bottom: 60px;
+      }
+
+      .footer-section h4 {
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 20px;
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-links li {
+        margin-bottom: 12px;
+      }
+
+      .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 15px;
+        transition: color 0.2s;
+      }
+
+      .footer-links a:hover {
+        color: var(--text-primary);
+      }
+
+      .footer-bottom {
+        text-align: center;
+        padding-top: 40px;
+        border-top: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
+
+      .footer-bottom-links {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .footer-bottom-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .footer-bottom-links a:hover {
+        color: var(--text-primary);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .container {
+          padding: 0 20px;
+        }
+
+        .nav {
+          gap: 20px;
+        }
+
+        .hero {
+          padding: 80px 0;
+        }
+
+        .features,
+        .principles,
+        .use-cases,
+        .pricing {
+          padding: 60px 0;
+        }
+
+        .features-grid,
+        .cases-grid,
+        .pricing-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-content {
+          flex-direction: column;
+          gap: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Header -->
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <a href="#" class="logo">HELGA AI</a>
+          <nav class="nav">
+            <a href="#features">Features</a>
+            <a href="#use-cases">Use Cases</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#contact" class="cta-button">Get Started</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <h1>Your Personal AI Mental Health Consultant, 24/7</h1>
+        <p class="hero-description">
+          Helga AI is an advanced AI-powered consultant that provides personalized mental health support through video consultations, automated content creation, and round-the-clock availability. Experience the future of accessible mental wellness.
+        </p>
+        <div class="hero-cta">
+          <a href="#pricing" class="primary-btn">Start Free Trial</a>
+          <a href="#features" class="secondary-btn">Learn More</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+      <div class="container">
+        <h2 class="section-title">Revolutionizing Mental Health Support</h2>
+        <div class="features-grid">
+          <div class="feature">
+            <div class="feature-icon">🎥</div>
+            <h3>AI Video Consultations</h3>
+            <p>Connect with Helga through live video sessions on Zoom, Google Meet, or our web platform. Experience natural conversations with realistic video and voice synthesis powered by cutting-edge AI.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-icon">🌍</div>
+            <h3>24/7 Availability</h3>
+            <p>No waiting lists, no scheduling conflicts. Get support whenever you need it, day or night, in multiple languages including Russian, English, and Danish.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-icon">📱</div>
+            <h3>Social Media Automation</h3>
+            <p>Helga automatically creates engaging Instagram Reels, Stories, and TikTok content with personalized mental health tips, motivation, and storytelling—all in your authentic voice and image.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-icon">🎯</div>
+            <h3>Personalized Support</h3>
+            <p>Built on a comprehensive knowledge base about depression and mental health, Helga adapts to your unique needs and provides tailored guidance for your personal journey.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-icon">🔒</div>
+            <h3>Private & Secure</h3>
+            <p>Your conversations are confidential and encrypted. We prioritize your privacy and follow strict data protection standards.</p>
+          </div>
+
+          <div class="feature">
+            <div class="feature-icon">💰</div>
+            <h3>Subscription Model</h3>
+            <p>Flexible pricing with monthly, yearly, and VIP options. Get unlimited access to consultations and exclusive content libraries based on your plan.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Principles Section -->
+    <section id="principles" class="principles">
+      <div class="container">
+        <div class="principle">
+          <h2>Always Available, Always Listening</h2>
+          <p class="principle-subtitle">Mental health doesn't follow a 9-to-5 schedule.</p>
+          <p>Helga AI provides immediate support when you need it most. Whether it's 3 AM or during a busy workday, access professional-grade mental health guidance without delays, appointments, or waiting rooms. Our AI consultant combines the empathy of human interaction with the reliability of 24/7 availability.</p>
+        </div>
+
+        <div class="principle">
+          <h2>Authentic Connection Through Technology</h2>
+          <p class="principle-subtitle">It should feel like talking to a real person.</p>
+          <p>Using advanced video synthesis, voice cloning, and natural language processing, Helga delivers consultations that feel genuinely personal. Our AI doesn't replace human therapists—it makes quality mental health support accessible to everyone, everywhere, breaking down barriers of cost, availability, and stigma.</p>
+        </div>
+
+        <div class="principle">
+          <h2>Content That Resonates</h2>
+          <p class="principle-subtitle">Your voice, your message, amplified.</p>
+          <p>Helga's social media automation creates authentic content that educates, inspires, and connects with your audience. From Instagram Stories sharing daily mental health tips to TikTok videos addressing common concerns, maintain a consistent, engaging presence without the constant content creation burden.</p>
+        </div>
+
+        <div class="principle">
+          <h2>Scalable Support for Everyone</h2>
+          <p class="principle-subtitle">One-to-one feels like one-to-thousands.</p>
+          <p>Whether you're supporting 10 clients or 10,000 subscribers, Helga scales seamlessly. Each person receives individualized attention, personalized responses, and meaningful interactions—without compromising quality or increasing your workload.</p>
+        </div>
+
+        <div class="principle">
+          <h2>Built on Proven AI Technology</h2>
+          <p class="principle-subtitle">Combining the best tools for the best results.</p>
+          <p>Helga integrates industry-leading AI platforms like HeyGen for video synthesis, ElevenLabs for voice cloning, and OpenAI GPT for conversational intelligence. We focus on what works in practice, ensuring every interaction is smooth, natural, and helpful.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section id="use-cases" class="use-cases">
+      <div class="container">
+        <h2 class="section-title">How Helga AI Works for You</h2>
+        <div class="cases-grid">
+          <div class="case-card">
+            <h3>AI Video Consultant</h3>
+            <p>Connect through Zoom, Google Meet, or our web platform for live video consultations. Helga responds in real-time with natural conversation, facial expressions, and voice that match your professional persona.</p>
+            <div class="case-feature">
+              <strong>Key Features:</strong>
+              Real-time video & audio • Instant booking • Session recordings • Multi-language support
+            </div>
+          </div>
+
+          <div class="case-card">
+            <h3>Subscription Platform</h3>
+            <p>Monetize your expertise with flexible subscription tiers. Manage everything from a simple admin panel—track subscribers, analyze engagement, and adjust content based on real data.</p>
+            <div class="case-feature">
+              <strong>Included:</strong>
+              Payment integration • CRM system • Analytics dashboard • Automated billing
+            </div>
+          </div>
+
+          <div class="case-card">
+            <h3>Social Media Automation</h3>
+            <p>Helga creates and posts Instagram Reels, Stories, TikTok videos, and YouTube Shorts automatically. Each piece features your image and voice, sharing mental health insights, answering common questions, and promoting your subscription service.</p>
+            <div class="case-feature">
+              <strong>Capabilities:</strong>
+              Auto-posting • Template library • Viral content strategies • Engagement tracking
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing">
+      <div class="container">
+        <h2 class="section-title">Choose Your Plan</h2>
+        <div class="pricing-grid">
+          <div class="pricing-card">
+            <div class="plan-name">Basic</div>
+            <div class="plan-price">$49</div>
+            <div class="plan-period">per month</div>
+            <ul class="plan-features">
+              <li>Up to 10 video consultations/month</li>
+              <li>24/7 text chat support</li>
+              <li>Access to content library</li>
+              <li>Email support</li>
+            </ul>
+            <a href="#contact" class="plan-cta">Get Started</a>
+          </div>
+
+          <div class="pricing-card featured">
+            <div class="plan-name">Advanced</div>
+            <div class="plan-price">$99</div>
+            <div class="plan-period">per month</div>
+            <ul class="plan-features">
+              <li>Unlimited video consultations</li>
+              <li>24/7 video & chat support</li>
+              <li>Full content library access</li>
+              <li>Priority support</li>
+              <li>Session recordings</li>
+              <li>Personalized action plans</li>
+            </ul>
+            <a href="#contact" class="plan-cta">Most Popular</a>
+          </div>
+
+          <div class="pricing-card">
+            <div class="plan-name">VIP</div>
+            <div class="plan-price">$199</div>
+            <div class="plan-period">per month</div>
+            <ul class="plan-features">
+              <li>Everything in Advanced</li>
+              <li>Exclusive 1-on-1 sessions (with real consultant)</li>
+              <li>Custom content creation</li>
+              <li>Premium support 24/7</li>
+              <li>Advanced analytics</li>
+              <li>API access</li>
+            </ul>
+            <a href="#contact" class="plan-cta">Contact Sales</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-section">
+            <h4>Product</h4>
+            <ul class="footer-links">
+              <li><a href="#features">Features</a></li>
+              <li><a href="#use-cases">Use Cases</a></li>
+              <li><a href="#pricing">Pricing</a></li>
+              <li><a href="#">API Documentation</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>Company</h4>
+            <ul class="footer-links">
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Careers</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>Resources</h4>
+            <ul class="footer-links">
+              <li><a href="#">Help Center</a></li>
+              <li><a href="#">Community</a></li>
+              <li><a href="#">Mental Health Guide</a></li>
+              <li><a href="#">Case Studies</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-section">
+            <h4>Legal</h4>
+            <ul class="footer-links">
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Cookie Policy</a></li>
+              <li><a href="#">GDPR Compliance</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <p>Helga AI © 2025</p>
+          <div class="footer-bottom-links">
+            <a href="#">Privacy Notice</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>
+
