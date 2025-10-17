@@ -1217,9 +1217,8 @@
       function init() {
         container = document.getElementById('container');
         
-        const restored = restore();
-        if (!restored) reset(true);
-        else renderCards();
+        // Always shuffle cards on load for random order
+        reset(true);
 
         // Update stats on scroll
         container.addEventListener('scroll', () => {
