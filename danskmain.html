@@ -311,29 +311,6 @@
         opacity: 0.8;
       }
 
-      /* Top bar stats */
-      .top-stats {
-        position: fixed;
-        top: env(safe-area-inset-top, 20px);
-        top: calc(env(safe-area-inset-top, 0px) + 20px);
-        left: 20px;
-        right: 80px;
-        z-index: 100;
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .stat-pill {
-        background: rgba(0,0,0,0.6);
-        backdrop-filter: blur(10px);
-        padding: 8px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        border: 1px solid rgba(255,255,255,0.1);
-        letter-spacing: 0.02em;
-      }
 
       /* Progress bar */
       .progress-bar {
@@ -372,10 +349,6 @@
     </style>
   </head>
   <body>
-    <div class="top-stats">
-      <div class="stat-pill" id="totalCount">0</div>
-      <div class="stat-pill" id="progressText">0/0</div>
-        </div>
 
     <div class="sidebar">
       <div>
@@ -422,7 +395,8 @@
           note: "Udtrykker modsætning med positiv vinkel.",
           emoji: "⚖️",
           ctxDa: "Til gengæld giver det mere fleksibilitet.",
-          ctxRu: "Зато это дает больше гибкости."
+          ctxRu: "Зато это дает больше гибкости.",
+          mnemonic: "ТИЛЬ ГЕНГЕЛЬД — ТИХО ГЕНдиректор выГнал, зато отдохнём"
         },
         {
           da: "alligevel",
@@ -430,7 +404,8 @@
           note: "Udtrykker modsætning til forventning.",
           emoji: "🔄",
           ctxDa: "Alligevel savner mange den daglige kontakt med kolleger.",
-          ctxRu: "Тем не менее многие скучают по ежедневному общению с коллегами."
+          ctxRu: "Тем не менее многие скучают по ежедневному общению с коллегами.",
+          mnemonic: "АЛЛИГЕВЕЛЬ — АЛЛЕ идут ГУЛЯТЬ, тем не менее работаем"
         },
         {
           da: "tværtimod",
@@ -438,7 +413,8 @@
           note: "Udtrykker direkte modsætning.",
           emoji: "🔄",
           ctxDa: "Tværtimod føler nogle sig mere produktive derhjemme.",
-          ctxRu: "Наоборот, некоторые чувствуют себя более продуктивными дома."
+          ctxRu: "Наоборот, некоторые чувствуют себя более продуктивными дома.",
+          mnemonic: "ТВЕРТИМОД — ТВЕРди МОДа, наоборот, мягкий стиль"
         },
         {
           da: "ikke desto mindre",
@@ -446,7 +422,8 @@
           note: "Formel måde at udtrykke modsætning.",
           emoji: "📝",
           ctxDa: "Ikke desto mindre er balancen vigtig.",
-          ctxRu: "Тем не менее баланс важен."
+          ctxRu: "Тем не менее баланс важен.",
+          mnemonic: "ИККЕ ДЕСТО — НЕ к МЕСТУ пришёл, тем не менее"
         },
         {
           da: "desuden",
@@ -463,7 +440,8 @@
           note: "Udtrykker parallelle begivenheder.",
           emoji: "⏰",
           ctxDa: "Samtidig bliver folk mere opmærksomme på stress.",
-          ctxRu: "Одновременно люди становятся более внимательными к стрессу."
+          ctxRu: "Одновременно люди становятся более внимательными к стрессу.",
+          mnemonic: "САМТИДИГ — САМ делаю ТИТАНИЧЕСКУЮ ДЕЛО, одновременно"
         },
         {
           da: "derfor",
@@ -480,7 +458,8 @@
           note: "Introducerer eksempel eller illustration.",
           emoji: "💡",
           ctxDa: "For eksempel tilbyder de fleksible arbejdstider.",
-          ctxRu: "Например, они предлагают гибкий график."
+          ctxRu: "Например, они предлагают гибкий график.",
+          mnemonic: "ФОР ЭКСЕМПЕЛЬ — ФОРма ЭКСцентрика, например"
         },
         {
           da: "derimod",
@@ -497,7 +476,8 @@
           note: "Udtrykker indrømmelse eller modsætning.",
           emoji: "🤔",
           ctxDa: "Selv om vejret i Danmark ofte er gråt, cykler folk stadig.",
-          ctxRu: "Хотя погода в Дании часто серая, люди всё равно ездят на велосипедах."
+          ctxRu: "Хотя погода в Дании часто серая, люди всё равно ездят на велосипедах.",
+          mnemonic: "СЕЛЬВ ОМ — СЕЛЬДЬ ОМерзительная, хотя съедобная"
         },
         {
           da: "endda",
@@ -505,15 +485,17 @@
           note: "Forstærker et udsagn.",
           emoji: "💪",
           ctxDa: "Endda om vinteren ser man mange på cykel.",
-          ctxRu: "Даже зимой можно увидеть многих на велосипедах."
+          ctxRu: "Даже зимой можно увидеть многих на велосипедах.",
+          mnemonic: "ЭНДДА — ЭНДшпиль ДАже опасный"
         },
         {
           da: "til sidst",
           ru: "наконец",
-          note: "Markerer afslutning eller konklusion.",
+          note: "Markerer afslutning eller konclusion.",
           emoji: "🏁",
           ctxDa: "Til sidst bør vi tale om miljøet.",
-          ctxRu: "Наконец, нам стоит поговорить об экологии."
+          ctxRu: "Наконец, нам стоит поговорить об экологии.",
+          mnemonic: "ТИЛЬ СИДСТ — ТИХО СИДел СТаром, наконец встал"
         },
         {
           da: "mens",
@@ -521,7 +503,8 @@
           note: "Udtrykker parallelle begivenheder med kontrast.",
           emoji: "⏳",
           ctxDa: "Mens nogle fokuserer på klimaet, tænker andre på økonomien.",
-          ctxRu: "В то время как одни думают о климате, другие — об экономике."
+          ctxRu: "В то время как одни думают о климате, другие — об экономике.",
+          mnemonic: "МЕНС — МЕНя окружили, в то время как убегаю"
         },
         {
           da: "på den ene side",
@@ -529,7 +512,8 @@
           note: "Introducerer første del af kontrast.",
           emoji: "📊",
           ctxDa: "På den ene side ønsker man vækst, på den anden side bæredygtighed.",
-          ctxRu: "С одной стороны хотят роста, с другой — устойчивости."
+          ctxRu: "С одной стороны хотят роста, с другой — устойчивости.",
+          mnemonic: "ПО ДЕН ЕНЕ СИДЕ — ПО ДНУ ЕДЕм СИДЯ, с одной стороны"
         },
         {
           da: "i øvrigt",
@@ -865,7 +849,6 @@
             <div class="card" data-index="${index}">
               <div class="face front" style="background: ${bgColor}">
                 <div class="top-bar">
-                  <div class="counter">${index + 1} / ${total}</div>
                 </div>
                 <div class="main-content">
                   <div class="context">${ctxHtml}</div>
@@ -879,7 +862,6 @@
               </div>
               <div class="face back" style="background: ${bgColor}; filter: brightness(0.85);">
                 <div class="top-bar">
-                  <div class="counter">${index + 1} / ${total}</div>
                 </div>
                 <div class="main-content">
                   <div class="word-display">
@@ -890,10 +872,6 @@
                   ${item.mnemonic ? `<div class="mnemonic">💡 ${item.mnemonic}</div>` : ''}
                 </div>
                 <div class="actions">
-                </div>
-                <div class="audio-controls">
-                  <button class="btn-audio speak-da-btn" data-index="${index}">🇩🇰</button>
-                  <button class="btn-audio speak-ru-btn" data-index="${index}">🇷🇺</button>
                 </div>
               </div>
             </div>
@@ -947,9 +925,6 @@
       function updateStats() {
         const total = DATA.length;
         const current = Math.floor(container.scrollTop / window.innerHeight) + 1;
-        
-        document.getElementById('totalCount').textContent = `${total} карточек`;
-        document.getElementById('progressText').textContent = `${current}/${state.order.length}`;
         
         const progress = (current / total) * 100;
         document.getElementById('progressFill').style.width = progress + '%';
@@ -1077,9 +1052,9 @@
         }
         
         console.warn(`No ${langCode} voices found`);
-        return null;
-      }
-
+            return null;
+          }
+          
       // Clean text for better speech quality
       function cleanTextForSpeech(text, lang) {
         if (!text) return text;
@@ -1130,8 +1105,8 @@
           const cleanedText = cleanTextForSpeech(text, lang);
           
           const utterance = new SpeechSynthesisUtterance(cleanedText);
-          
-          // Set language explicitly
+            
+            // Set language explicitly
           utterance.lang = lang === 'da' ? 'da-DK' : 'ru-RU';
           
           // Try to select best voice
@@ -1139,7 +1114,7 @@
           if (voice) {
             utterance.voice = voice;
             console.log(`Speaking with voice: ${voice.name} (${voice.lang})`);
-          } else {
+            } else { 
             console.warn(`No voice found for ${lang}, using default`);
           }
           
