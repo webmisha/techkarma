@@ -2,303 +2,339 @@
 <html lang="ru">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dansk • Флешкарты союзов и связок</title>
-    <meta name="theme-color" content="#0ea5e9" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Dansk • Флешкарты</title>
+    <meta name="theme-color" content="#000000" />
     <style>
-      :root {
-        --bg: #ffffff;
-        --surface: #f8fafc; /* slate-50 */
-        --card: #ffffff;
-        --muted: #475569; /* slate-600 */
-        --text: #0f172a; /* slate-900 */
-        --accent: #0ea5e9; /* sky-500 */
-        --good: #16a34a; /* green-600 */
-        --warn: #d97706; /* amber-600 */
-        --bad: #dc2626;  /* red-600 */
-        --ring: 14 165 233;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
+      
       html, body {
         height: 100%;
-        margin: 0;
-        background: radial-gradient(1200px 700px at 0% 0%, #eef6ff, transparent),
-                    radial-gradient(900px 500px at 100% 0%, #f5f9ff, transparent),
-                    radial-gradient(900px 500px at 50% 100%, #f8fbff, transparent),
-                    var(--bg);
-        color: var(--text);
-        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        overflow: hidden;
+        background: #000000;
+        color: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        touch-action: none;
       }
-      .app {
-        max-width: 920px;
-        margin: 0 auto;
-        padding: 16px 16px 64px;
-        display: grid;
-        grid-template-rows: auto 1fr auto;
-        gap: 16px;
-        min-height: 100dvh;
+
+      .container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
       }
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+
+      .container::-webkit-scrollbar {
+        display: none;
       }
-      .title {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 700;
-        letter-spacing: 0.2px;
-      }
-      .title em {
-        font-style: normal;
-        color: var(--accent);
-      }
-      .toolbar {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        align-items: center;
-      }
-      .pill {
-        background: rgba(14, 165, 233, 0.10);
-        color: var(--accent);
-        border: 1px solid rgba(14, 165, 233, 0.30);
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-      }
-      .stats {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-      .stats .pill {
-        border-color: rgba(15, 23, 42, 0.12);
-        color: var(--muted);
-        background: rgba(2, 6, 23, 0.04);
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-      .card-wrap {
-        perspective: 1400px;
-        display: grid;
-        place-items: center;
-      }
-      .card {
-        width: min(720px, 100%);
-        aspect-ratio: 16 / 10;
-        background: linear-gradient(180deg, rgba(2,6,23,0.02), rgba(2,6,23,0.0)), var(--card);
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+
+      .card-slide {
         position: relative;
-        transform-style: preserve-3d;
-        transition: transform 600ms cubic-bezier(.2,.8,.2,1), box-shadow 200ms;
-        cursor: pointer;
-        outline: none;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        perspective: 1400px;
       }
-      .card:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.12); }
-      .card.is-flipped { transform: rotateY(180deg); }
+
+      .card {
+        position: relative;
+        width: 90%;
+        max-width: 500px;
+        aspect-ratio: 9 / 16;
+        transform-style: preserve-3d;
+        transition: transform 600ms cubic-bezier(.2,.8,.2,1);
+        cursor: pointer;
+      }
+
+      .card.is-flipped {
+        transform: rotateY(180deg);
+      }
+
       .face {
         position: absolute;
         inset: 0;
         backface-visibility: hidden;
-        display: grid;
-        grid-template-rows: auto 1fr auto;
-        padding: 20px;
-      }
-      .face .top-row {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 24px;
+        padding: 32px 24px;
         display: flex;
-        align-items: center;
+        flex-direction: column;
         justify-content: space-between;
-        gap: 8px;
-        color: var(--muted);
-        font-size: 14px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
       }
-      .face .main {
-        display: grid;
-        place-items: center;
-        text-align: center;
-        padding: 4px;
+
+      .face.back {
+        transform: rotateY(180deg);
+        background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
       }
-      .da { font-size: clamp(18px, 4.5vw, 28px); font-weight: 600; }
-      .context {
-        font-size: clamp(18px, 4.5vw, 26px);
-        line-height: 1.35;
-        max-width: 88%;
+
+      .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
       }
-      .mark {
-        background: rgba(14,165,233,0.20);
-        color: #0c4a6e;
-        padding: 0 4px;
-        border-radius: 6px;
-      }
+
       .emoji {
-        font-size: clamp(24px, 5.5vw, 40px);
-        filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+        font-size: 48px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
       }
-      .hint {
+
+      .counter {
+        background: rgba(255,255,255,0.15);
+        padding: 8px 16px;
+        border-radius: 20px;
         font-size: 14px;
-        color: var(--muted);
-      }
-      .back { transform: rotateY(180deg); }
-      .ru {
-        font-size: clamp(18px, 4.5vw, 26px);
         font-weight: 600;
+        backdrop-filter: blur(10px);
       }
-      .note {
-        margin-top: 8px;
-        color: var(--muted);
-        font-size: 14px;
-      }
-      .controls {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-      }
-      .controls button {
-        background: linear-gradient(180deg, rgba(2,6,23,0.03), rgba(2,6,23,0.0));
-        color: var(--text);
-        border: 1px solid rgba(15, 23, 42, 0.12);
-        border-radius: 12px;
-        padding: 12px 14px;
-        font-size: 15px;
-        display: inline-flex;
+
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 8px;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .word-display {
+        font-size: clamp(24px, 6vw, 36px);
+        font-weight: 700;
+        line-height: 1.4;
+        margin-bottom: 12px;
+      }
+
+      .context {
+        font-size: clamp(18px, 4.5vw, 24px);
+        line-height: 1.5;
+        opacity: 0.95;
+      }
+
+      .mark {
+        background: rgba(56, 189, 248, 0.3);
+        color: #38bdf8;
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-weight: 600;
+      }
+
+      .translation {
+        font-size: clamp(20px, 5vw, 28px);
+        font-weight: 600;
+        line-height: 1.4;
+        margin-bottom: 16px;
+      }
+
+      .note {
+        font-size: 16px;
+        opacity: 0.7;
+        line-height: 1.6;
+        margin-top: 12px;
+      }
+
+      .hint {
+        font-size: 14px;
+        opacity: 0.6;
+        text-align: center;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 0.3; }
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 24px;
+        font-size: 14px;
+        font-weight: 600;
         cursor: pointer;
-        transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+        backdrop-filter: blur(10px);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
         user-select: none;
       }
-      .controls button:hover { transform: translateY(-1px); }
-      .controls button:active { transform: translateY(0); }
-      .controls .ok { border-color: rgba(22,163,74,.45); }
-      .controls .nok { border-color: rgba(220,38,38,.45); }
-      .controls .flip { border-color: rgba(217,119,6,.45); }
-      .controls .shuffle { border-color: rgba(14,165,233,.45); }
 
-      .progress {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 10px;
+      .btn:active {
+        transform: scale(0.95);
+      }
+
+      .btn-success {
+        background: rgba(34, 197, 94, 0.2);
+        border-color: rgba(34, 197, 94, 0.4);
+      }
+
+      .btn-error {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.4);
+      }
+
+      .btn-primary {
+        background: rgba(56, 189, 248, 0.2);
+        border-color: rgba(56, 189, 248, 0.4);
+      }
+
+      /* Sidebar UI */
+      .sidebar {
+        position: fixed;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        z-index: 100;
+      }
+
+      .sidebar-btn {
+        width: 56px;
+        height: 56px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
         align-items: center;
-      }
-      .bar {
-        height: 10px;
-        background: rgba(15, 23, 42, 0.08);
-        border-radius: 999px;
-        overflow: hidden;
-        border: 1px solid rgba(15, 23, 42, 0.12);
-      }
-      .bar > span {
-        display: block;
-        height: 100%;
-        width: 0;
-        background: linear-gradient(90deg, #22c55e, #38bdf8);
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        font-size: 24px;
+        transition: all 0.2s;
       }
 
-      .small {
-        font-size: 12px;
-        color: var(--muted);
+      .sidebar-btn:active {
+        transform: scale(0.9);
       }
-      .muted-link {
-        color: var(--muted);
-        text-decoration: underline dotted rgba(148, 163, 184, 0.35);
-        cursor: pointer;
+
+      .sidebar-label {
+        font-size: 11px;
+        text-align: center;
+        margin-top: 4px;
+        opacity: 0.8;
+      }
+
+      /* Top bar stats */
+      .top-stats {
+        position: fixed;
+        top: env(safe-area-inset-top, 20px);
+        top: calc(env(safe-area-inset-top, 0px) + 20px);
+        left: 20px;
+        right: 80px;
+        z-index: 100;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .stat-pill {
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(10px);
+        padding: 8px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid rgba(255,255,255,0.1);
+      }
+
+      /* Progress bar */
+      .progress-bar {
+        position: fixed;
+        bottom: env(safe-area-inset-bottom, 20px);
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+        left: 20px;
+        right: 20px;
+        height: 4px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 2px;
+        overflow: hidden;
+        z-index: 100;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #22c55e, #38bdf8);
+        width: 0%;
+        transition: width 0.3s ease;
       }
 
       @media (max-width: 640px) {
-        .controls { grid-template-columns: repeat(2, 1fr); }
-        header { flex-direction: column; align-items: flex-start; }
-        .stats { width: 100%; }
+        .sidebar {
+          right: 12px;
+        }
+        .sidebar-btn {
+          width: 48px;
+          height: 48px;
+          font-size: 20px;
+        }
+        .top-stats {
+          right: 70px;
+        }
       }
-
-      
     </style>
   </head>
   <body>
-    <div class="app" id="app">
-      <header>
-        <div class="title" role="heading" aria-level="1">
-          <span class="emoji" aria-hidden="true">🇩🇰</span>
-          <span>Dansk • Связки и вводные слова <em>тренажёр</em></span>
-        </div>
-        <div class="toolbar">
-          <span class="pill" id="totalCount">0 карточек</span>
-          <div class="stats">
-            <span class="pill" id="progressText">0 / 0</span>
-            <span class="pill" id="knownText">Знаю: 0</span>
-            <span class="pill" id="unknownText">Не знаю: 0</span>
-          </div>
-        </div>
-      </header>
+    <div class="top-stats">
+      <div class="stat-pill" id="totalCount">0</div>
+      <div class="stat-pill" id="progressText">0/0</div>
+      <div class="stat-pill" id="knownText">✓ 0</div>
+    </div>
 
-      <main class="grid">
-        <div class="card-wrap">
-          <article class="card" id="card" tabindex="0" aria-live="polite" aria-label="Флешкарта" title="Нажмите для переворота">
-            <section class="face front">
-              <div class="top-row">
-                <span class="hint" id="hint">Нажмите для переворота</span>
-                <span class="emoji" id="emojiFront">✨</span>
-              </div>
-              <div class="main">
-                <div class="context" id="context">—</div>
-              </div>
-              <div class="small" id="idx">0 / 0</div>
-            </section>
-            <section class="face back">
-              <div class="top-row">
-                <span class="hint">Обратная сторона</span>
-                <span class="emoji" id="emojiBack">🧠</span>
-              </div>
-              <div class="main">
-                <div class="ru" id="ru">—</div>
-                <div class="note" id="note">—</div>
-                <div class="note" id="ctxRu">—</div>
-              </div>
-              <div class="small">Отметьте: знаю / не знаю</div>
-            </section>
-          </article>
-        </div>
+    <div class="sidebar">
+      <div>
+        <div class="sidebar-btn" id="btnShuffle" title="Перемешать">🔀</div>
+        <div class="sidebar-label">Shuffle</div>
+      </div>
+      <div>
+        <div class="sidebar-btn" id="btnSpeakDa" title="Датский">🇩🇰</div>
+        <div class="sidebar-label">Danish</div>
+      </div>
+      <div>
+        <div class="sidebar-btn" id="btnSpeakRu" title="Русский">🇷🇺</div>
+        <div class="sidebar-label">Russian</div>
+      </div>
+      <div>
+        <div class="sidebar-btn" id="btnReset" title="Сброс">🔁</div>
+        <div class="sidebar-label">Reset</div>
+      </div>
+    </div>
 
-        <div class="controls" aria-label="Управление">
-          <button class="flip" id="btnFlip" title="Показать перевод">🪄 Показать</button>
-          <button class="ok" id="btnKnow" title="Знаю">👍 Знаю</button>
-          <button class="nok" id="btnDontKnow" title="Не знаю">🤔 Не знаю</button>
-          <button class="shuffle" id="btnShuffle" title="Перемешать">🔀 Перемешать</button>
-        </div>
+    <div class="container" id="container">
+      <!-- Cards will be inserted here by JavaScript -->
+    </div>
 
-        <div class="progress">
-          <div class="bar" aria-label="Прогресс">
-            <span id="bar"></span>
-          </div>
-          <div class="small">
-            <span class="muted-link" id="btnReset" title="Сбросить прогресс">🔁 сброс</span>
-          </div>
-        </div>
-
-        <div class="controls" aria-label="Аудио">
-          <button class="flip" id="btnSpeakDa" title="Прослушать датский">🔊 Послушать (DA)</button>
-          <button class="flip" id="btnSpeakRu" title="Прослушать перевод">🎧 Послушать (RU)</button>
-          <button class="shuffle" id="btnSpeakStop" title="Остановить звук">⏹ Остановить</button>
-          <div></div>
-        </div>
-
-        <!-- Hidden audio elements for high-quality pre-recorded files (если добавите в папку audio/) -->
-        <audio id="audioDa" preload="none"></audio>
-        <audio id="audioRu" preload="none"></audio>
-      </main>
-
-      <footer class="small">
-        Подсказка: нажимайте пробел для переворота, ←/→ для навигации, 1/2 — знаю/не знаю.
-      </footer>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
     </div>
 
     <script>
@@ -545,16 +581,15 @@
         }
       ];
 
-      const appStateKey = "dansk-trainer-state-v1";
-      const $ = (id) => document.getElementById(id);
-
+      const appStateKey = "dansk-trainer-tiktok-v1";
       const state = {
         order: [],
-        index: 0,
         known: new Set(),
-        unknown: new Set(),
-        flipped: false
+        currentIndex: 0
       };
+
+      let container;
+      let audioContextReady = false;
 
       function shuffle(array) {
         const a = array.slice();
@@ -565,15 +600,146 @@
         return a;
       }
 
+      function highlightContext(text, target) {
+        if (!text || !target) return text;
+        const esc = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const re = new RegExp(`(\\b${esc}\\b)`, "i");
+        return text.replace(re, '<span class="mark">$1</span>');
+      }
+
+      function createCard(item, index, total) {
+        const ctxHtml = highlightContext(item.ctxDa || item.da, item.da);
+        
+        return `
+          <div class="card-slide" data-index="${index}">
+            <div class="card" data-index="${index}">
+              <div class="face front">
+                <div class="top-bar">
+                  <div class="emoji">${item.emoji || "✨"}</div>
+                  <div class="counter">${index + 1} / ${total}</div>
+                </div>
+                <div class="main-content">
+                  <div class="word-display">${item.da}</div>
+                  <div class="context">${ctxHtml}</div>
+                  <div class="hint">👆 Нажми для переворота</div>
+                </div>
+                <div class="actions">
+                  <button class="btn btn-primary flip-btn">🪄 Показать перевод</button>
+                </div>
+              </div>
+              <div class="face back">
+                <div class="top-bar">
+                  <div class="emoji">🧠</div>
+                  <div class="counter">${index + 1} / ${total}</div>
+                </div>
+                <div class="main-content">
+                  <div class="translation">${item.ru}</div>
+                  <div class="context">${item.ctxRu || ""}</div>
+                  <div class="note">${item.note || ""}</div>
+                </div>
+                <div class="actions">
+                  <button class="btn btn-success know-btn">👍 Знаю</button>
+                  <button class="btn btn-error dontknow-btn">🤔 Не знаю</button>
+                  <button class="btn btn-primary flip-btn">🔙 Назад</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function renderCards() {
+        const total = state.order.length;
+        const html = state.order.map((dataIndex, i) => 
+          createCard(DATA[dataIndex], i, total)
+        ).join('');
+        container.innerHTML = html;
+
+        // Add event listeners
+        document.querySelectorAll('.card').forEach((card, index) => {
+          card.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'BUTTON') {
+              flipCard(card);
+            }
+          });
+        });
+
+        document.querySelectorAll('.flip-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const card = e.target.closest('.card');
+            flipCard(card);
+          });
+        });
+
+        document.querySelectorAll('.know-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(e.target.closest('.card-slide').dataset.index);
+            markCard(index, true);
+          });
+        });
+
+        document.querySelectorAll('.dontknow-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(e.target.closest('.card-slide').dataset.index);
+            markCard(index, false);
+          });
+        });
+
+        updateStats();
+      }
+
+      function flipCard(card) {
+        card.classList.toggle('is-flipped');
+      }
+
+      function markCard(index, isKnown) {
+        const dataIndex = state.order[index];
+        if (isKnown) {
+          state.known.add(dataIndex);
+        }
+        persist();
+        updateStats();
+        
+        // Scroll to next card
+        const nextSlide = container.children[index + 1];
+        if (nextSlide) {
+          nextSlide.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+
+      function updateStats() {
+        const total = DATA.length;
+        const known = state.known.size;
+        const current = Math.floor(container.scrollTop / window.innerHeight) + 1;
+        
+        document.getElementById('totalCount').textContent = `${total} карточек`;
+        document.getElementById('progressText').textContent = `${current}/${state.order.length}`;
+        document.getElementById('knownText').textContent = `✓ ${known}`;
+        
+        const progress = (known / total) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+      }
+
+      function reset(doShuffle = true) {
+        state.order = doShuffle ? shuffle([...DATA.keys()]) : [...DATA.keys()];
+        state.known.clear();
+        state.currentIndex = 0;
+        persist();
+        renderCards();
+        container.scrollTop = 0;
+      }
+
       function persist() {
-        const serializable = {
-          order: state.order,
-          index: state.index,
-          known: Array.from(state.known),
-          unknown: Array.from(state.unknown),
-          flipped: state.flipped
-        };
-        try { localStorage.setItem(appStateKey, JSON.stringify(serializable)); } catch {}
+        try {
+          localStorage.setItem(appStateKey, JSON.stringify({
+            order: state.order,
+            known: Array.from(state.known),
+            currentIndex: state.currentIndex
+          }));
+        } catch {}
       }
 
       function restore() {
@@ -581,473 +747,107 @@
           const raw = localStorage.getItem(appStateKey);
           if (!raw) return false;
           const obj = JSON.parse(raw);
-          if (!Array.isArray(obj.order) || typeof obj.index !== "number") return false;
-          state.order = obj.order.filter((x) => Number.isInteger(x) && x >= 0 && x < DATA.length);
+          if (!Array.isArray(obj.order)) return false;
+          state.order = obj.order.filter(x => x >= 0 && x < DATA.length);
           if (state.order.length !== DATA.length) return false;
-          state.index = Math.min(Math.max(0, obj.index), state.order.length - 1);
-          state.known = new Set(Array.isArray(obj.known) ? obj.known : []);
-          state.unknown = new Set(Array.isArray(obj.unknown) ? obj.unknown : []);
-          state.flipped = !!obj.flipped;
+          state.known = new Set(obj.known || []);
+          state.currentIndex = obj.currentIndex || 0;
           return true;
         } catch {
           return false;
         }
       }
 
-      function reset(fullShuffle = true) {
-        state.order = fullShuffle ? shuffle([...DATA.keys()]) : [...DATA.keys()];
-        state.index = 0;
-        state.known.clear();
-        state.unknown.clear();
-        state.flipped = false;
-        render();
-        persist();
-      }
-
-      function currentItem() {
-        const idx = state.order[state.index];
-        return { idx, item: DATA[idx] };
-      }
-
-      function setFlipped(value) {
-        state.flipped = value;
-        const card = $("card");
-        card.classList.toggle("is-flipped", state.flipped);
-        $("btnFlip").textContent = state.flipped ? "🔙 Скрыть" : "🪄 Показать";
-        persist();
-      }
-
-      function nextCard() {
-        if (state.index < state.order.length - 1) {
-          state.index += 1;
-          state.flipped = false;
-          render();
-          persist();
-          return;
-        }
-        // Если есть неизвестные — повторим их блоком
-        if (state.unknown.size > 0) {
-          const again = Array.from(state.unknown);
-          state.order = again;
-          state.index = 0;
-          state.unknown.clear();
-          state.flipped = false;
-          render();
-          persist();
-          return;
-        }
-        // Конец: всё выучено
-        toast("🎉 Отлично! Вы прошли все карточки.");
-      }
-
-      function prevCard() {
-        if (state.index > 0) {
-          state.index -= 1;
-          state.flipped = false;
-          render();
-          persist();
-        }
-      }
-
-      function markKnown(isKnown) {
-        const { idx } = currentItem();
-        if (isKnown) {
-          state.known.add(idx);
-          state.unknown.delete(idx);
-        } else {
-          state.unknown.add(idx);
-          state.known.delete(idx);
-        }
-        nextCard();
-      }
-
-      function highlightContext(text, target) {
-        const esc = target.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        const re = new RegExp(`(\\b${esc}\\b)`, "i");
-        return text.replace(re, '<span class="mark">$1</span>');
-      }
-
-      function render() {
-        const total = DATA.length;
-        const known = state.known.size;
-        const { idx, item } = currentItem();
-        const ctxHtml = highlightContext(item.ctxDa || item.da, item.da);
-        $("context").innerHTML = ctxHtml;
-        $("ru").textContent = item.ru;
-        $("note").textContent = item.note;
-        $("ctxRu").textContent = item.ctxRu || "";
-        $("emojiFront").textContent = item.emoji || "✨";
-        $("emojiBack").textContent = "🧠";
-        $("idx").textContent = `${state.index + 1} / ${state.order.length}`;
-        $("totalCount").textContent = `${total} карточек`;
-        $("progressText").textContent = `${state.index + 1} / ${state.order.length}`;
-        $("knownText").textContent = `Знаю: ${known}`;
-        const unknownCount = state.order.length - known;
-        $("unknownText").textContent = `Не знаю: ${unknownCount}`;
-        const pct = Math.round(((state.index) / Math.max(1, state.order.length)) * 100);
-        $("bar").style.width = pct + "%";
-        $("card").classList.toggle("is-flipped", state.flipped);
-        $("btnFlip").textContent = state.flipped ? "🔙 Скрыть" : "🪄 Показать";
-        $("btnFlip").textContent = state.flipped ? "🔙 Скрыть" : "🪄 Показать";
-      }
-
-      function toast(text) {
-        const el = document.createElement("div");
-        el.textContent = text;
-        el.style.position = "fixed";
-        el.style.bottom = "16px";
-        el.style.left = "50%";
-        el.style.transform = "translateX(-50%)";
-        el.style.background = "rgba(17,24,39,0.9)";
-        el.style.border = "1px solid rgba(148,163,184,0.25)";
-        el.style.color = "#e5e7eb";
-        el.style.padding = "10px 12px";
-        el.style.borderRadius = "10px";
-        el.style.zIndex = "40";
-        el.style.pointerEvents = "none";
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 2000);
-      }
-
-      // Sound effects for button taps (iOS/iPad compatible)
-      let audioContextReady = false;
-      
-      function playButtonSound(type = 'tap') {
-        // Only play sounds if audio context is ready (after user interaction)
-        if (!audioContextReady || !window.audioContext) {
-          return;
-        }
+      // Speech synthesis
+      function speak(text, lang) {
+        if (!window.speechSynthesis || !text) return;
         
-        try {
-          const ctx = window.audioContext;
-          
-          // Ensure context is running (required for iOS)
-          if (ctx.state === 'suspended') {
-            ctx.resume().then(() => {
-              playButtonSound(type); // Retry after resume
-            }).catch(() => {
-              // Silent fail
-            });
-            return;
-          }
-          
-          const now = ctx.currentTime;
-          
-          if (type === 'tap') {
-            // Simple tap sound - short sine wave
-            const oscillator = ctx.createOscillator();
-            const gainNode = ctx.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(ctx.destination);
-            
-            oscillator.frequency.setValueAtTime(800, now);
-            oscillator.frequency.exponentialRampToValueAtTime(400, now + 0.1);
-            
-            gainNode.gain.setValueAtTime(0.15, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-            
-            oscillator.start(now);
-            oscillator.stop(now + 0.1);
-          } else if (type === 'success') {
-            // Success sound - rising tone
-            const oscillator = ctx.createOscillator();
-            const gainNode = ctx.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(ctx.destination);
-            
-            oscillator.frequency.setValueAtTime(600, now);
-            oscillator.frequency.exponentialRampToValueAtTime(900, now + 0.2);
-            
-            gainNode.gain.setValueAtTime(0.15, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-            
-            oscillator.start(now);
-            oscillator.stop(now + 0.2);
-          } else if (type === 'error') {
-            // Error sound - descending tone
-            const oscillator = ctx.createOscillator();
-            const gainNode = ctx.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(ctx.destination);
-            
-            oscillator.frequency.setValueAtTime(600, now);
-            oscillator.frequency.exponentialRampToValueAtTime(300, now + 0.15);
-            
-            gainNode.gain.setValueAtTime(0.15, now);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-            
-            oscillator.start(now);
-            oscillator.stop(now + 0.15);
-          }
-        } catch (e) {
-          // Silently fail if audio context is not available
-          console.debug('Audio context error:', e);
-        }
+        const synth = window.speechSynthesis;
+        synth.cancel();
+        
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang === 'da' ? 'da-DK' : 'ru-RU';
+        utterance.rate = lang === 'da' ? 0.86 : 0.95;
+        utterance.pitch = 1.0;
+        
+        synth.speak(utterance);
+      }
+
+      function getCurrentCard() {
+        const index = Math.floor(container.scrollTop / window.innerHeight);
+        const dataIndex = state.order[index];
+        return DATA[dataIndex];
       }
 
       function init() {
-        const ok = restore();
-        if (!ok) reset(true); else render();
-
-        $("card").addEventListener("click", () => { playButtonSound('tap'); setFlipped(!state.flipped); });
-        $("btnFlip").addEventListener("click", () => { playButtonSound('tap'); setFlipped(!state.flipped); });
-        $("btnKnow").addEventListener("click", () => { playButtonSound('success'); markKnown(true); });
-        $("btnDontKnow").addEventListener("click", () => { playButtonSound('error'); markKnown(false); });
-        $("btnShuffle").addEventListener("click", () => { playButtonSound('tap'); reset(true); toast("🔀 Перемешано"); });
-        $("btnReset").addEventListener("click", () => { playButtonSound('tap'); localStorage.removeItem(appStateKey); reset(true); toast("🔁 Сброшено"); });
-
-        // Audio (TTS)
-        const synth = window.speechSynthesis;
-        let voices = [];
-        let voicesLoaded = false;
+        container = document.getElementById('container');
         
-        function loadVoices() {
-          voices = synth.getVoices();
-          console.log('Loaded voices:', voices.length);
-          if (voices.length > 0) {
-            voicesLoaded = true;
-          }
-        }
-        
-        // Initial load
-        loadVoices();
-        
-        // iOS requires user interaction to load voices
-        if (typeof speechSynthesis !== "undefined") {
-          speechSynthesis.onvoiceschanged = loadVoices;
-          
-          // Also try to load voices after user interaction
-          document.addEventListener('touchstart', () => {
-            setTimeout(loadVoices, 100);
-            setTimeout(loadVoices, 500);
-            setTimeout(loadVoices, 1000);
-          }, { once: true });
-          
-          document.addEventListener('click', () => {
-            setTimeout(loadVoices, 100);
-            setTimeout(loadVoices, 500);
-            setTimeout(loadVoices, 1000);
-          }, { once: true });
-        }
+        const restored = restore();
+        if (!restored) reset(true);
+        else renderCards();
 
-        // Mobile unlock (iOS/Android) to enable audio/TTS after first user gesture
-        let audioUnlocked = false;
-        function unlockAudioOnce() {
-          if (audioUnlocked) return;
-          audioUnlocked = true;
-          try { if (window.speechSynthesis) { window.speechSynthesis.resume(); } } catch {}
-          try {
-            const silent = new SpeechSynthesisUtterance(" ");
-            silent.volume = 0;
-            window.speechSynthesis.speak(silent);
-            window.speechSynthesis.cancel();
-          } catch {}
-          try {
-            const a = new Audio();
-            a.muted = true;
-            const playPromise = a.play();
-            if (playPromise && typeof playPromise.then === "function") {
-              playPromise.then(() => { try { a.pause(); } catch {} }).catch(() => {});
-            }
-          } catch {}
-          // Initialize audio context for button sounds
-          try {
-            if (!window.audioContext) {
-              window.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            // Resume audio context if suspended (required for iOS)
-            if (window.audioContext.state === 'suspended') {
-              window.audioContext.resume().then(() => {
-                audioContextReady = true;
-                console.log('Audio context ready for button sounds');
-              }).catch(() => {
-                console.log('Failed to resume audio context');
-              });
-            } else {
-              audioContextReady = true;
-            }
-          } catch (e) {
-            console.log('Failed to initialize audio context:', e);
-          }
-        }
-        document.addEventListener("touchstart", unlockAudioOnce, { once: true, passive: true });
-        document.addEventListener("click", unlockAudioOnce, { once: true });
+        // Update stats on scroll
+        container.addEventListener('scroll', () => {
+          updateStats();
+        });
 
-        function selectVoice(lang) {
-          console.log(`Selecting voice for ${lang}, available voices:`, voices.length);
-          if (voices.length === 0) {
-            console.log('No voices available');
-            return null;
-          }
-          
-          const lower = (s) => (s || "").toLowerCase();
-          const candidatesByName = lang === "da" ? [
-            // Common high-quality Danish voices (browsers/OS vary)
-            "microsoft christel", "christel", "google dansk", "google danish", "google dk", "sara", "da-dk"
-          ] : lang === "ru" ? [
-            "microsoft ekaterina", "ekaterina", "google русский", "google russian", "milena", "ru-ru"
-          ] : [];
-          
-          // Exact lang match first
-          const langCode = lang === "da" ? "da-dk" : lang === "ru" ? "ru-ru" : (lang || "").toLowerCase();
-          const exactLang = voices.filter(v => lower(v.lang).startsWith(langCode));
-          console.log(`Found ${exactLang.length} voices for ${langCode}`);
-          
-          // Sort exact by preferred names
-          for (const namePart of candidatesByName) {
-            const v = exactLang.find(vv => lower(vv.name).includes(namePart));
-            if (v) {
-              console.log(`Selected preferred voice: ${v.name} (${v.lang})`);
-              return v;
-            }
-          }
-          
-          // Fallback: any exact lang
-          if (exactLang[0]) {
-            console.log(`Selected fallback voice: ${exactLang[0].name} (${exactLang[0].lang})`);
-            return exactLang[0];
-          }
-          
-          // Fallback: any voice that mentions language in name
-          for (const namePart of candidatesByName) {
-            const v = voices.find(vv => lower(vv.name).includes(namePart));
-            if (v) {
-              console.log(`Selected name-based voice: ${v.name} (${v.lang})`);
-              return v;
-            }
-          }
-          
-          console.log(`Using default voice: ${voices[0].name} (${voices[0].lang})`);
-          return voices[0];
-        }
+        // Sidebar controls
+        document.getElementById('btnShuffle').addEventListener('click', () => {
+          reset(true);
+          showToast('🔀 Перемешано');
+        });
 
-        function normalizeText(text, langPrefer, targetWord) {
-          if (!text) return text;
-          // Mobile/Safari-safe: collapse spaces only (no Unicode property regex)
-          let t = String(text).replace(/\s+/g, " ").trim();
-          if (langPrefer === "da" && targetWord) {
-            // Insert a short pause after the connector if missing punctuation
-            const esc = targetWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-            const re = new RegExp(`(\\b${esc}\\b)(?![\",\.!?;:])`, "i");
-            t = t.replace(re, "$1,");
-            t = t.replace(/\s*,\s*/g, ", ");
+        document.getElementById('btnSpeakDa').addEventListener('click', () => {
+          const card = getCurrentCard();
+          if (card) speak(card.ctxDa || card.da, 'da');
+        });
+
+        document.getElementById('btnSpeakRu').addEventListener('click', () => {
+          const card = getCurrentCard();
+          if (card) speak(card.ctxRu || card.ru, 'ru');
+        });
+
+        document.getElementById('btnReset').addEventListener('click', () => {
+          if (confirm('Сбросить весь прогресс?')) {
+            localStorage.removeItem(appStateKey);
+            reset(true);
+            showToast('🔁 Прогресс сброшен');
           }
-          // Ensure sentence-final punctuation for smoother cadence
-          if (!/[\.!?…]$/.test(t)) t += ".";
-          return t;
-        }
+        });
 
-        function voicesReady() {
-          return voicesLoaded || (Array.isArray(voices) && voices.length > 0);
-        }
-
-        function speak(text, langPrefer, targetWord) {
-          const cleaned = normalizeText(text, langPrefer, targetWord);
-          if (!cleaned) return;
-          if (!window.speechSynthesis) { toast("🔇 Нет поддержки TTS в браузере"); return; }
-          
-          // Cancel any current speech
-          synth.cancel();
-          
-          const start = () => {
-            const utter = new SpeechSynthesisUtterance(cleaned);
-            const v = selectVoice(langPrefer);
-            if (v) utter.voice = v;
-            
-            // Set language explicitly
-            utter.lang = langPrefer === "da" ? "da-DK" : langPrefer === "ru" ? "ru-RU" : "en-US";
-            
-            // Tuned for smoother prosody
-            if (langPrefer === "da") { 
-              utter.rate = 0.86; 
-              utter.pitch = 1.02; 
-            } else if (langPrefer === "ru") { 
-              utter.rate = 0.95; 
-              utter.pitch = 1.0; 
-            } else { 
-              utter.rate = 1.0; 
-              utter.pitch = 1.0; 
-            }
-            
-            utter.volume = 1.0;
-            
-            // Add error handling
-            utter.onerror = (e) => {
-              console.log('TTS Error:', e);
-              toast("🔇 Ошибка воспроизведения речи");
-            };
-            
-            utter.onstart = () => {
-              console.log('TTS Started for', langPrefer);
-            };
-            
+        // Initialize audio context on first interaction
+        document.addEventListener('click', () => {
+          if (!audioContextReady) {
             try {
-              synth.speak(utter);
-            } catch (e) {
-              console.log('TTS Speak Error:', e);
-              toast("🔇 Не удалось воспроизвести речь");
-            }
-          };
-          
-          // Try multiple times with increasing delays for iOS
-          if (!voicesReady()) {
-            console.log('Voices not ready, retrying...');
-            setTimeout(start, 100);
-            setTimeout(start, 500);
-            setTimeout(start, 1000);
-          } else {
-            start();
+              if (window.speechSynthesis) {
+                window.speechSynthesis.resume();
+              }
+              audioContextReady = true;
+            } catch {}
           }
-        }
-
-        function slugify(text) {
-          return String(text)
-            .toLowerCase()
-            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-            .replace(/[^a-z0-9\s-]/g, "")
-            .trim()
-            .replace(/\s+/g, "-")
-            .replace(/-+/g, "-");
-        }
-
-        async function playRecordedOrTts(kind) {
-          const { item } = currentItem();
-          const text = kind === "da" ? (item.ctxDa || item.da) : (item.ctxRu || item.ru);
-          
-          // Stop any current audio and TTS
-          if (window.speechSynthesis) window.speechSynthesis.cancel();
-          
-          console.log(`Attempting to play ${kind}:`, text);
-          
-          // For now, skip audio files and go directly to TTS
-          // This ensures TTS works on mobile devices
-          speak(text, kind, item.da);
-        }
-
-        $("btnSpeakDa").addEventListener("click", () => { playButtonSound('tap'); playRecordedOrTts("da"); });
-        $("btnSpeakRu").addEventListener("click", () => { playButtonSound('tap'); playRecordedOrTts("ru"); });
-        $("btnSpeakStop").addEventListener("click", () => {
-          playButtonSound('tap');
-          try { $("audioDa").pause(); $("audioRu").pause(); } catch {}
-          if (window.speechSynthesis) window.speechSynthesis.cancel();
-        });
-
-        window.addEventListener("keydown", (e) => {
-          if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
-          if (e.code === "Space") { e.preventDefault(); playButtonSound('tap'); setFlipped(!state.flipped); }
-          if (e.key === "ArrowRight") { e.preventDefault(); playButtonSound('tap'); nextCard(); }
-          if (e.key === "ArrowLeft") { e.preventDefault(); playButtonSound('tap'); prevCard(); }
-          if (e.key === "1") { e.preventDefault(); playButtonSound('success'); markKnown(true); }
-          if (e.key === "2") { e.preventDefault(); playButtonSound('error'); markKnown(false); }
-        });
+        }, { once: true });
       }
 
-      document.addEventListener("DOMContentLoaded", init);
+      function showToast(message) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `
+          position: fixed;
+          bottom: 100px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0,0,0,0.8);
+          color: white;
+          padding: 12px 24px;
+          border-radius: 24px;
+          z-index: 1000;
+          backdrop-filter: blur(10px);
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      document.addEventListener('DOMContentLoaded', init);
     </script>
   </body>
-  </html>
-
-
+</html>
