@@ -171,6 +171,19 @@
         margin-top: 12px;
       }
 
+      .mnemonic {
+        font-size: clamp(16px, 4vw, 20px);
+        font-weight: 500;
+        line-height: 1.5;
+        margin-top: 24px;
+        padding: 16px 20px;
+        background: rgba(255, 255, 255, 0.08);
+        border-left: 3px solid rgba(253, 224, 71, 0.6);
+        border-radius: 8px;
+        color: #fef08a;
+        opacity: 0.95;
+      }
+
       .hint {
         font-size: 14px;
         opacity: 0.6;
@@ -357,7 +370,8 @@
           note: "Bruges til at tilføje information.",
           emoji: "➕",
           ctxDa: "Derudover arbejder mange mennesker hjemmefra i dag.",
-          ctxRu: "Кроме того, многие люди сегодня работают из дома."
+          ctxRu: "Кроме того, многие люди сегодня работают из дома.",
+          mnemonic: "ДЁРУ-довер — ДЁРУсь сверху, ДОВЕРху"
         },
         {
           da: "dog",
@@ -365,7 +379,8 @@
           note: "Udtrykker modsætning eller forbehold.",
           emoji: "⚠️",
           ctxDa: "Dog mener nogle, at det gør samarbejdet sværere.",
-          ctxRu: "Однако некоторые считают, что это усложняет сотрудничество."
+          ctxRu: "Однако некоторые считают, что это усложняет сотрудничество.",
+          mnemonic: "ДОГ — однако, ДО чеГо довели"
         },
         {
           da: "til gengæld",
@@ -405,7 +420,8 @@
           note: "Tilføjer yderligere information.",
           emoji: "✨",
           ctxDa: "Desuden spiller motion en stor rolle for sundheden.",
-          ctxRu: "Кроме того, физическая активность играет большую роль для здоровья."
+          ctxRu: "Кроме того, физическая активность играет большую роль для здоровья.",
+          mnemonic: "ДЕСУДЕН — ДЕйствующие СУДЬИ подкупные, кроме того"
         },
         {
           da: "samtidig",
@@ -421,7 +437,8 @@
           note: "Udtrykker årsag og konsekvens.",
           emoji: "🔗",
           ctxDa: "Derfor forsøger mange virksomheder at skabe bedre arbejdsmiljø.",
-          ctxRu: "Поэтому многие компании стараются создать лучшую рабочую среду."
+          ctxRu: "Поэтому многие компании стараются создать лучшую рабочую среду.",
+          mnemonic: "ДЭРФОР — ДЭР ФОРточка, поэтому открыта"
         },
         {
           da: "for eksempel",
@@ -437,7 +454,8 @@
           note: "Udtrykker kontrast eller modsætning.",
           emoji: "↔️",
           ctxDa: "Derimod er nogle imod hjemmearbejde.",
-          ctxRu: "Напротив, некоторые выступают против работы из дома."
+          ctxRu: "Напротив, некоторые выступают против работы из дома.",
+          mnemonic: "ДЕРИМОД — ДЕРИть МОДУ напротив"
         },
         {
           da: "selv om",
@@ -833,6 +851,7 @@
                     <span class="emoji">${item.emoji || "✨"}</span>
                   </div>
                   <div class="translation">${item.ru}</div>
+                  ${item.mnemonic ? `<div class="mnemonic">💡 ${item.mnemonic}</div>` : ''}
                 </div>
                 <div class="actions">
                 </div>
