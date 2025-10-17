@@ -470,8 +470,25 @@
           padding: 0 20px;
         }
 
+        header {
+          padding: 20px 0;
+        }
+
+        .logo {
+          font-size: 18px;
+        }
+
         .nav {
-          gap: 20px;
+          gap: 12px;
+        }
+
+        .nav a {
+          font-size: 13px;
+        }
+
+        .cta-button {
+          padding: 8px 14px;
+          font-size: 13px;
         }
 
         .hero {
@@ -494,6 +511,29 @@
         .footer-content {
           flex-direction: column;
           gap: 40px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header-content {
+          flex-wrap: wrap;
+          gap: 15px;
+        }
+
+        .nav {
+          width: 100%;
+          justify-content: space-between;
+          gap: 8px;
+        }
+
+        .nav a {
+          font-size: 12px;
+        }
+
+        .cta-button {
+          padding: 8px 12px;
+          font-size: 12px;
+          white-space: nowrap;
         }
       }
     </style>
