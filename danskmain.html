@@ -87,14 +87,15 @@
 
       .top-bar {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         margin-bottom: 20px;
       }
 
       .emoji {
-        font-size: 48px;
+        font-size: 32px;
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        margin-right: 8px;
       }
 
       .counter {
@@ -121,12 +122,22 @@
         font-weight: 700;
         line-height: 1.4;
         margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
       }
 
       .context {
         font-size: clamp(18px, 4.5vw, 24px);
         line-height: 1.5;
         opacity: 0.95;
+      }
+      
+      .context-emoji {
+        font-size: clamp(20px, 5vw, 32px);
+        margin-left: 8px;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
       }
 
       .mark {
@@ -578,6 +589,158 @@
           emoji: "🌐",
           ctxDa: "Ikke kun fritid, men også socialt liv ændres.",
           ctxRu: "Меняется не только досуг, но и социальная жизнь."
+        },
+        {
+          da: "gennemskue",
+          ru: "разгадать, видеть насквозь",
+          note: "At se igennem noget, forstå den sande hensigt.",
+          emoji: "🔍",
+          ctxDa: "Det er ikke svært at gennemskue hans planer.",
+          ctxRu: "Нетрудно разгадать его планы."
+        },
+        {
+          da: "afvise",
+          ru: "отклонить, отвергнуть",
+          note: "At sige nej til noget, ikke acceptere.",
+          emoji: "❌",
+          ctxDa: "Regeringen har afvist forslaget.",
+          ctxRu: "Правительство отклонило предложение."
+        },
+        {
+          da: "udelukke",
+          ru: "исключить",
+          note: "At fjerne muligheden for noget.",
+          emoji: "🚫",
+          ctxDa: "Vi kan ikke udelukke, at der sker fejl.",
+          ctxRu: "Мы не можем исключить, что произойдут ошибки."
+        },
+        {
+          da: "forvirrende",
+          ru: "запутанный, сбивающий с толку",
+          note: "Noget der skaber forvirring.",
+          emoji: "😵",
+          ctxDa: "Instruktionen var meget forvirrende.",
+          ctxRu: "Инструкция была очень запутанной."
+        },
+        {
+          da: "unødvendigt",
+          ru: "ненужный, излишний",
+          note: "Noget der ikke er nødvendigt.",
+          emoji: "🗑️",
+          ctxDa: "Det er unødvendigt at bekymre sig så meget.",
+          ctxRu: "Не нужно так сильно беспокоиться."
+        },
+        {
+          da: "derimod",
+          ru: "напротив, зато",
+          note: "Udtrykker modsætning eller kontrast.",
+          emoji: "↔️",
+          ctxDa: "Han er ikke doven, derimod er han meget flittig.",
+          ctxRu: "Он не ленивый, напротив, он очень трудолюбивый."
+        },
+        {
+          da: "udskyde",
+          ru: "отложить, перенести",
+          note: "At flytte noget til senere.",
+          emoji: "📅",
+          ctxDa: "Vi er nødt til at udskyde mødet til næste uge.",
+          ctxRu: "Нам придётся перенести встречу на следующую неделю."
+        },
+        {
+          da: "overveje",
+          ru: "обдумывать, рассматривать",
+          note: "At tænke over noget grundigt.",
+          emoji: "🤔",
+          ctxDa: "Jeg overvejer at skifte job.",
+          ctxRu: "Я обдумываю смену работы."
+        },
+        {
+          da: "ikke desto mindre",
+          ru: "тем не менее",
+          note: "Udtrykker kontrast trods det foregående.",
+          emoji: "📝",
+          ctxDa: "Det er dyrt, ikke desto mindre er det værd at prøve.",
+          ctxRu: "Это дорого, тем не менее стоит попробовать."
+        },
+        {
+          da: "heller",
+          ru: "тоже не, также не",
+          note: "Bruges i negative sammenhænge.",
+          emoji: "➖",
+          ctxDa: "Jeg kan ikke lide kaffe, og te kan jeg heller ikke lide.",
+          ctxRu: "Я не люблю кофе, и чай я тоже не люблю."
+        },
+        {
+          da: "nødvendigvis",
+          ru: "обязательно, непременно",
+          note: "Udtrykker at noget er nødvendigt.",
+          emoji: "❗",
+          ctxDa: "Det betyder ikke nødvendigvis, at vi tager fejl.",
+          ctxRu: "Это не обязательно означает, что мы ошибаемся."
+        },
+        {
+          da: "altså",
+          ru: "итак, то есть",
+          note: "Bruges til at konkludere eller præcisere.",
+          emoji: "💬",
+          ctxDa: "Han kommer ikke, altså må vi begynde uden ham.",
+          ctxRu: "Он не придёт, итак, мы должны начать без него."
+        },
+        {
+          da: "forøge",
+          ru: "увеличить, повысить",
+          note: "At gøre noget større eller mere.",
+          emoji: "📈",
+          ctxDa: "Virksomheden vil forøge produktionen næste år.",
+          ctxRu: "Компания увеличит производство в следующем году."
+        },
+        {
+          da: "overtage",
+          ru: "взять на себя, перенять",
+          note: "At tage kontrol eller ansvar.",
+          emoji: "🤝",
+          ctxDa: "Hun overtager min stilling, når jeg stopper.",
+          ctxRu: "Она возьмёт на себя мою должность, когда я уйду."
+        },
+        {
+          da: "formålet",
+          ru: "цель, назначение",
+          note: "Den hensigt eller målsætning man har.",
+          emoji: "🎯",
+          ctxDa: "Formålet med mødet er at finde en løsning.",
+          ctxRu: "Цель встречи — найти решение."
+        },
+        {
+          da: "hensigten",
+          ru: "намерение, цель",
+          note: "Det man har til hensigt at gøre.",
+          emoji: "💡",
+          ctxDa: "Det var ikke min hensigt at såre dig.",
+          ctxRu: "Я не намеревался обидеть тебя."
+        },
+        {
+          da: "sandsynlig",
+          ru: "вероятный, возможный",
+          note: "Noget der med stor sandsynlighed vil ske.",
+          emoji: "🎲",
+          ctxDa: "Det er sandsynligt, at det regner i morgen.",
+          ctxRu: "Вероятно, завтра будет дождь."
+        },
+        {
+          da: "svækket",
+          ru: "ослабленный",
+          note: "Gjort svagere eller mindre stærk.",
+          emoji: "📉",
+          ctxDa: "Økonomien er blevet svækket af krisen.",
+          ctxRu: "Экономика была ослаблена кризисом."
+        },
+        {
+          da: "undersøgt",
+          ru: "исследованный, изученный",
+          note: "Noget der er blevet analyseret eller studeret.",
+          emoji: "🔬",
+          ctxDa: "Sagen er blevet grundigt undersøgt af politiet.",
+          ctxRu: "Дело было тщательно изучено полицией."
         }
       ];
 
@@ -607,33 +770,69 @@
         return text.replace(re, '<span class="mark">$1</span>');
       }
 
+      function getCardColor(emoji) {
+        const colorMap = {
+          '➕': 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)', // blue
+          '⚠️': 'linear-gradient(135deg, #92400e 0%, #b45309 100%)', // orange/amber
+          '⚖️': 'linear-gradient(135deg, #4c1d95 0%, #5b21b6 100%)', // purple
+          '🔄': 'linear-gradient(135deg, #134e4a 0%, #115e59 100%)', // teal
+          '📝': 'linear-gradient(135deg, #0f766e 0%, #0d9488 100%)', // teal
+          '✨': 'linear-gradient(135deg, #7e22ce 0%, #9333ea 100%)', // purple
+          '⏰': 'linear-gradient(135deg, #1e40af 0%, #2563eb 100%)', // blue
+          '🔗': 'linear-gradient(135deg, #065f46 0%, #047857 100%)', // green
+          '💡': 'linear-gradient(135deg, #ca8a04 0%, #eab308 100%)', // yellow
+          '↔️': 'linear-gradient(135deg, #be123c 0%, #e11d48 100%)', // rose
+          '🤔': 'linear-gradient(135deg, #6b21a8 0%, #7c3aed 100%)', // violet
+          '💪': 'linear-gradient(135deg, #b91c1c 0%, #dc2626 100%)', // red
+          '🏁': 'linear-gradient(135deg, #1f2937 0%, #374151 100%)', // gray
+          '⏳': 'linear-gradient(135deg, #9f1239 0%, #be123c 100%)', // pink
+          '📊': 'linear-gradient(135deg, #0c4a6e 0%, #075985 100%)', // sky
+          '💬': 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)', // green
+          '💭': 'linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%)', // violet
+          '🎯': 'linear-gradient(135deg, #991b1b 0%, #b91c1c 100%)', // red
+          '🤝': 'linear-gradient(135deg, #047857 0%, #059669 100%)', // emerald
+          '📈': 'linear-gradient(135deg, #0369a1 0%, #0284c7 100%)', // sky
+          '⭐': 'linear-gradient(135deg, #d97706 0%, #f59e0b 100%)', // amber
+          '✅': 'linear-gradient(135deg, #15803d 0%, #16a34a 100%)', // green
+          '🛡️': 'linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%)', // blue
+          '🔍': 'linear-gradient(135deg, #6b21a8 0%, #7c3aed 100%)', // violet
+          '🤷': 'linear-gradient(135deg, #475569 0%, #64748b 100%)', // slate
+          '📋': 'linear-gradient(135deg, #0c4a6e 0%, #075985 100%)', // sky
+          '🎊': 'linear-gradient(135deg, #be185d 0%, #db2777 100%)', // pink
+          '🌐': 'linear-gradient(135deg, #0e7490 0%, #0891b2 100%)'  // cyan
+        };
+        return colorMap[emoji] || 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)';
+      }
+
       function createCard(item, index, total) {
         const ctxHtml = highlightContext(item.ctxDa || item.da, item.da);
+        const bgColor = getCardColor(item.emoji);
         
         return `
           <div class="card-slide" data-index="${index}">
             <div class="card" data-index="${index}">
-              <div class="face front">
+              <div class="face front" style="background: ${bgColor}">
                 <div class="top-bar">
-                  <div class="emoji">${item.emoji || "✨"}</div>
                   <div class="counter">${index + 1} / ${total}</div>
                 </div>
                 <div class="main-content">
-                  <div class="word-display">${item.da}</div>
+                  <div class="word-display">
+                    <span>${item.da}</span>
+                    <span class="emoji">${item.emoji || "✨"}</span>
+                  </div>
                   <div class="context">${ctxHtml}</div>
                 </div>
                 <div class="actions">
                   <button class="btn btn-primary flip-btn">🪄 Показать перевод</button>
                 </div>
               </div>
-              <div class="face back">
+              <div class="face back" style="background: ${bgColor}; filter: brightness(0.85);">
                 <div class="top-bar">
-                  <div class="emoji">🧠</div>
                   <div class="counter">${index + 1} / ${total}</div>
                 </div>
                 <div class="main-content">
                   <div class="translation">${item.ru}</div>
-                  <div class="context">${item.ctxRu || ""}</div>
+                  <div class="context">${item.ctxRu || ""} <span class="context-emoji">${item.emoji || "✨"}</span></div>
                   <div class="note">${item.note || ""}</div>
                 </div>
                 <div class="actions">
