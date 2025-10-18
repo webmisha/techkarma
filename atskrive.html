@@ -176,23 +176,26 @@
         cursor: not-allowed;
       }
 
-      .result-message {
-        font-size: 18px;
-        font-weight: 600;
+      .answer-display {
+        font-size: clamp(20px, 5vw, 26px);
+        font-weight: 700;
+        padding: 16px 24px;
+        border-radius: 16px;
         margin-top: 10px;
-        opacity: 0;
-        transition: opacity 0.3s;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+        transition: all 0.3s;
       }
 
-      .result-message.show {
-        opacity: 1;
-      }
-
-      .result-message.correct {
+      .answer-display.correct {
+        background: rgba(34, 197, 94, 0.2);
+        border: 2px solid rgba(34, 197, 94, 0.6);
         color: #86efac;
       }
 
-      .result-message.incorrect {
+      .answer-display.incorrect {
+        background: rgba(239, 68, 68, 0.2);
+        border: 2px solid rgba(239, 68, 68, 0.6);
         color: #fca5a5;
       }
 
@@ -507,7 +510,7 @@
                     />
                   </div>
                   <button class="check-btn" data-index="${index}">Проверить</button>
-                  <div class="result-message" data-index="${index}"></div>
+                  <div class="answer-display-container" data-index="${index}"></div>
                 </div>
                 <div class="audio-controls">
                   <button class="btn-audio speak-ru-btn" data-index="${index}">🇷🇺</button>
@@ -617,9 +620,9 @@
         
         const input = slide.querySelector('.danish-input');
         const checkBtn = slide.querySelector('.check-btn');
-        const resultMsg = slide.querySelector('.result-message');
+        const answerContainer = slide.querySelector('.answer-display-container');
         
-        if (!input || !checkBtn || !resultMsg) return;
+        if (!input || !checkBtn || !answerContainer) return;
         
         const userAnswer = input.value.trim();
         if (!userAnswer) {
@@ -633,22 +636,24 @@
         
         const isCorrect = normalizedUser === normalizedCorrect;
         
-        // Update UI
+        // Update input
         input.classList.remove('correct', 'incorrect');
         input.classList.add(isCorrect ? 'correct' : 'incorrect');
         input.disabled = true;
         
-        checkBtn.disabled = true;
+        // Hide button and show answer
+        checkBtn.style.display = 'none';
         
-        resultMsg.classList.remove('correct', 'incorrect', 'show');
-        resultMsg.classList.add(isCorrect ? 'correct' : 'incorrect', 'show');
-        resultMsg.textContent = isCorrect ? '✅ Правильно!' : '❌ Неправильно';
+        const answerDiv = document.createElement('div');
+        answerDiv.className = `answer-display ${isCorrect ? 'correct' : 'incorrect'}`;
+        answerDiv.textContent = item.da;
+        answerContainer.appendChild(answerDiv);
         
         // Show toast
         if (isCorrect) {
           showToast('✅ Правильно!');
         } else {
-          showToast('❌ Неправильно. Переверните карточку для просмотра ответа');
+          showToast('❌ Неправильно');
         }
       }
 
