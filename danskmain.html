@@ -314,88 +314,6 @@
       }
 
 
-      /* Timer */
-      .timer-container {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 100;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .timer-display {
-        background: rgba(255,255,255,0.15);
-        border: 1px solid rgba(255,255,255,0.2);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        padding: 12px 20px;
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        color: #ffffff;
-        min-width: 120px;
-        text-align: center;
-        font-variant-numeric: tabular-nums;
-      }
-
-      .timer-display.running {
-        background: rgba(34, 197, 94, 0.2);
-        border-color: rgba(34, 197, 94, 0.4);
-        color: #86efac;
-      }
-
-      .timer-display.finished {
-        background: rgba(239, 68, 68, 0.2);
-        border-color: rgba(239, 68, 68, 0.4);
-        color: #fca5a5;
-        animation: pulse-timer 1s ease-in-out infinite;
-      }
-
-      @keyframes pulse-timer {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.8; transform: scale(1.05); }
-      }
-
-      .timer-controls {
-        display: flex;
-        gap: 8px;
-      }
-
-      .timer-btn {
-        background: rgba(255,255,255,0.15);
-        border: 1px solid rgba(255,255,255,0.2);
-        color: white;
-        padding: 8px 16px;
-        border-radius: 12px;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        backdrop-filter: blur(10px);
-        transition: all 0.2s;
-        user-select: none;
-        flex: 1;
-      }
-
-      .timer-btn:active {
-        transform: scale(0.95);
-      }
-
-      .timer-btn.start {
-        background: rgba(34, 197, 94, 0.2);
-        border-color: rgba(34, 197, 94, 0.4);
-      }
-
-      .timer-btn.pause {
-        background: rgba(234, 179, 8, 0.2);
-        border-color: rgba(234, 179, 8, 0.4);
-      }
-
-      .timer-btn.reset {
-        background: rgba(239, 68, 68, 0.2);
-        border-color: rgba(239, 68, 68, 0.4);
-      }
 
       /* Progress bar */
       .progress-bar {
@@ -434,15 +352,6 @@
     </style>
   </head>
   <body>
-
-    <!-- Timer -->
-    <div class="timer-container">
-      <div class="timer-display" id="timerDisplay">05:00</div>
-      <div class="timer-controls">
-        <button class="timer-btn start" id="timerStart">▶</button>
-        <button class="timer-btn reset" id="timerReset">↻</button>
-      </div>
-    </div>
 
     <div class="sidebar">
       <div>
@@ -1363,110 +1272,8 @@
         setTimeout(() => toast.remove(), 2000);
       }
 
-      // Timer functionality
-      let timerInterval = null;
-      let timeRemaining = 5 * 60; // 5 minutes in seconds
-      let isTimerRunning = false;
-      const TIMER_DURATION = 5 * 60;
-
-      function formatTime(seconds) {
-        const mins = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-      }
-
-      function updateTimerDisplay() {
-        const display = document.getElementById('timerDisplay');
-        display.textContent = formatTime(timeRemaining);
-        
-        if (timeRemaining === 0) {
-          display.classList.add('finished');
-          display.classList.remove('running');
-        } else if (isTimerRunning) {
-          display.classList.add('running');
-          display.classList.remove('finished');
-        } else {
-          display.classList.remove('running', 'finished');
-        }
-      }
-
-      function playAlarmSound() {
-        // Create a pleasant alarm sound using Web Audio API
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Play a pleasant three-note chime
-        const notes = [523.25, 659.25, 783.99]; // C5, E5, G5
-        
-        notes.forEach((freq, index) => {
-          setTimeout(() => {
-            const oscillator = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-            
-            oscillator.frequency.value = freq;
-            oscillator.type = 'sine';
-            
-            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
-            
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.8);
-          }, index * 300);
-        });
-        
-        showToast('⏰ Время истекло!');
-      }
-
-      function startTimer() {
-        if (isTimerRunning) {
-          // Pause
-          clearInterval(timerInterval);
-          isTimerRunning = false;
-          document.getElementById('timerStart').textContent = '▶';
-          updateTimerDisplay();
-          return;
-        }
-
-        if (timeRemaining === 0) {
-          // Reset if finished
-          timeRemaining = TIMER_DURATION;
-        }
-
-        isTimerRunning = true;
-        document.getElementById('timerStart').textContent = '⏸';
-        
-        timerInterval = setInterval(() => {
-          timeRemaining--;
-          updateTimerDisplay();
-          
-          if (timeRemaining === 0) {
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            document.getElementById('timerStart').textContent = '▶';
-            playAlarmSound();
-          }
-        }, 1000);
-      }
-
-      function resetTimer() {
-        clearInterval(timerInterval);
-        isTimerRunning = false;
-        timeRemaining = TIMER_DURATION;
-        document.getElementById('timerStart').textContent = '▶';
-        updateTimerDisplay();
-      }
-
-      function initTimer() {
-        document.getElementById('timerStart').addEventListener('click', startTimer);
-        document.getElementById('timerReset').addEventListener('click', resetTimer);
-        updateTimerDisplay();
-      }
-
       document.addEventListener('DOMContentLoaded', () => {
         init();
-        initTimer();
       });
     </script>
   </body>
