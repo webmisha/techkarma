@@ -96,6 +96,113 @@
         justify-content: center;
         text-align: center;
         gap: 20px;
+        padding: 0 10px;
+      }
+
+      .russian-text {
+        font-size: clamp(24px, 6vw, 32px);
+        font-weight: 400;
+        line-height: 1.4;
+        opacity: 0.98;
+        letter-spacing: -0.02em;
+        margin-bottom: 20px;
+      }
+
+      .input-wrapper {
+        width: 100%;
+        max-width: 450px;
+        margin-bottom: 20px;
+      }
+
+      .danish-input {
+        width: 100%;
+        background: rgba(255,255,255,0.1);
+        border: 2px solid rgba(255,255,255,0.2);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 16px;
+        font-size: clamp(16px, 4vw, 20px);
+        font-weight: 400;
+        font-family: 'Inter', sans-serif;
+        outline: none;
+        transition: all 0.3s;
+        text-align: center;
+      }
+
+      .danish-input::placeholder {
+        color: rgba(255,255,255,0.4);
+      }
+
+      .danish-input:focus {
+        background: rgba(255,255,255,0.15);
+        border-color: rgba(56, 189, 248, 0.6);
+      }
+
+      .danish-input.correct {
+        background: rgba(34, 197, 94, 0.2);
+        border-color: rgba(34, 197, 94, 0.6);
+        color: #86efac;
+      }
+
+      .danish-input.incorrect {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.6);
+        color: #fca5a5;
+      }
+
+      .check-btn {
+        background: rgba(56, 189, 248, 0.2);
+        border: 2px solid rgba(56, 189, 248, 0.4);
+        color: white;
+        padding: 14px 32px;
+        border-radius: 24px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      .check-btn:active {
+        transform: scale(0.95);
+      }
+
+      .check-btn:hover {
+        background: rgba(56, 189, 248, 0.3);
+      }
+
+      .check-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .result-message {
+        font-size: 18px;
+        font-weight: 600;
+        margin-top: 10px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .result-message.show {
+        opacity: 1;
+      }
+
+      .result-message.correct {
+        color: #86efac;
+      }
+
+      .result-message.incorrect {
+        color: #fca5a5;
+      }
+
+      .danish-answer {
+        font-size: clamp(26px, 6.5vw, 36px);
+        font-weight: 700;
+        line-height: 1.3;
+        opacity: 0.98;
+        letter-spacing: -0.02em;
+        color: #7dd3fc;
       }
 
       .phrase-da {
@@ -389,17 +496,28 @@
               <div class="face front" style="background: ${bgColor}">
                 <div class="category">${item.cat}</div>
                 <div class="main-content">
-                  <div class="phrase-da">${item.da}</div>
+                  <div class="russian-text">${item.ru}</div>
+                  <div class="input-wrapper">
+                    <input 
+                      type="text" 
+                      class="danish-input" 
+                      data-index="${index}"
+                      placeholder="Напишите перевод на датском..."
+                      autocomplete="off"
+                    />
+                  </div>
+                  <button class="check-btn" data-index="${index}">Проверить</button>
+                  <div class="result-message" data-index="${index}"></div>
                 </div>
                 <div class="audio-controls">
-                  <button class="btn-audio speak-da-btn" data-index="${index}">🇩🇰</button>
                   <button class="btn-audio speak-ru-btn" data-index="${index}">🇷🇺</button>
                 </div>
               </div>
               <div class="face back" style="background: ${bgColor}; filter: brightness(0.85);">
                 <div class="category">${item.cat}</div>
                 <div class="main-content">
-                  <div class="phrase-ru">${item.ru}</div>
+                  <div class="russian-text">${item.ru}</div>
+                  <div class="danish-answer">${item.da}</div>
                 </div>
                 <div class="audio-controls">
                   <button class="btn-audio speak-da-btn" data-index="${index}">🇩🇰</button>
@@ -418,19 +536,46 @@
         ).join('');
         container.innerHTML = html;
 
-        // Add event listeners
+        // Add event listeners for card flip
         document.querySelectorAll('.card').forEach((card, index) => {
           card.addEventListener('click', (e) => {
-            if (e.target.tagName !== 'BUTTON') {
+            // Don't flip if clicking on input, button, or audio controls
+            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') {
               flipCard(card);
             }
           });
         });
 
+        // Add event listeners for check buttons
+        document.querySelectorAll('.check-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(btn.dataset.index);
+            checkAnswer(index);
+          });
+        });
+
+        // Add event listeners for Enter key in input
+        document.querySelectorAll('.danish-input').forEach(input => {
+          input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              const index = parseInt(input.dataset.index);
+              checkAnswer(index);
+            }
+          });
+          
+          // Prevent click on input from flipping card
+          input.addEventListener('click', (e) => {
+            e.stopPropagation();
+          });
+        });
+
+        // Add event listeners for audio buttons
         document.querySelectorAll('.speak-da-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const index = parseInt(e.target.dataset.index);
+            const index = parseInt(btn.dataset.index);
             const dataIndex = state.order[index];
             const item = DATA[dataIndex];
             speak(item.da, 'da');
@@ -440,7 +585,7 @@
         document.querySelectorAll('.speak-ru-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            const index = parseInt(e.target.dataset.index);
+            const index = parseInt(btn.dataset.index);
             const dataIndex = state.order[index];
             const item = DATA[dataIndex];
             speak(item.ru, 'ru');
@@ -452,6 +597,59 @@
 
       function flipCard(card) {
         card.classList.toggle('is-flipped');
+      }
+
+      function normalizeText(text) {
+        // Normalize text for comparison: lowercase, trim, remove extra spaces and punctuation
+        return text.toLowerCase()
+          .trim()
+          .replace(/[.,!?;:]/g, '')
+          .replace(/\s+/g, ' ');
+      }
+
+      function checkAnswer(index) {
+        const dataIndex = state.order[index];
+        const item = DATA[dataIndex];
+        
+        // Find elements for this card
+        const slide = document.querySelector(`.card-slide[data-index="${index}"]`);
+        if (!slide) return;
+        
+        const input = slide.querySelector('.danish-input');
+        const checkBtn = slide.querySelector('.check-btn');
+        const resultMsg = slide.querySelector('.result-message');
+        
+        if (!input || !checkBtn || !resultMsg) return;
+        
+        const userAnswer = input.value.trim();
+        if (!userAnswer) {
+          showToast('⚠️ Введите ответ');
+          return;
+        }
+        
+        // Normalize both answers for comparison
+        const normalizedUser = normalizeText(userAnswer);
+        const normalizedCorrect = normalizeText(item.da);
+        
+        const isCorrect = normalizedUser === normalizedCorrect;
+        
+        // Update UI
+        input.classList.remove('correct', 'incorrect');
+        input.classList.add(isCorrect ? 'correct' : 'incorrect');
+        input.disabled = true;
+        
+        checkBtn.disabled = true;
+        
+        resultMsg.classList.remove('correct', 'incorrect', 'show');
+        resultMsg.classList.add(isCorrect ? 'correct' : 'incorrect', 'show');
+        resultMsg.textContent = isCorrect ? '✅ Правильно!' : '❌ Неправильно';
+        
+        // Show toast
+        if (isCorrect) {
+          showToast('✅ Правильно!');
+        } else {
+          showToast('❌ Неправильно. Переверните карточку для просмотра ответа');
+        }
       }
 
       function updateStats() {
