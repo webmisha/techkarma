@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI News Feed</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    header {
+      border-bottom: 2px solid #000000;
+      padding-bottom: 40px;
+      margin-bottom: 60px;
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      color: #666666;
+      font-weight: 400;
+    }
+
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #999999;
+      font-size: 18px;
+    }
+
+    .news-list {
+      list-style: none;
+    }
+
+    .news-item {
+      margin-bottom: 20px;
+      padding: 15px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .news-text {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .news-author {
+      font-weight: 600;
+      color: #000000;
+      font-size: 15px;
+    }
+
+    .news-tweet {
+      font-size: 15px;
+      color: #000000;
+      flex: 1;
+    }
+
+    .news-date {
+      color: #999999;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .stat-value {
+      font-weight: 600;
+      color: #000000;
+    }
+
+    .refresh-btn {
+      padding: 10px 20px;
+      background: #000000;
+      color: #ffffff;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      font-family: inherit;
+    }
+
+    .refresh-btn:hover {
+      opacity: 0.8;
+    }
+
+    .refresh-btn:active {
+      opacity: 0.6;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 36px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>AI News Feed</h1>
+      <div class="subtitle">Tweets from tech leaders and AI pioneers</div>
+    </header>
+
+    <div class="controls">
+      <div class="stats">
+        <div>
+          <span class="stat-value" id="total-news">0</span> tweets
+        </div>
+        <div>
+          Updated: <span class="stat-value" id="last-update">—</span>
+        </div>
+      </div>
+      <button class="refresh-btn" onclick="loadNews()">Refresh</button>
+    </div>
+
+    <div id="loading" class="loading">
+      Loading news feed...
+    </div>
+
+    <ul class="news-list" id="news-container"></ul>
+  </div>
+
+  <script>
+    let allNews = [];
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      if (diffHours < 1) return 'Just now';
+      if (diffHours < 24) return `${diffHours}h ago`;
+      if (diffDays < 7) return `${diffDays}d ago`;
+      
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: date.getFullYear() !== now.getFullYear() ? 'numeric' : undefined
+      });
+    }
+
+    function renderNews(newsToRender) {
+      const container = document.getElementById('news-container');
+      
+      if (newsToRender.length === 0) {
+        container.innerHTML = '<div class="loading">No news items found</div>';
+        return;
+      }
+
+      container.innerHTML = newsToRender.map(item => `
+        <li class="news-item">
+          <div class="news-text">
+            <span class="news-author">${item.sourceName}</span>
+            <span class="news-tweet">${item.title}</span>
+            <span class="news-date">${formatDate(item.date)}</span>
+          </div>
+        </li>
+      `).join('');
+    }
+
+
+    // Sample tweet templates
+    const TWEET_TEMPLATES = {
+      elonmusk: [
+        'xAI will open source Grok this week',
+        'Compute will be the currency of the future',
+        'AI will eventually exceed human intelligence in every way',
+        'The singularity is near',
+        'Neuralink will change everything',
+        'We need to be careful with AI development'
+      ],
+      sama: [
+        'The arc of AI progress continues to be remarkable',
+        'We are working on something that will be very surprising',
+        'AGI is closer than most people think',
+        'AI safety is our top priority at OpenAI',
+        'The pace of AI development is accelerating'
+      ],
+      sundarpichai: [
+        'Gemini 2.0 represents a major leap in multimodal AI capabilities',
+        'Google AI is helping researchers make breakthroughs in medicine',
+        'AI is transforming how we search and discover information'
+      ],
+      satyanadella: [
+        'Excited to share our vision for AI-powered future at Microsoft',
+        'Copilot is transforming how developers write code',
+        'AI will augment every role and every business'
+      ],
+      AravSrinivas: [
+        'Perplexity is redefining how we search and discover information',
+        'Answer engines are the future. Search is just the beginning.',
+        'Building the best answer engine in the world'
+      ],
+      miramurati: [
+        'Building safe and beneficial AI is the challenge of our generation',
+        'The best AI systems will be those that empower humans'
+      ],
+      zuck: [
+        'Meta AI is now available to billions of people worldwide',
+        'Llama 3 is our most powerful open source model yet',
+        'Open source AI will win in the long run'
+      ],
+      BillGates: [
+        'AI will be the most transformative technology of our lifetime',
+        'AI agents will revolutionize healthcare and education'
+      ],
+      sergeyb: [
+        'Back at Google working on AI. It feels like 1999 again.'
+      ],
+      larrypage: [
+        'The future of AI is about augmenting human intelligence, not replacing it'
+      ]
+    };
+
+    const AUTHORS = [
+      { name: 'Elon Musk', handle: 'elonmusk', avatar: 'https://upload.wikimedia.org/wikipedia/commons/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg' },
+      { name: 'Sam Altman', handle: 'sama', avatar: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Sam_Altman_TechCrunch_SF_2019_Day_2_Oct_3.jpg' },
+      { name: 'Sundar Pichai', handle: 'sundarpichai', avatar: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Sundar_Pichai_Ted_2022.jpg' },
+      { name: 'Satya Nadella', handle: 'satyanadella', avatar: 'https://upload.wikimedia.org/wikipedia/commons/7/78/Satya_Nadella_2017.jpg' },
+      { name: 'Aravind Srinivas', handle: 'AravSrinivas', avatar: 'https://pbs.twimg.com/profile_images/1671900840805183488/6ILnOiZ4_400x400.jpg' },
+      { name: 'Mira Murati', handle: 'miramurati', avatar: 'https://pbs.twimg.com/profile_images/1638632020550811649/8LG4ASpO_400x400.jpg' },
+      { name: 'Mark Zuckerberg', handle: 'zuck', avatar: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Mark_Zuckerberg_F8_2019_Keynote.jpg' },
+      { name: 'Bill Gates', handle: 'BillGates', avatar: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Bill_Gates_2017_%28cropped%29.jpg' },
+      { name: 'Sergey Brin', handle: 'sergeyb', avatar: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Sergey_Brin_cropped.jpg' },
+      { name: 'Larry Page', handle: 'larrypage', avatar: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Larry_Page_in_the_European_Parliament%2C_17.06.2009.jpg' }
+    ];
+
+    // Fixed tweets with exact timestamps - never change
+    let FIXED_TWEETS = null;
+    const TWEET_CREATED_TIME = Date.now();
+
+    function generateTweets(count = 20) {
+      // If we already have fixed tweets, just update their relative time
+      if (FIXED_TWEETS) {
+        const now = Date.now();
+        const elapsed = now - TWEET_CREATED_TIME;
+        
+        return FIXED_TWEETS.map((tweet, i) => ({
+          ...tweet,
+          // Original timestamp minus elapsed time since page load
+          date: new Date(tweet.originalTimestamp - elapsed)
+        }));
+      }
+      
+      // First time generation - create fixed tweets
+      const tweets = [];
+      const now = Date.now();
+      const usedTweets = new Set();
+      
+      for (let i = 0; i < count; i++) {
+        let author, tweet, tweetKey;
+        let attempts = 0;
+        
+        do {
+          author = AUTHORS[Math.floor(Math.random() * AUTHORS.length)];
+          const templates = TWEET_TEMPLATES[author.handle];
+          tweet = templates[Math.floor(Math.random() * templates.length)];
+          tweetKey = `${author.handle}:${tweet}`;
+          attempts++;
+          
+          if (attempts > 50) break;
+        } while (usedTweets.has(tweetKey));
+        
+        usedTweets.add(tweetKey);
+        
+        // Fixed timestamp - each tweet exactly i minutes old
+        const minutesAgo = i * 5; // 5 minute intervals for more variety
+        const timestamp = now - minutesAgo * 60 * 1000;
+        
+        tweets.push({
+          sourceName: author.name,
+          source: author.handle,
+          title: tweet,
+          url: `https://twitter.com/${author.handle}`,
+          date: new Date(timestamp),
+          originalTimestamp: timestamp
+        });
+      }
+      
+      // Save fixed tweets
+      FIXED_TWEETS = tweets;
+      
+      return tweets;
+    }
+
+    async function loadNews() {
+      const loading = document.getElementById('loading');
+      loading.style.display = 'block';
+
+      try {
+        // Generate fresh tweets (already in chronological order)
+        allNews = generateTweets(20);
+
+        // Update stats
+        document.getElementById('total-news').textContent = allNews.length;
+        document.getElementById('last-update').textContent = new Date().toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        renderNews(allNews);
+        loading.style.display = 'none';
+
+      } catch (error) {
+        console.error('Error loading news:', error);
+        loading.innerHTML = 'Error loading news. Please try again later.';
+      }
+    }
+
+    // Load news on page load
+    loadNews();
+
+    // Auto-refresh every 5 minutes
+    setInterval(loadNews, 5 * 60 * 1000);
+
+    console.log('%c🐦 AI Tweets Feed', 'font-size: 20px; font-weight: bold;');
+    console.log('This is a demo with sample data.');
+    console.log('In production, these would come from Twitter API with authentication.');
+  </script>
+</body>
+</html>
