@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Dungeon Mage • Top-Down RPG</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile */
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(to bottom, #1a1a2e 0%, #0f0f1e 50%, #1a1a2e 100%);
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+            border: 4px solid #8b4513;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #dungeon-view {
+            position: relative;
+            background: #1a1a1a;
+            box-shadow: 0 0 30px rgba(0,0,0,0.9);
+        }
+
+        .tile {
+            position: absolute;
+            background: #2a2a2a;
+            border: 1px solid #1a1a1a;
+        }
+
+        .tile.wall {
+            background: linear-gradient(135deg, #3d3d3d 0%, #2a2a2a 100%);
+            border: 1px solid #555;
+            box-shadow: inset 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .tile.floor {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        }
+
+        .player {
+            position: absolute;
+            transition: all 0.15s ease-out;
+            z-index: 10;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8));
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player.direction-left {
+            transform: scaleX(-1);
+        }
+
+        .monster {
+            position: absolute;
+            transition: all 0.3s ease-out;
+            z-index: 9;
+            cursor: crosshair;
+            animation: monsterFloat 2s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(255,0,0,0.5));
+        }
+
+        .monster:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 4px 12px rgba(255,0,0,0.9));
+        }
+
+        @keyframes monsterFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .monster-sprite {
+            width: 100%;
+            height: 100%;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .potion {
+            position: absolute;
+            font-size: 28px;
+            z-index: 8;
+            transition: all 0.2s;
+            animation: potionBounce 1.5s ease-in-out infinite;
+            cursor: pointer;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        }
+
+        .potion:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes potionBounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .hp-bar {
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 4px;
+            background: #333;
+            border: 1px solid #000;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .hp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #c41e3a, #ff4444);
+            transition: width 0.3s;
+        }
+
+        .fireball {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            font-size: 24px;
+            z-index: 100;
+            pointer-events: none;
+            filter: drop-shadow(0 0 10px rgba(255,100,0,0.8));
+        }
+
+        .explosion {
+            position: absolute;
+            font-size: 40px;
+            z-index: 101;
+            animation: explode 0.5s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .damage-text {
+            position: absolute;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff4444;
+            z-index: 102;
+            animation: damageFloat 1s ease-out forwards;
+            pointer-events: none;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        @keyframes damageFloat {
+            0% {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -150%);
+                opacity: 0;
+            }
+        }
+
+        #hud {
+            height: auto;
+            min-height: 120px;
+            background: linear-gradient(to bottom, #1a1a2e, #0f0f1e);
+            border-top: 4px solid #8b4513;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .hud-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .stat-bar {
+            flex: 1;
+            height: 30px;
+            background: #222;
+            border: 2px solid #666;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-fill {
+            height: 100%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .hp-fill {
+            background: linear-gradient(90deg, #c41e3a, #ff4444);
+        }
+
+        .mana-fill {
+            background: linear-gradient(90deg, #1e3ac4, #4444ff);
+        }
+
+        .stat-label {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: bold;
+            z-index: 1;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            background: linear-gradient(to bottom, #4a4a4a, #2a2a2a);
+            border: 2px solid #666;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-size: 14px;
+            min-width: 70px;
+            min-height: 50px;
+            touch-action: manipulation;
+        }
+
+        .btn:hover {
+            background: linear-gradient(to bottom, #5a5a5a, #3a3a3a);
+            border-color: #888;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .message {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            padding: 10px 20px;
+            border: 2px solid #ffd700;
+            border-radius: 4px;
+            font-size: 18px;
+            z-index: 1000;
+            animation: messageAppear 0.5s;
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            #viewport {
+                border-width: 2px;
+            }
+
+            #hud {
+                padding: 8px 12px;
+                border-top-width: 2px;
+            }
+
+            .stat-bar {
+                height: 25px;
+            }
+
+            .stat-fill {
+                font-size: 12px;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 13px;
+                min-width: 60px;
+                min-height: 45px;
+            }
+
+            .message {
+                font-size: 16px;
+                padding: 8px 16px;
+                max-width: 90%;
+            }
+
+            .player {
+                font-size: 28px;
+            }
+
+            .monster-sprite {
+                font-size: 28px;
+            }
+
+            .fireball {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hud-row {
+                gap: 10px;
+            }
+
+            .controls {
+                gap: 5px;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+                min-width: 55px;
+                min-height: 40px;
+                border-radius: 6px;
+            }
+
+            .stat-bar {
+                height: 22px;
+            }
+
+            .stat-fill {
+                font-size: 11px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            .player {
+                font-size: 24px;
+            }
+
+            .monster-sprite {
+                font-size: 24px;
+            }
+
+            .fireball {
+                font-size: 18px;
+            }
+
+            .explosion {
+                font-size: 32px;
+            }
+
+            .damage-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="viewport">
+            <div id="dungeon-view"></div>
+        </div>
+        <div id="hud">
+            <div class="hud-row">
+                <div class="stat-bar">
+                    <div class="stat-label">HP</div>
+                    <div class="stat-fill hp-fill" id="hp-bar" style="width: 100%;">
+                        <span id="hp-text">100 / 100</span>
+                    </div>
+                </div>
+                <div class="stat-bar">
+                    <div class="stat-label">MANA</div>
+                    <div class="stat-fill mana-fill" id="mana-bar" style="width: 100%;">
+                        <span id="mana-text">100 / 100</span>
+                    </div>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="btn" onclick="game.move(-1, 0)">↑ Up</button>
+                <button class="btn" onclick="game.move(1, 0)">↓ Down</button>
+                <button class="btn" onclick="game.move(0, -1)">← Left</button>
+                <button class="btn" onclick="game.move(0, 1)">→ Right</button>
+                <button class="btn" onclick="game.castFireball()">🔥 Fireball</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const game = {
+            player: {
+                x: 5,
+                y: 5,
+                hp: 100,
+                maxHp: 100,
+                mana: 100,
+                maxMana: 100,
+                direction: 'down', // down, up, left, right
+                isWalking: false
+            },
+            dungeon: [],
+            dungeonSize: 15,
+            tileSize: 48,
+            monsters: [],
+            fireballs: [],
+            potions: [],
+            monsterTypes: [
+                { emoji: '💀', hp: 20, damage: 3, name: 'Skull' },      // Weak
+                { emoji: '👹', hp: 40, damage: 6, name: 'Demon' },      // Medium
+                { emoji: '🐉', hp: 80, damage: 10, name: 'Dragon' }     // Strong
+            ],
+
+            init() {
+                this.adjustTileSize();
+                this.generateDungeon();
+                this.spawnMonsters();
+                this.spawnPotions();
+                this.setupKeyboard();
+                this.setupTouchControls();
+                this.showMessage('Welcome to the Dungeon! Collect potions and defeat monsters!');
+                this.render();
+                this.updateHUD();
+                this.startGameLoop();
+                
+                // Re-adjust on orientation change
+                window.addEventListener('resize', () => {
+                    this.adjustTileSize();
+                    this.render();
+                });
+            },
+
+            adjustTileSize() {
+                const viewport = document.getElementById('viewport');
+                const availableWidth = viewport.clientWidth;
+                const availableHeight = viewport.clientHeight;
+                
+                // Calculate optimal tile size based on viewport
+                const maxTileWidth = Math.floor(availableWidth / this.dungeonSize);
+                const maxTileHeight = Math.floor(availableHeight / this.dungeonSize);
+                
+                // Use the smaller dimension to ensure everything fits
+                this.tileSize = Math.min(maxTileWidth, maxTileHeight, 48);
+                
+                // Minimum tile size for playability
+                if (this.tileSize < 24) this.tileSize = 24;
+            },
+
+            generateDungeon() {
+                // Create a simple dungeon grid (0=wall, 1=floor)
+                for (let x = 0; x < this.dungeonSize; x++) {
+                    this.dungeon[x] = [];
+                    for (let y = 0; y < this.dungeonSize; y++) {
+                        // Walls on edges, random walls inside
+                        if (x === 0 || x === this.dungeonSize - 1 || 
+                            y === 0 || y === this.dungeonSize - 1) {
+                            this.dungeon[x][y] = 0;
+                        } else {
+                            this.dungeon[x][y] = Math.random() > 0.25 ? 1 : 0;
+                        }
+                    }
+                }
+                // Ensure player start position is clear
+                this.dungeon[5][5] = 1;
+                this.dungeon[4][5] = 1;
+                this.dungeon[6][5] = 1;
+                this.dungeon[5][4] = 1;
+                this.dungeon[5][6] = 1;
+            },
+
+            spawnMonsters() {
+                // Spawn: 3 skulls, 3 demons, 2 dragons
+                const spawnCount = [3, 3, 2]; // Weak, Medium, Strong
+                
+                for (let typeIndex = 0; typeIndex < this.monsterTypes.length; typeIndex++) {
+                    const type = this.monsterTypes[typeIndex];
+                    const count = spawnCount[typeIndex];
+                    
+                    for (let i = 0; i < count; i++) {
+                        let x, y;
+                        do {
+                            x = Math.floor(Math.random() * (this.dungeonSize - 2)) + 1;
+                            y = Math.floor(Math.random() * (this.dungeonSize - 2)) + 1;
+                        } while (this.dungeon[x][y] === 0 || (x === 5 && y === 5) || 
+                                 this.monsters.some(m => m.x === x && m.y === y));
+                        
+                        this.monsters.push({
+                            x,
+                            y,
+                            hp: type.hp,
+                            maxHp: type.hp,
+                            emoji: type.emoji,
+                            name: type.name,
+                            damage: type.damage,
+                            lastMoveTime: Date.now()
+                        });
+                    }
+                }
+            },
+
+            spawnPotions() {
+                // Spawn 5 health potions and 5 mana potions
+                for (let i = 0; i < 10; i++) {
+                    let x, y;
+                    do {
+                        x = Math.floor(Math.random() * (this.dungeonSize - 2)) + 1;
+                        y = Math.floor(Math.random() * (this.dungeonSize - 2)) + 1;
+                    } while (
+                        this.dungeon[x][y] === 0 || 
+                        (x === 5 && y === 5) || 
+                        this.monsters.some(m => m.x === x && m.y === y) ||
+                        this.potions.some(p => p.x === x && p.y === y)
+                    );
+                    
+                    const isHealth = i < 5;
+                    this.potions.push({
+                        x,
+                        y,
+                        type: isHealth ? 'health' : 'mana',
+                        emoji: isHealth ? '❤️' : '💙',
+                        amount: isHealth ? 30 : 25
+                    });
+                }
+            },
+
+            setupKeyboard() {
+                document.addEventListener('keydown', (e) => {
+                    switch(e.key) {
+                        case 'w':
+                        case 'ArrowUp':
+                            this.move(-1, 0);
+                            e.preventDefault();
+                            break;
+                        case 's':
+                        case 'ArrowDown':
+                            this.move(1, 0);
+                            e.preventDefault();
+                            break;
+                        case 'a':
+                        case 'ArrowLeft':
+                            this.move(0, -1);
+                            e.preventDefault();
+                            break;
+                        case 'd':
+                        case 'ArrowRight':
+                            this.move(0, 1);
+                            e.preventDefault();
+                            break;
+                        case ' ':
+                            this.castFireball();
+                            e.preventDefault();
+                            break;
+                    }
+                });
+            },
+
+            setupTouchControls() {
+                const viewport = document.getElementById('viewport');
+                let touchStartX = 0;
+                let touchStartY = 0;
+                let touchEndX = 0;
+                let touchEndY = 0;
+                
+                const minSwipeDistance = 30;
+                
+                viewport.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                    touchStartY = e.changedTouches[0].screenY;
+                }, { passive: true });
+                
+                viewport.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    touchEndY = e.changedTouches[0].screenY;
+                    this.handleSwipe(touchStartX, touchStartY, touchEndX, touchEndY, minSwipeDistance);
+                }, { passive: true });
+            },
+
+            handleSwipe(startX, startY, endX, endY, minDistance) {
+                const diffX = endX - startX;
+                const diffY = endY - startY;
+                const absDiffX = Math.abs(diffX);
+                const absDiffY = Math.abs(diffY);
+                
+                // Check if swipe is long enough
+                if (absDiffX < minDistance && absDiffY < minDistance) {
+                    return;
+                }
+                
+                // Determine direction
+                if (absDiffX > absDiffY) {
+                    // Horizontal swipe
+                    if (diffX > 0) {
+                        this.move(0, 1); // Right
+                    } else {
+                        this.move(0, -1); // Left
+                    }
+                } else {
+                    // Vertical swipe
+                    if (diffY > 0) {
+                        this.move(1, 0); // Down
+                    } else {
+                        this.move(-1, 0); // Up
+                    }
+                }
+            },
+
+            move(dx, dy) {
+                const newX = this.player.x + dx;
+                const newY = this.player.y + dy;
+
+                // Update direction based on movement
+                if (dx < 0) this.player.direction = 'up';
+                else if (dx > 0) this.player.direction = 'down';
+                else if (dy < 0) this.player.direction = 'left';
+                else if (dy > 0) this.player.direction = 'right';
+
+                if (this.dungeon[newX] && this.dungeon[newX][newY] === 1) {
+                    this.player.x = newX;
+                    this.player.y = newY;
+                    
+                    // Check for potion pickup
+                    this.checkPotionPickup();
+                    
+                    // Check for monster collision
+                    this.checkMonsterCollision();
+                    
+                    // Show walking animation
+                    this.player.isWalking = true;
+                    setTimeout(() => {
+                        this.player.isWalking = false;
+                        this.render();
+                    }, 150);
+                    
+                    this.render();
+                    
+                    // Mana regeneration
+                    if (Math.random() > 0.7) {
+                        this.player.mana = Math.min(this.player.maxMana, this.player.mana + 2);
+                        this.updateHUD();
+                    }
+                } else {
+                    // Just update direction without moving
+                    this.render();
+                }
+            },
+
+            checkPotionPickup() {
+                for (let i = this.potions.length - 1; i >= 0; i--) {
+                    const potion = this.potions[i];
+                    if (potion.x === this.player.x && potion.y === this.player.y) {
+                        // Pick up potion
+                        if (potion.type === 'health') {
+                            this.player.hp = Math.min(this.player.maxHp, this.player.hp + potion.amount);
+                            this.showMessage(`+${potion.amount} HP! ❤️`);
+                        } else {
+                            this.player.mana = Math.min(this.player.maxMana, this.player.mana + potion.amount);
+                            this.showMessage(`+${potion.amount} Mana! 💙`);
+                        }
+                        this.potions.splice(i, 1);
+                        this.updateHUD();
+                    }
+                }
+            },
+
+            checkMonsterCollision() {
+                this.monsters.forEach(monster => {
+                    if (monster.x === this.player.x && monster.y === this.player.y) {
+                        // Player collides with monster
+                        this.player.hp -= monster.damage;
+                        this.showMessage(`-${monster.damage} HP from ${monster.name}! 💥`);
+                        this.updateHUD();
+                        
+                        if (this.player.hp <= 0) {
+                            this.player.hp = 0;
+                            setTimeout(() => {
+                                this.showMessage('💀 Game Over! You died! 💀');
+                                setTimeout(() => location.reload(), 2000);
+                            }, 500);
+                        }
+                    }
+                });
+            },
+
+            startGameLoop() {
+                setInterval(() => {
+                    this.updateFireballs();
+                }, 50);
+                
+                // Monsters move slower than player (every 800ms vs player's 150ms)
+                setInterval(() => {
+                    this.moveMonsters();
+                }, 800);
+            },
+
+            moveMonsters() {
+                this.monsters.forEach(monster => {
+                    // Simple AI: move towards player if close enough
+                    const distToPlayer = Math.abs(monster.x - this.player.x) + Math.abs(monster.y - this.player.y);
+                    
+                    if (distToPlayer <= 6) {
+                        // Monster is within range, chase player
+                        let dx = 0, dy = 0;
+                        
+                        // Randomly choose to move horizontally or vertically
+                        if (Math.random() > 0.5) {
+                            // Move horizontally
+                            if (this.player.x > monster.x) dx = 1;
+                            else if (this.player.x < monster.x) dx = -1;
+                        } else {
+                            // Move vertically
+                            if (this.player.y > monster.y) dy = 1;
+                            else if (this.player.y < monster.y) dy = -1;
+                        }
+                        
+                        const newX = monster.x + dx;
+                        const newY = monster.y + dy;
+                        
+                        // Check if new position is valid and not occupied by another monster
+                        if (this.dungeon[newX] && this.dungeon[newX][newY] === 1 &&
+                            !this.monsters.some(m => m !== monster && m.x === newX && m.y === newY)) {
+                            monster.x = newX;
+                            monster.y = newY;
+                            
+                            // Check if monster caught the player
+                            if (monster.x === this.player.x && monster.y === this.player.y) {
+                                this.player.hp -= monster.damage;
+                                this.showMessage(`-${monster.damage} HP from ${monster.name}! 💥`);
+                                this.updateHUD();
+                                
+                                if (this.player.hp <= 0) {
+                                    this.player.hp = 0;
+                                    setTimeout(() => {
+                                        this.showMessage('💀 Game Over! You died! 💀');
+                                        setTimeout(() => location.reload(), 2000);
+                                    }, 500);
+                                }
+                            }
+                            
+                            this.render();
+                        }
+                    }
+                });
+            },
+
+            render() {
+                const view = document.getElementById('dungeon-view');
+                view.innerHTML = '';
+                
+                // Set view size
+                const viewWidth = this.dungeonSize * this.tileSize;
+                const viewHeight = this.dungeonSize * this.tileSize;
+                view.style.width = viewWidth + 'px';
+                view.style.height = viewHeight + 'px';
+
+                // Draw tiles
+                for (let x = 0; x < this.dungeonSize; x++) {
+                    for (let y = 0; y < this.dungeonSize; y++) {
+                        const tile = document.createElement('div');
+                        tile.className = this.dungeon[x][y] === 0 ? 'tile wall' : 'tile floor';
+                        tile.style.left = y * this.tileSize + 'px';
+                        tile.style.top = x * this.tileSize + 'px';
+                        tile.style.width = this.tileSize + 'px';
+                        tile.style.height = this.tileSize + 'px';
+                        view.appendChild(tile);
+                    }
+                }
+
+                // Draw potions
+                this.potions.forEach(potion => {
+                    const potionEl = document.createElement('div');
+                    potionEl.className = 'potion';
+                    potionEl.style.left = potion.y * this.tileSize + 'px';
+                    potionEl.style.top = potion.x * this.tileSize + 'px';
+                    potionEl.style.width = this.tileSize + 'px';
+                    potionEl.style.height = this.tileSize + 'px';
+                    potionEl.textContent = potion.emoji;
+                    potionEl.style.display = 'flex';
+                    potionEl.style.alignItems = 'center';
+                    potionEl.style.justifyContent = 'center';
+                    view.appendChild(potionEl);
+                });
+
+                // Draw monsters
+                this.monsters.forEach(monster => {
+                    const monsterEl = document.createElement('div');
+                    monsterEl.className = 'monster';
+                    monsterEl.style.left = monster.y * this.tileSize + 'px';
+                    monsterEl.style.top = monster.x * this.tileSize + 'px';
+                    monsterEl.style.width = this.tileSize + 'px';
+                    monsterEl.style.height = this.tileSize + 'px';
+                    monsterEl.onclick = () => this.castFireballAt(monster);
+                    
+                    const sprite = document.createElement('div');
+                    sprite.className = 'monster-sprite';
+                    sprite.textContent = monster.emoji;
+                    monsterEl.appendChild(sprite);
+
+                    // HP bar
+                    const hpBar = document.createElement('div');
+                    hpBar.className = 'hp-bar';
+                    const hpFill = document.createElement('div');
+                    hpFill.className = 'hp-bar-fill';
+                    hpFill.style.width = (monster.hp / monster.maxHp * 100) + '%';
+                    hpBar.appendChild(hpFill);
+                    monsterEl.appendChild(hpBar);
+
+                    view.appendChild(monsterEl);
+                });
+
+                // Draw player
+                const playerEl = document.createElement('div');
+                playerEl.className = 'player direction-' + this.player.direction;
+                playerEl.style.left = this.player.y * this.tileSize + 'px';
+                playerEl.style.top = this.player.x * this.tileSize + 'px';
+                playerEl.style.width = this.tileSize + 'px';
+                playerEl.style.height = this.tileSize + 'px';
+                playerEl.textContent = '🧙‍♂️';
+                
+                view.appendChild(playerEl);
+            },
+
+            castFireball() {
+                // Find closest monster
+                let closest = null;
+                let minDist = Infinity;
+                
+                this.monsters.forEach(monster => {
+                    const dist = Math.abs(monster.x - this.player.x) + Math.abs(monster.y - this.player.y);
+                    if (dist < minDist && dist <= 5) {
+                        minDist = dist;
+                        closest = monster;
+                    }
+                });
+
+                if (!closest) {
+                    this.showMessage('No target in range!');
+                    return;
+                }
+
+                this.castFireballAt(closest);
+            },
+
+            castFireballAt(monster) {
+                if (this.player.mana < 15) {
+                    this.showMessage('Not enough mana!');
+                    return;
+                }
+
+                this.player.mana -= 15;
+                this.updateHUD();
+
+                // Create fireball
+                const fireball = {
+                    x: this.player.x,
+                    y: this.player.y,
+                    targetX: monster.x,
+                    targetY: monster.y,
+                    target: monster,
+                    speed: 0.15
+                };
+                this.fireballs.push(fireball);
+            },
+
+            updateFireballs() {
+                const view = document.getElementById('dungeon-view');
+                
+                // Remove old fireballs
+                view.querySelectorAll('.fireball').forEach(el => el.remove());
+
+                // Update and draw fireballs
+                for (let i = this.fireballs.length - 1; i >= 0; i--) {
+                    const fb = this.fireballs[i];
+                    
+                    // Move towards target
+                    const dx = fb.targetX - fb.x;
+                    const dy = fb.targetY - fb.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < fb.speed) {
+                        // Hit target
+                        this.hitMonster(fb.target);
+                        this.fireballs.splice(i, 1);
+                    } else {
+                        fb.x += (dx / dist) * fb.speed;
+                        fb.y += (dy / dist) * fb.speed;
+                        
+                        // Draw fireball
+                        const fireballEl = document.createElement('div');
+                        fireballEl.className = 'fireball';
+                        fireballEl.textContent = '🔥';
+                        fireballEl.style.left = (fb.y * this.tileSize + this.tileSize / 2) + 'px';
+                        fireballEl.style.top = (fb.x * this.tileSize + this.tileSize / 2) + 'px';
+                        fireballEl.style.transform = 'translate(-50%, -50%)';
+                        view.appendChild(fireballEl);
+                    }
+                }
+            },
+
+            hitMonster(monster) {
+                const damage = 15 + Math.floor(Math.random() * 10);
+                monster.hp -= damage;
+
+                const view = document.getElementById('dungeon-view');
+                
+                // Show explosion
+                const explosion = document.createElement('div');
+                explosion.className = 'explosion';
+                explosion.textContent = '💥';
+                explosion.style.left = (monster.y * this.tileSize + this.tileSize / 2) + 'px';
+                explosion.style.top = (monster.x * this.tileSize + this.tileSize / 2) + 'px';
+                view.appendChild(explosion);
+
+                // Show damage text
+                const damageText = document.createElement('div');
+                damageText.className = 'damage-text';
+                damageText.textContent = `-${damage}`;
+                damageText.style.left = (monster.y * this.tileSize + this.tileSize / 2) + 'px';
+                damageText.style.top = (monster.x * this.tileSize + this.tileSize / 2 - 20) + 'px';
+                view.appendChild(damageText);
+
+                setTimeout(() => {
+                    explosion.remove();
+                    damageText.remove();
+                }, 1000);
+
+                if (monster.hp <= 0) {
+                    // Sometimes drop a potion when monster is defeated
+                    if (Math.random() > 0.5) {
+                        const isHealth = Math.random() > 0.5;
+                        this.potions.push({
+                            x: monster.x,
+                            y: monster.y,
+                            type: isHealth ? 'health' : 'mana',
+                            emoji: isHealth ? '❤️' : '💙',
+                            amount: isHealth ? 30 : 25
+                        });
+                    }
+                    
+                    const index = this.monsters.indexOf(monster);
+                    this.monsters.splice(index, 1);
+                    this.showMessage(`${monster.name} defeated! +50 XP`);
+                    
+                    if (this.monsters.length === 0) {
+                        setTimeout(() => {
+                            this.showMessage('🎉 Victory! All monsters defeated! 🎉');
+                        }, 1000);
+                    }
+                }
+
+                this.render();
+            },
+
+            updateHUD() {
+                const hpBar = document.getElementById('hp-bar');
+                const hpText = document.getElementById('hp-text');
+                const manaBar = document.getElementById('mana-bar');
+                const manaText = document.getElementById('mana-text');
+
+                const hpPercent = (this.player.hp / this.player.maxHp) * 100;
+                const manaPercent = (this.player.mana / this.player.maxMana) * 100;
+
+                hpBar.style.width = hpPercent + '%';
+                hpText.textContent = `${this.player.hp} / ${this.player.maxHp}`;
+                
+                manaBar.style.width = manaPercent + '%';
+                manaText.textContent = `${this.player.mana} / ${this.player.maxMana}`;
+            },
+
+            showMessage(text) {
+                const existing = document.querySelector('.message');
+                if (existing) existing.remove();
+
+                const message = document.createElement('div');
+                message.className = 'message';
+                message.textContent = text;
+                document.getElementById('viewport').appendChild(message);
+
+                setTimeout(() => message.remove(), 2000);
+            }
+        };
+
+        // Start game on load
+        window.addEventListener('load', () => game.init());
+    </script>
+</body>
+</html>
+
