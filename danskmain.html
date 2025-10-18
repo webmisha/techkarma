@@ -239,6 +239,59 @@
         background: rgba(255,255,255,0.25);
       }
 
+      /* Answer options */
+      .answer-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 500px;
+        margin: 20px auto 0;
+      }
+
+      .answer-btn {
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.25);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 16px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: all 0.2s;
+        text-align: center;
+        user-select: none;
+      }
+
+      .answer-btn:hover {
+        background: rgba(255,255,255,0.25);
+        transform: translateY(-2px);
+      }
+
+      .answer-btn:active {
+        transform: scale(0.98);
+      }
+
+      .answer-btn.correct {
+        background: rgba(34, 197, 94, 0.3);
+        border-color: rgba(34, 197, 94, 0.6);
+        color: #86efac;
+        font-weight: 600;
+      }
+
+      .answer-btn.incorrect {
+        background: rgba(239, 68, 68, 0.3);
+        border-color: rgba(239, 68, 68, 0.6);
+        color: #fca5a5;
+        font-weight: 600;
+      }
+
+      .answer-btn.disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
       .btn {
         background: rgba(255,255,255,0.15);
         border: 1px solid rgba(255,255,255,0.2);
@@ -381,7 +434,9 @@
           emoji: "➕",
           ctxDa: "Derudover arbejder mange mennesker hjemmefra i dag.",
           ctxRu: "Кроме того, многие люди сегодня работают из дома.",
-          mnemonic: "ДЁРУ-довер — ДЁРУсь сверху, ДОВЕРху"
+          mnemonic: "ДЁРУ-довер — ДЁРУсь сверху, ДОВЕРху",
+          answers: ["помимо этого", "кроме того", "вдобавок"],
+          c: 1
         },
         {
           da: "dog",
@@ -390,7 +445,9 @@
           emoji: "⚠️",
           ctxDa: "Dog mener nogle, at det gør samarbejdet sværere.",
           ctxRu: "Однако некоторые считают, что это усложняет сотрудничество.",
-          mnemonic: "ДОГ — однако, ДО чеГо довели"
+          mnemonic: "ДОГ — однако, ДО чеГо довели",
+          answers: ["всё же", "однако", "впрочем"],
+          c: 1
         },
         {
           da: "til gengæld",
@@ -399,7 +456,9 @@
           emoji: "⚖️",
           ctxDa: "Til gengæld giver det mere fleksibilitet.",
           ctxRu: "Зато это дает больше гибкости.",
-          mnemonic: "ТИЛЬ ГЕНГЕЛЬД — ТИХО ГЕНдиректор выГнал, зато отдохнём"
+          mnemonic: "ТИЛЬ ГЕНГЕЛЬД — ТИХО ГЕНдиректор выГнал, зато отдохнём",
+          answers: ["взамен", "зато", "в ответ"],
+          c: 1
         },
         {
           da: "alligevel",
@@ -408,7 +467,9 @@
           emoji: "🔄",
           ctxDa: "Alligevel savner mange den daglige kontakt med kolleger.",
           ctxRu: "Тем не менее многие скучают по ежедневному общению с коллегами.",
-          mnemonic: "АЛЛИГЕВЕЛЬ — АЛЛЕ идут ГУЛЯТЬ, тем не менее работаем"
+          mnemonic: "АЛЛИГЕВЕЛЬ — АЛЛЕ идут ГУЛЯТЬ, тем не менее работаем",
+          answers: ["всё же", "тем не менее", "всё-таки"],
+          c: 1
         },
         {
           da: "tværtimod",
@@ -417,7 +478,9 @@
           emoji: "🔄",
           ctxDa: "Tværtimod føler nogle sig mere produktive derhjemme.",
           ctxRu: "Наоборот, некоторые чувствуют себя более продуктивными дома.",
-          mnemonic: "ТВЕРТИМОД — ТВЕРди МОДа, наоборот, мягкий стиль"
+          mnemonic: "ТВЕРТИМОД — ТВЕРди МОДа, наоборот, мягкий стиль",
+          answers: ["наоборот", "напротив", "совсем наоборот"],
+          c: 0
         },
         {
           da: "ikke desto mindre",
@@ -426,7 +489,9 @@
           emoji: "📝",
           ctxDa: "Ikke desto mindre er balancen vigtig.",
           ctxRu: "Тем не менее баланс важен.",
-          mnemonic: "ИККЕ ДЕСТО — НЕ к МЕСТУ пришёл, тем не менее"
+          mnemonic: "ИККЕ ДЕСТО — НЕ к МЕСТУ пришёл, тем не менее",
+          answers: ["всё равно", "тем не менее", "несмотря ни на что"],
+          c: 1
         },
         {
           da: "desuden",
@@ -435,7 +500,9 @@
           emoji: "✨",
           ctxDa: "Desuden spiller motion en stor rolle for sundheden.",
           ctxRu: "Кроме того, физическая активность играет большую роль для здоровья.",
-          mnemonic: "ДЕСУДЕН — ДЕйствующие СУДЬИ подкупные, кроме того"
+          mnemonic: "ДЕСУДЕН — ДЕйствующие СУДЬИ подкупные, кроме того",
+          answers: ["к тому же", "кроме того", "более того"],
+          c: 1
         },
         {
           da: "samtidig",
@@ -444,7 +511,9 @@
           emoji: "⏰",
           ctxDa: "Samtidig bliver folk mere opmærksomme på stress.",
           ctxRu: "Одновременно люди становятся более внимательными к стрессу.",
-          mnemonic: "САМТИДИГ — САМ делаю ТИТАНИЧЕСКУЮ ДЕЛО, одновременно"
+          mnemonic: "САМТИДИГ — САМ делаю ТИТАНИЧЕСКУЮ ДЕЛО, одновременно",
+          answers: ["одновременно", "в то же время", "параллельно"],
+          c: 0
         },
         {
           da: "derfor",
@@ -453,7 +522,9 @@
           emoji: "🔗",
           ctxDa: "Derfor forsøger mange virksomheder at skabe bedre arbejdsmiljø.",
           ctxRu: "Поэтому многие компании стараются создать лучшую рабочую среду.",
-          mnemonic: "ДЭРФОР — ДЭР ФОРточка, поэтому открыта"
+          mnemonic: "ДЭРФОР — ДЭР ФОРточка, поэтому открыта",
+          answers: ["следовательно", "поэтому", "потому что"],
+          c: 1
         },
         {
           da: "for eksempel",
@@ -462,7 +533,9 @@
           emoji: "💡",
           ctxDa: "For eksempel tilbyder de fleksible arbejdstider.",
           ctxRu: "Например, они предлагают гибкий график.",
-          mnemonic: "ФОР ЭКСЕМПЕЛЬ — ФОРма ЭКСцентрика, например"
+          mnemonic: "ФОР ЭКСЕМПЕЛЬ — ФОРма ЭКСцентрика, например",
+          answers: ["к примеру", "например", "в частности"],
+          c: 1
         },
         {
           da: "derimod",
@@ -471,7 +544,9 @@
           emoji: "↔️",
           ctxDa: "Derimod er nogle imod hjemmearbejde.",
           ctxRu: "Напротив, некоторые выступают против работы из дома.",
-          mnemonic: "ДЕРИМОД — ДЕРИть МОДУ напротив"
+          mnemonic: "ДЕРИМОД — ДЕРИть МОДУ напротив",
+          answers: ["зато", "напротив", "наоборот"],
+          c: 1
         },
         {
           da: "selv om",
@@ -480,7 +555,9 @@
           emoji: "🤔",
           ctxDa: "Selv om vejret i Danmark ofte er gråt, cykler folk stadig.",
           ctxRu: "Хотя погода в Дании часто серая, люди всё равно ездят на велосипедах.",
-          mnemonic: "СЕЛЬВ ОМ — СЕЛЬДЬ ОМерзительная, хотя съедобная"
+          mnemonic: "СЕЛЬВ ОМ — СЕЛЬДЬ ОМерзительная, хотя съедобная",
+          answers: ["несмотря на то что", "хотя", "даже если"],
+          c: 1
         },
         {
           da: "endda",
@@ -489,7 +566,9 @@
           emoji: "💪",
           ctxDa: "Endda om vinteren ser man mange på cykel.",
           ctxRu: "Даже зимой можно увидеть многих на велосипедах.",
-          mnemonic: "ЭНДДА — ЭНДшпиль ДАже опасный"
+          mnemonic: "ЭНДДА — ЭНДшпиль ДАже опасный",
+          answers: ["даже", "ещё и", "вдобавок"],
+          c: 0
         },
         {
           da: "til sidst",
@@ -498,7 +577,9 @@
           emoji: "🏁",
           ctxDa: "Til sidst bør vi tale om miljøet.",
           ctxRu: "Наконец, нам стоит поговорить об экологии.",
-          mnemonic: "ТИЛЬ СИДСТ — ТИХО СИДел СТаром, наконец встал"
+          mnemonic: "ТИЛЬ СИДСТ — ТИХО СИДел СТаром, наконец встал",
+          answers: ["наконец", "в конце концов", "в итоге"],
+          c: 0
         },
         {
           da: "mens",
@@ -507,7 +588,9 @@
           emoji: "⏳",
           ctxDa: "Mens nogle fokuserer på klimaet, tænker andre på økonomien.",
           ctxRu: "В то время как одни думают о климате, другие — об экономике.",
-          mnemonic: "МЕНС — МЕНя окружили, в то время как убегаю"
+          mnemonic: "МЕНС — МЕНя окружили, в то время как убегаю",
+          answers: ["пока", "в то время как", "тогда как"],
+          c: 1
         },
         {
           da: "på den ene side",
@@ -516,7 +599,9 @@
           emoji: "📊",
           ctxDa: "På den ene side ønsker man vækst, på den anden side bæredygtighed.",
           ctxRu: "С одной стороны хотят роста, с другой — устойчивости.",
-          mnemonic: "ПО ДЕН ЕНЕ СИДЕ — ПО ДНУ ЕДЕм СИДЯ, с одной стороны"
+          mnemonic: "ПО ДЕН ЕНЕ СИДЕ — ПО ДНУ ЕДЕм СИДЯ, с одной стороны",
+          answers: ["с одной стороны", "с одного бока", "с этой стороны"],
+          c: 0
         },
         {
           da: "i øvrigt",
@@ -525,7 +610,9 @@
           emoji: "💬",
           ctxDa: "I øvrigt har Danmark mange grønne initiativer.",
           ctxRu: "Кстати, в Дании много зелёных инициатив.",
-          mnemonic: "И ЭВРИТ — И ОВРаг тут, кстати"
+          mnemonic: "И ЭВРИТ — И ОВРаг тут, кстати",
+          answers: ["кстати", "к слову", "между прочим"],
+          c: 0
         },
         {
           da: "for øvrigt",
@@ -534,7 +621,9 @@
           emoji: "💭",
           ctxDa: "For øvrigt er det dyrt at eje bil i Danmark.",
           ctxRu: "Кстати, владеть машиной в Дании дорого.",
-          mnemonic: "ФОР ЭВРИТ — ФОРель ОВРаг, кстати глубокий"
+          mnemonic: "ФОР ЭВРИТ — ФОРель ОВРаг, кстати глубокий",
+          answers: ["впрочем", "кстати", "к слову сказать"],
+          c: 1
         },
         {
           da: "dermed",
@@ -543,7 +632,9 @@
           emoji: "🎯",
           ctxDa: "Dermed prøver mange at bruge offentlig transport.",
           ctxRu: "Тем самым многие стараются пользоваться общественным транспортом.",
-          mnemonic: "ДЕРМЕД — ДЕРЕВО МЕДленно, тем самым растёт"
+          mnemonic: "ДЕРМЕД — ДЕРЕВО МЕДленно, тем самым растёт",
+          answers: ["таким образом", "тем самым", "этим способом"],
+          c: 1
         },
         {
           da: "både",
@@ -552,7 +643,9 @@
           emoji: "🤝",
           ctxDa: "Både unge og ældre går mere op i sund mad.",
           ctxRu: "И молодые, и пожилые больше заботятся о здоровом питании.",
-          mnemonic: "БОДЕ — БОДрые и сонные, и те и другие"
+          mnemonic: "БОДЕ — БОДрые и сонные, и те и другие",
+          answers: ["как", "и", "оба"],
+          c: 1
         },
         {
           da: "ikke kun",
@@ -561,7 +654,9 @@
           emoji: "📈",
           ctxDa: "Ikke kun i byerne, men også på landet.",
           ctxRu: "Не только в городах, но и в сельской местности.",
-          mnemonic: "ИККЕ КУН — ИКРА КУНается, не только одна"
+          mnemonic: "ИККЕ КУН — ИКРА КУНается, не только одна",
+          answers: ["не только", "не просто", "не исключительно"],
+          c: 0
         },
         {
           da: "netop derfor",
@@ -570,7 +665,9 @@
           emoji: "⭐",
           ctxDa: "Netop derfor er økologiske varer blevet populære.",
           ctxRu: "Именно поэтому органические продукты стали популярными.",
-          mnemonic: "НЕТОП ДЭРФОР — НЕТ ОПасности ДЛЯ ФОРточки, именно поэтому"
+          mnemonic: "НЕТОП ДЭРФОР — НЕТ ОПасности ДЛЯ ФОРточки, именно поэтому",
+          answers: ["как раз поэтому", "именно поэтому", "вот почему"],
+          c: 1
         },
         {
           da: "faktisk",
@@ -579,7 +676,9 @@
           emoji: "✅",
           ctxDa: "Faktisk køber over halvdelen af danskerne økologisk mælk.",
           ctxRu: "На самом деле более половины датчан покупают органическое молоко.",
-          mnemonic: "ФАКТИСК — ФАКТы ИСКать, на самом деле"
+          mnemonic: "ФАКТИСК — ФАКТы ИСКать, на самом деле",
+          answers: ["фактически", "на самом деле", "в действительности"],
+          c: 1
         },
         {
           da: "på trods af",
@@ -588,7 +687,9 @@
           emoji: "🛡️",
           ctxDa: "På trods af høje priser rejser danskerne meget.",
           ctxRu: "Несмотря на высокие цены, датчане много путешествуют.",
-          mnemonic: "ПО ТРОС АФ — ПО ТРОСу АФера, несмотря на опасность"
+          mnemonic: "ПО ТРОС АФ — ПО ТРОСу АФера, несмотря на опасность",
+          answers: ["вопреки", "несмотря на", "невзирая на"],
+          c: 1
         },
         {
           da: "især",
@@ -597,7 +698,9 @@
           emoji: "🔍",
           ctxDa: "Især om sommeren tager de på ferie til Sydeuropa.",
           ctxRu: "Особенно летом они едут в Южную Европу.",
-          mnemonic: "ИСЛИГ — ИСключительно ЛИГа, особенно сильная"
+          mnemonic: "ИСЛИГ — ИСключительно ЛИГа, особенно сильная",
+          answers: ["особенно", "в особенности", "главным образом"],
+          c: 0
         },
         {
           da: "selvom",
@@ -606,7 +709,9 @@
           emoji: "🤷",
           ctxDa: "Selvom sundhedssystemet er godt, er ventetiden lang.",
           ctxRu: "Хотя система здравоохранения хорошая, время ожидания долгое.",
-          mnemonic: "СЕЛЬВОМ — СЕЛЬДЬ ВОМучае, хотя плавает"
+          mnemonic: "СЕЛЬВОМ — СЕЛЬДЬ ВОМучае, хотя плавает",
+          answers: ["даже если", "хотя", "пусть"],
+          c: 1
         },
         {
           da: "imidlertid",
@@ -615,7 +720,9 @@
           emoji: "📋",
           ctxDa: "Imidlertid har ikke alle råd til det.",
           ctxRu: "Однако не у всех есть на это средства.",
-          mnemonic: "ИМИДЛЕРТИД — ИМИДж ДЛЯ людей ТУТ, однако дорогой"
+          mnemonic: "ИМИДЛЕРТИД — ИМИДж ДЛЯ людей ТУТ, однако дорогой",
+          answers: ["впрочем", "однако", "тем не менее"],
+          c: 1
         },
         {
           da: "ligeledes",
@@ -624,7 +731,9 @@
           emoji: "🔄",
           ctxDa: "Ligeledes er uddannelse gratis, hvilket hjælper mange.",
           ctxRu: "Точно так же образование бесплатно, что помогает многим.",
-          mnemonic: "ЛИГЕЛЕДЕС — ЛИГа ЛЕДяная, точно так же холодная"
+          mnemonic: "ЛИГЕЛЕДЕС — ЛИГа ЛЕДяная, точно так же холодная",
+          answers: ["аналогично", "точно так же", "подобным образом"],
+          c: 1
         },
         {
           da: "endelig",
@@ -633,7 +742,9 @@
           emoji: "🎊",
           ctxDa: "Endelig føler mange sig mere frie uden storbyens stress.",
           ctxRu: "Наконец, многие чувствуют себя свободнее без городского стресса.",
-          mnemonic: "ЭНДЕЛИГ — ЭНДшпиль наконец ЛЕГкий"
+          mnemonic: "ЭНДЕЛИГ — ЭНДшпиль наконец ЛЕГкий",
+          answers: ["в конце концов", "наконец", "в итоге"],
+          c: 1
         },
         {
           da: "ikke kun",
@@ -642,7 +753,9 @@
           emoji: "🌐",
           ctxDa: "Ikke kun fritid, men også socialt liv ændres.",
           ctxRu: "Меняется не только досуг, но и социальная жизнь.",
-          mnemonic: "ИККЕ КУН — ИКРА КУНается везде, не только в море"
+          mnemonic: "ИККЕ КУН — ИКРА КУНается везде, не только в море",
+          answers: ["не лишь", "не только", "не единственно"],
+          c: 1
         },
         {
           da: "gennemskue",
@@ -651,7 +764,9 @@
           emoji: "🔍",
           ctxDa: "Det er ikke svært at gennemskue hans planer.",
           ctxRu: "Нетрудно разгадать его планы.",
-          mnemonic: "ГЕННЕМСКУЭ — ГЕНий НЕМой СКУчный, разгадать его можно"
+          mnemonic: "ГЕННЕМСКУЭ — ГЕНий НЕМой СКУчный, разгадать его можно",
+          answers: ["разгадать", "понять", "распознать"],
+          c: 0
         },
         {
           da: "afvise",
@@ -660,7 +775,9 @@
           emoji: "❌",
           ctxDa: "Regeringen har afvist forslaget.",
           ctxRu: "Правительство отклонило предложение.",
-          mnemonic: "АФВИСЕ — АФера ВИСит, отклонить её надо"
+          mnemonic: "АФВИСЕ — АФера ВИСит, отклонить её надо",
+          answers: ["отклонить", "отказать", "отвергнуть"],
+          c: 0
         },
         {
           da: "udelukke",
@@ -669,7 +786,9 @@
           emoji: "🚫",
           ctxDa: "Vi kan ikke udelukke, at der sker fejl.",
           ctxRu: "Мы не можем исключить, что произойдут ошибки.",
-          mnemonic: "УДЕЛЮККЕ — УДЕЛ ЛЮКа, исключить из списка"
+          mnemonic: "УДЕЛЮККЕ — УДЕЛ ЛЮКа, исключить из списка",
+          answers: ["исключить", "устранить", "отменить"],
+          c: 0
         },
         {
           da: "forvirrende",
@@ -678,7 +797,9 @@
           emoji: "😵",
           ctxDa: "Instruktionen var meget forvirrende.",
           ctxRu: "Инструкция была очень запутанной.",
-          mnemonic: "ФОРВИРРЕНДЕ — ФОР виражей РЕНдер ДЕлает, запутанный"
+          mnemonic: "ФОРВИРРЕНДЕ — ФОР виражей РЕНдер ДЕлает, запутанный",
+          answers: ["запутанный", "сбивающий", "непонятный"],
+          c: 0
         },
         {
           da: "unødvendigt",
@@ -687,7 +808,9 @@
           emoji: "🗑️",
           ctxDa: "Det er unødvendigt at bekymre sig så meget.",
           ctxRu: "Не нужно так сильно беспокоиться.",
-          mnemonic: "УНЁДВЕНДИТ — УНёс ВЕНОК ДИТя, ненужный был"
+          mnemonic: "УНЁДВЕНДИТ — УНёс ВЕНОК ДИТя, ненужный был",
+          answers: ["излишний", "ненужный", "лишний"],
+          c: 1
         },
         {
           da: "derimod",
@@ -696,7 +819,9 @@
           emoji: "↔️",
           ctxDa: "Han er ikke doven, derimod er han meget flittig.",
           ctxRu: "Он не ленивый, напротив, он очень трудолюбивый.",
-          mnemonic: "ДЕРИМОД — ДЕРИть МОДУ, напротив традиций"
+          mnemonic: "ДЕРИМОД — ДЕРИть МОДУ, напротив традиций",
+          answers: ["наоборот", "напротив", "зато"],
+          c: 1
         },
         {
           da: "udskyde",
@@ -705,7 +830,9 @@
           emoji: "📅",
           ctxDa: "Vi er nødt til at udskyde mødet til næste uge.",
           ctxRu: "Нам придётся перенести встречу на следующую неделю.",
-          mnemonic: "УДСКЮДЕ — УДочку СКУчно ЮДЕть, отложить рыбалку"
+          mnemonic: "УДСКЮДЕ — УДочку СКУчно ЮДЕть, отложить рыбалку",
+          answers: ["перенести", "отложить", "передвинуть"],
+          c: 1
         },
         {
           da: "overveje",
@@ -714,7 +841,9 @@
           emoji: "🤔",
           ctxDa: "Jeg overvejer at skifte job.",
           ctxRu: "Я обдумываю смену работы.",
-          mnemonic: "ОВЕРВЕ́Й — ОВЕРкиль ВЕЙся, обдумывать маршрут"
+          mnemonic: "ОВЕРВЕ́Й — ОВЕРкиль ВЕЙся, обдумывать маршрут",
+          answers: ["рассматривать", "обдумывать", "взвешивать"],
+          c: 1
         },
         {
           da: "ikke desto mindre",
@@ -723,7 +852,9 @@
           emoji: "📝",
           ctxDa: "Det er dyrt, ikke desto mindre er det værd at prøve.",
           ctxRu: "Это дорого, тем не менее стоит попробовать.",
-          mnemonic: "ИККЕ ДЕСТО МИНДРЕ — ИКРА МЕСТА МИНдальная, тем не менее дорогая"
+          mnemonic: "ИККЕ ДЕСТО МИНДРЕ — ИКРА МЕСТА МИНдальная, тем не менее дорогая",
+          answers: ["тем не менее", "всё же", "несмотря на это"],
+          c: 0
         },
         {
           da: "heller",
@@ -732,7 +863,9 @@
           emoji: "➖",
           ctxDa: "Jeg kan ikke lide kaffe, og te kan jeg heller ikke lide.",
           ctxRu: "Я не люблю кофе, и чай я тоже не люблю.",
-          mnemonic: "ХЕЛЛЕР — ХЕЛлоу говорит ЛЕРа, тоже не хочет"
+          mnemonic: "ХЕЛЛЕР — ХЕЛлоу говорит ЛЕРа, тоже не хочет",
+          answers: ["тоже не", "также не", "и не"],
+          c: 0
         },
         {
           da: "nødvendigvis",
@@ -741,7 +874,9 @@
           emoji: "❗",
           ctxDa: "Det betyder ikke nødvendigvis, at vi tager fejl.",
           ctxRu: "Это не обязательно означает, что мы ошибаемся.",
-          mnemonic: "НЁДВЕНДИВИС — НУЖНО ВЕНу ДИВно ВИдеть, обязательно"
+          mnemonic: "НЁДВЕНДИВИС — НУЖНО ВЕНу ДИВно ВИдеть, обязательно",
+          answers: ["непременно", "обязательно", "неизбежно"],
+          c: 1
         },
         {
           da: "altså",
@@ -750,7 +885,9 @@
           emoji: "💬",
           ctxDa: "Han kommer ikke, altså må vi begynde uden ham.",
           ctxRu: "Он не придёт, итак, мы должны начать без него.",
-          mnemonic: "АЛЬТСО — АЛЬТ поёт, итак начинаем"
+          mnemonic: "АЛЬТСО — АЛЬТ поёт, итак начинаем",
+          answers: ["следовательно", "итак", "значит"],
+          c: 1
         },
         {
           da: "forøge",
@@ -759,7 +896,9 @@
           emoji: "📈",
           ctxDa: "Virksomheden vil forøge produktionen næste år.",
           ctxRu: "Компания увеличит производство в следующем году.",
-          mnemonic: "ФОРЁЙЕ — ФОРель ЁЖится, увеличить размер"
+          mnemonic: "ФОРЁЙЕ — ФОРель ЁЖится, увеличить размер",
+          answers: ["увеличить", "повысить", "расширить"],
+          c: 0
         },
         {
           da: "overtage",
@@ -768,7 +907,9 @@
           emoji: "🤝",
           ctxDa: "Hun overtager min stilling, når jeg stopper.",
           ctxRu: "Она возьмёт на себя мою должность, когда я уйду.",
-          mnemonic: "ОВЕРТАГЕ — ОВЕРкиль ТАЩИ, взять на себя"
+          mnemonic: "ОВЕРТАГЕ — ОВЕРкиль ТАЩИ, взять на себя",
+          answers: ["взять на себя", "принять", "перенять"],
+          c: 0
         },
         {
           da: "formålet",
@@ -777,7 +918,9 @@
           emoji: "🎯",
           ctxDa: "Formålet med mødet er at finde en løsning.",
           ctxRu: "Цель встречи — найти решение.",
-          mnemonic: "ФОРМОЛЕТ — ФОРМа МОЛится, цель достичь"
+          mnemonic: "ФОРМОЛЕТ — ФОРМа МОЛится, цель достичь",
+          answers: ["назначение", "цель", "предназначение"],
+          c: 1
         },
         {
           da: "hensigten",
@@ -786,7 +929,9 @@
           emoji: "💡",
           ctxDa: "Det var ikke min hensigt at såre dig.",
           ctxRu: "Я не намеревался обидеть тебя.",
-          mnemonic: "ХЕНСИКТЕН — ХЕНдай СИКтит мотор, намерение ехать"
+          mnemonic: "ХЕНСИКТЕН — ХЕНдай СИКтит мотор, намерение ехать",
+          answers: ["намерение", "замысел", "умысел"],
+          c: 0
         },
         {
           da: "sandsynlig",
@@ -795,7 +940,9 @@
           emoji: "🎲",
           ctxDa: "Det er sandsynligt, at det regner i morgen.",
           ctxRu: "Вероятно, завтра будет дождь.",
-          mnemonic: "САНДСЮНЛИ — САНДалии СЮДа ЛИли, вероятно промокли"
+          mnemonic: "САНДСЮНЛИ — САНДалии СЮДа ЛИли, вероятно промокли",
+          answers: ["вероятный", "возможный", "правдоподобный"],
+          c: 0
         },
         {
           da: "svækket",
@@ -804,7 +951,9 @@
           emoji: "📉",
           ctxDa: "Økonomien er blevet svækket af krisen.",
           ctxRu: "Экономика была ослаблена кризисом.",
-          mnemonic: "СВЕККЕТ — СВЁКЛА КЕКС, ослабленный вкус"
+          mnemonic: "СВЕККЕТ — СВЁКЛА КЕКС, ослабленный вкус",
+          answers: ["ослабленный", "ослабевший", "ухудшенный"],
+          c: 0
         },
         {
           da: "undersøgt",
@@ -813,7 +962,9 @@
           emoji: "🔬",
           ctxDa: "Sagen er blevet grundigt undersøgt af politiet.",
           ctxRu: "Дело было тщательно изучено полицией.",
-          mnemonic: "УНДЕРСЁГТ — УНДер водой СЁГун, исследованный морем"
+          mnemonic: "УНДЕРСЁГТ — УНДер водой СЁГун, исследованный морем",
+          answers: ["исследованный", "изученный", "проверенный"],
+          c: 0
         }
       ];
 
@@ -881,6 +1032,20 @@
         const ctxHtml = highlightContext(item.ctxDa || item.da, item.da, item.emoji);
         const bgColor = getCardColor(item.emoji);
         
+        // Generate answer options HTML if available
+        let answersHtml = '';
+        if (item.answers && item.answers.length > 0) {
+          answersHtml = `
+            <div class="answer-options">
+              ${item.answers.map((answer, i) => `
+                <button class="answer-btn" data-card-index="${index}" data-answer-index="${i}">
+                  ${answer}
+                </button>
+              `).join('')}
+            </div>
+          `;
+        }
+        
         return `
           <div class="card-slide" data-index="${index}">
             <div class="card" data-index="${index}">
@@ -889,6 +1054,7 @@
                 </div>
                 <div class="main-content">
                   <div class="context">${ctxHtml}</div>
+                  ${answersHtml}
                 </div>
                 <div class="actions">
                 </div>
@@ -952,7 +1118,51 @@
           });
         });
 
+        // Add event listeners for answer buttons
+        document.querySelectorAll('.answer-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleAnswer(e.target);
+          });
+        });
+
         updateStats();
+      }
+
+      function handleAnswer(btn) {
+        const cardIndex = parseInt(btn.dataset.cardIndex);
+        const answerIndex = parseInt(btn.dataset.answerIndex);
+        const dataIndex = state.order[cardIndex];
+        const item = DATA[dataIndex];
+        
+        // Get the card slide element
+        const slide = btn.closest('.card-slide');
+        if (!slide) return;
+        
+        // Get all answer buttons in this card
+        const buttons = slide.querySelectorAll('.answer-btn');
+        
+        // Check if answer is correct
+        const isCorrect = answerIndex === item.c;
+        
+        // Update button states
+        buttons.forEach((button, i) => {
+          button.classList.add('disabled');
+          button.style.pointerEvents = 'none';
+          
+          if (i === item.c) {
+            button.classList.add('correct');
+          } else if (i === answerIndex && !isCorrect) {
+            button.classList.add('incorrect');
+          }
+        });
+        
+        // Show feedback toast
+        if (isCorrect) {
+          showToast('✅ Правильно!');
+        } else {
+          showToast('❌ Неправильно');
+        }
       }
 
       function flipCard(card) {
