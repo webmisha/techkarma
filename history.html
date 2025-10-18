@@ -133,6 +133,40 @@
         opacity: 0.5;
       }
 
+      /* Audio controls */
+      .audio-controls {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+      }
+
+      .btn-audio {
+        width: 52px;
+        height: 52px;
+        background: rgba(255,255,255,0.15);
+        border: 1px solid rgba(255,255,255,0.25);
+        color: white;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+      }
+
+      .btn-audio:active {
+        transform: scale(0.9);
+      }
+
+      .btn-audio:hover {
+        background: rgba(255,255,255,0.25);
+      }
 
       /* Progress bar */
       .progress-bar {
@@ -313,6 +347,10 @@
               <div class="answers">
                 ${answersHtml}
               </div>
+              <div class="audio-controls">
+                <button class="btn-audio speak-da-btn" data-index="${index}">🇩🇰</button>
+                <button class="btn-audio speak-ru-btn" data-index="${index}">🇷🇺</button>
+              </div>
             </div>
           </div>
         `;
@@ -328,6 +366,29 @@
         // Add event listeners for answers
         document.querySelectorAll('.answer-btn').forEach(btn => {
           btn.addEventListener('click', handleAnswer);
+        });
+
+        // Add event listeners for audio buttons
+        document.querySelectorAll('.speak-da-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(btn.dataset.index);
+            const dataIndex = state.order[index];
+            const item = DATA[dataIndex];
+            speak(item.q, 'da');
+          });
+        });
+
+        document.querySelectorAll('.speak-ru-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const index = parseInt(btn.dataset.index);
+            const dataIndex = state.order[index];
+            const item = DATA[dataIndex];
+            // For Russian, we need to speak the answer (assuming correct answer)
+            const correctAnswer = item.a[item.c];
+            speak(correctAnswer, 'ru');
+          });
         });
 
         updateStats();
@@ -381,6 +442,225 @@
         state.answered = [];
         renderCards();
         container.scrollTop = 0;
+      }
+
+      // Speech synthesis
+      let voicesLoaded = false;
+      let availableVoices = [];
+      
+      function loadVoices() {
+        availableVoices = window.speechSynthesis.getVoices();
+        if (availableVoices.length > 0) {
+          voicesLoaded = true;
+          console.log('Loaded voices:', availableVoices.map(v => `${v.name} (${v.lang})`));
+        }
+      }
+      
+      // Load voices on page load and when they change
+      if (window.speechSynthesis) {
+        loadVoices();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        
+        // Also try loading after user interaction (iOS requirement)
+        document.addEventListener('click', () => {
+          setTimeout(loadVoices, 100);
+        }, { once: true });
+      }
+
+      function selectBestVoice(lang) {
+        if (!voicesLoaded || availableVoices.length === 0) {
+          console.warn('No voices loaded yet');
+          return null;
+        }
+
+        const langCode = lang === 'da' ? 'da' : 'ru';
+        
+        // Priority list of HIGH-QUALITY voice names for each language
+        const danishVoices = [
+          'sara', 'ida', 'christel', 'magnus', 'freja',  // macOS/iOS
+          'google dansk', 'google danish',                // Android/Chrome
+          'microsoft christel', 'dansk', 'danish', 'da-dk'
+        ];
+        const russianVoices = [
+          'yuri', 'milena', 'katya', 'ekaterina',        // macOS/iOS
+          'google русский', 'google russian',             // Android/Chrome  
+          'microsoft ekaterina', 'russian', 'русский', 'ru-ru'
+        ];
+        
+        const preferredNames = lang === 'da' ? danishVoices : russianVoices;
+        
+        // First, try to find voices that match the language code exactly
+        const exactMatches = availableVoices.filter(v => 
+          v.lang.toLowerCase().startsWith(langCode)
+        );
+        
+        console.log(`Found ${exactMatches.length} voices for ${langCode}:`, 
+          exactMatches.map(v => `${v.name} (${v.lang}) [${v.localService ? 'local' : 'remote'}]`));
+        
+        // Prefer local voices (they're usually higher quality)
+        const localVoices = exactMatches.filter(v => v.localService);
+        const remoteVoices = exactMatches.filter(v => !v.localService);
+        
+        // Try to find preferred voice by name (prioritize local)
+        for (const prefName of preferredNames) {
+          // First check local voices
+          let voice = localVoices.find(v => 
+            v.name.toLowerCase().includes(prefName)
+          );
+          if (voice) {
+            console.log(`Selected local voice: ${voice.name} (${voice.lang})`);
+            return voice;
+          }
+          
+          // Then check remote voices
+          voice = remoteVoices.find(v => 
+            v.name.toLowerCase().includes(prefName)
+          );
+          if (voice) {
+            console.log(`Selected remote voice: ${voice.name} (${voice.lang})`);
+            return voice;
+          }
+        }
+        
+        // Fallback: prefer local voice if available
+        if (localVoices.length > 0) {
+          console.log(`Using fallback local voice: ${localVoices[0].name} (${localVoices[0].lang})`);
+          return localVoices[0];
+        }
+        
+        if (exactMatches.length > 0) {
+          console.log(`Using fallback voice: ${exactMatches[0].name} (${exactMatches[0].lang})`);
+          return exactMatches[0];
+        }
+        
+        console.warn(`No ${langCode} voices found`);
+        return null;
+      }
+      
+      // Clean text for better speech quality
+      function cleanTextForSpeech(text, lang) {
+        if (!text) return text;
+        
+        let cleaned = text.trim();
+        
+        // Remove HTML tags if any
+        cleaned = cleaned.replace(/<[^>]*>/g, '');
+        
+        // Normalize spaces
+        cleaned = cleaned.replace(/\s+/g, ' ');
+        
+        // Add natural pauses for better prosody
+        if (lang === 'da') {
+          // Add pauses after Danish conjunctions
+          cleaned = cleaned.replace(/([,;:])/g, '$1 ');
+          cleaned = cleaned.replace(/\s+/g, ' ');
+        } else if (lang === 'ru') {
+          // Add pauses for Russian
+          cleaned = cleaned.replace(/([,;:])/g, '$1 ');
+          cleaned = cleaned.replace(/\s+/g, ' ');
+        }
+        
+        // Ensure proper sentence ending
+        if (!/[.!?…]$/.test(cleaned)) {
+          cleaned += '.';
+        }
+        
+        return cleaned;
+      }
+
+      function speak(text, lang) {
+        if (!window.speechSynthesis || !text) {
+          console.error('Speech synthesis not available');
+          return;
+        }
+        
+        const synth = window.speechSynthesis;
+        
+        // Cancel any ongoing speech smoothly
+        if (synth.speaking) {
+          synth.cancel();
+        }
+        
+        // Wait for cancel to complete and voices to be ready
+        setTimeout(() => {
+          // Clean text for better quality
+          const cleanedText = cleanTextForSpeech(text, lang);
+          
+          const utterance = new SpeechSynthesisUtterance(cleanedText);
+          
+          // Set language explicitly
+          utterance.lang = lang === 'da' ? 'da-DK' : 'ru-RU';
+          
+          // Try to select best voice
+          const voice = selectBestVoice(lang);
+          if (voice) {
+            utterance.voice = voice;
+            console.log(`Speaking with voice: ${voice.name} (${voice.lang})`);
+          } else { 
+            console.warn(`No voice found for ${lang}, using default`);
+          }
+          
+          // Optimized speech parameters for natural sound
+          if (lang === 'da') {
+            utterance.rate = 0.82;  // Slower for Danish
+            utterance.pitch = 1.05; // Slightly higher pitch
+            utterance.volume = 1.0;
+          } else if (lang === 'ru') {
+            utterance.rate = 0.88;  // Slower for Russian
+            utterance.pitch = 0.98; // Slightly lower pitch
+            utterance.volume = 1.0;
+          }
+          
+          // Error handling
+          utterance.onerror = (event) => {
+            console.error('Speech error:', event.error, event);
+            if (event.error !== 'canceled') {
+              showToast('🔇 Ошибка воспроизведения');
+            }
+          };
+          
+          utterance.onstart = () => {
+            console.log(`Started speaking: "${cleanedText.substring(0, 50)}..."`);
+          };
+          
+          utterance.onend = () => {
+            console.log('Finished speaking');
+          };
+          
+          utterance.onpause = () => {
+            console.log('Speech paused');
+          };
+          
+          utterance.onresume = () => {
+            console.log('Speech resumed');
+          };
+          
+          // Resume audio context if needed (iOS fix)
+          if (synth.paused) {
+            synth.resume();
+          }
+          
+          // Speak with error handling
+          try {
+            synth.speak(utterance);
+            
+            // iOS/Safari fix: resume after small delay
+            setTimeout(() => {
+              if (synth.paused) {
+                synth.resume();
+              }
+            }, 100);
+          } catch (error) {
+            console.error('Failed to speak:', error);
+            showToast('🔇 Не удалось воспроизвести');
+          }
+        }, 150);
+      }
+
+      function getCurrentQuestion() {
+        const index = Math.floor(container.scrollTop / window.innerHeight);
+        const dataIndex = state.order[index];
+        return DATA[dataIndex];
       }
 
       function init() {
