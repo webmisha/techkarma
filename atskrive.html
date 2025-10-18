@@ -604,10 +604,10 @@
       }
 
       function normalizeText(text) {
-        // Normalize text for comparison: lowercase, trim, remove extra spaces and punctuation
+        // Normalize text for comparison: lowercase, trim, remove extra spaces and all punctuation
         return text.toLowerCase()
           .trim()
-          .replace(/[.,!?;:]/g, '')
+          .replace(/[.,!?;:…]/g, '')
           .replace(/\s+/g, ' ');
       }
 
