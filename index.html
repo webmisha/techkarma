@@ -106,6 +106,42 @@
       margin-left: 10px;
     }
 
+    .projects-box {
+      border: 2px solid #000000;
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+
+    .project-list {
+      list-style: none;
+    }
+
+    .project-list li {
+      margin-bottom: 25px;
+      padding-left: 0;
+    }
+
+    .project-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .project-list a {
+      color: #000000;
+      text-decoration: none;
+      font-size: 16px;
+      display: block;
+      line-height: 1.6;
+      transition: opacity 0.2s;
+    }
+
+    .project-list a:hover {
+      opacity: 0.6;
+    }
+
+    .project-list strong {
+      font-weight: 700;
+    }
+
     .book-list {
       display: flex;
       flex-direction: column;
@@ -219,7 +255,7 @@
   <div class="container">
     <header>
       <h1>Mikhail Sukhov</h1>
-      <div class="subtitle">Agile Coach with 10 years of experience implementing Agile operating models in companies. Former Senior Product Manager with a Master's degree in Engineering. Skilled in OKRs, metrics, and Product Management. Passionate about Frameworks and Change Management.</div>
+      <div class="subtitle">Agile Coach with 10 years of experience implementing Agile operating models in companies. Former Senior Product Manager with a Master's degree in Engineering. Skilled in OKRs, metrics, and Product Management. Passionate about Frameworks and Change Management. Vibe coding.</div>
     </header>
 
     <section>
@@ -229,8 +265,46 @@
       </div>
     </section>
 
-    <section>
-      <h2>Case Studies</h2>
+  <section>
+    <h2>Projects</h2>
+    <div class="projects-box">
+      <ul class="project-list">
+        <li>
+          <a href="danskmain.html">
+            <strong>Danish Learning App</strong> — Interactive flashcards for learning Danish with audio pronunciation, mnemonic associations, and multiple-choice quizzes
+          </a>
+        </li>
+        <li>
+          <a href="atskrive.html">
+            <strong>Danish Writing Trainer</strong> — Practice writing Danish translations with instant feedback and validation
+          </a>
+        </li>
+        <li>
+          <a href="history.html">
+            <strong>History Quiz</strong> — Educational quiz game with multiple-choice questions about history topics
+          </a>
+        </li>
+        <li>
+          <a href="mm.html">
+            <strong>Dungeon Mage</strong> — Top-down RPG game where a mage explores dungeons and battles monsters with fireballs
+          </a>
+        </li>
+        <li>
+          <a href="news.html">
+            <strong>AI News Feed</strong> — Curated feed of tweets from tech leaders and AI pioneers in chronological order
+          </a>
+        </li>
+        <li>
+          <a href="helga.html">
+            <strong>Helga AI</strong> — Landing page for an AI startup focused on enterprise solutions
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Case Studies</h2>
       <ul class="article-list">
         <li>
           <a href="https://webmisha.medium.com/team-maturity-model-86781671eb44" target="_blank" rel="noopener">
