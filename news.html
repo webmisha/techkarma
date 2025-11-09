@@ -174,7 +174,10 @@
           Updated: <span class="stat-value" id="last-update">—</span>
         </div>
       </div>
-      <button class="refresh-btn" onclick="loadNews()">Refresh</button>
+      <div style="display: flex; gap: 10px;">
+        <button class="refresh-btn" onclick="loadNews()">Refresh Time</button>
+        <button class="refresh-btn" onclick="generateNewFeed()">New Feed</button>
+      </div>
     </div>
 
     <div id="loading" class="loading">
@@ -295,24 +298,43 @@
       { name: 'Larry Page', handle: 'larrypage', avatar: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Larry_Page_in_the_European_Parliament%2C_17.06.2009.jpg' }
     ];
 
-    // Fixed tweets with exact timestamps - never change
-    let FIXED_TWEETS = null;
-    const TWEET_CREATED_TIME = Date.now();
+    // Fixed tweets stored in localStorage - never change across page reloads
+    const STORAGE_KEY = 'ai_news_fixed_tweets';
+    
+    function loadFixedTweets() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error('Error parsing stored tweets:', e);
+          return null;
+        }
+      }
+      return null;
+    }
+
+    function saveFixedTweets(tweets) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(tweets));
+      } catch (e) {
+        console.error('Error saving tweets:', e);
+      }
+    }
 
     function generateTweets(count = 20) {
-      // If we already have fixed tweets, just update their relative time
-      if (FIXED_TWEETS) {
-        const now = Date.now();
-        const elapsed = now - TWEET_CREATED_TIME;
-        
-        return FIXED_TWEETS.map((tweet, i) => ({
+      // Try to load existing fixed tweets
+      const fixedTweets = loadFixedTweets();
+      
+      if (fixedTweets && fixedTweets.length > 0) {
+        // Return existing tweets - timestamps are absolute and don't change
+        return fixedTweets.map(tweet => ({
           ...tweet,
-          // Original timestamp minus elapsed time since page load
-          date: new Date(tweet.originalTimestamp - elapsed)
+          date: new Date(tweet.originalTimestamp)
         }));
       }
       
-      // First time generation - create fixed tweets
+      // First time generation - create fixed tweets with absolute timestamps
       const tweets = [];
       const now = Date.now();
       const usedTweets = new Set();
@@ -333,7 +355,7 @@
         
         usedTweets.add(tweetKey);
         
-        // Fixed timestamp - each tweet exactly i minutes old
+        // Fixed timestamp - each tweet exactly i*5 minutes old
         const minutesAgo = i * 5; // 5 minute intervals for more variety
         const timestamp = now - minutesAgo * 60 * 1000;
         
@@ -347,8 +369,8 @@
         });
       }
       
-      // Save fixed tweets
-      FIXED_TWEETS = tweets;
+      // Save fixed tweets to localStorage
+      saveFixedTweets(tweets);
       
       return tweets;
     }
@@ -375,6 +397,12 @@
         console.error('Error loading news:', error);
         loading.innerHTML = 'Error loading news. Please try again later.';
       }
+    }
+
+    function generateNewFeed() {
+      // Clear stored tweets to generate a new feed
+      localStorage.removeItem(STORAGE_KEY);
+      loadNews();
     }
 
     // Load news on page load
