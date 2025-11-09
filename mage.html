@@ -452,7 +452,7 @@
                 <div class="stat-bar">
                     <div class="stat-label">MANA</div>
                     <div class="stat-fill mana-fill" id="mana-bar" style="width: 100%;">
-                        <span id="mana-text">100 / 100</span>
+                        <span id="mana-text">150 / 150</span>
                     </div>
                 </div>
             </div>
@@ -473,8 +473,8 @@
                 y: 5,
                 hp: 100,
                 maxHp: 100,
-                mana: 100,
-                maxMana: 100,
+                mana: 150,
+                maxMana: 150,
                 direction: 'down', // down, up, left, right
                 isWalking: false
             },
@@ -594,8 +594,8 @@
             },
 
             spawnPotions() {
-                // Spawn 5 health potions and 5 mana potions
-                for (let i = 0; i < 10; i++) {
+                // Spawn 5 health potions and 7 mana potions
+                for (let i = 0; i < 12; i++) {
                     let x, y;
                     do {
                         x = Math.floor(Math.random() * (this.dungeonSize - 2)) + 1;
@@ -613,7 +613,7 @@
                         y,
                         type: isHealth ? 'health' : 'mana',
                         emoji: isHealth ? '❤️' : '💙',
-                        amount: isHealth ? 30 : 25
+                        amount: isHealth ? 30 : 35
                     });
                 }
             },
@@ -728,9 +728,9 @@
                     
                     this.render();
                     
-                    // Mana regeneration
-                    if (Math.random() > 0.7) {
-                        this.player.mana = Math.min(this.player.maxMana, this.player.mana + 2);
+                    // Mana regeneration (50% chance to restore 3 mana)
+                    if (Math.random() > 0.5) {
+                        this.player.mana = Math.min(this.player.maxMana, this.player.mana + 3);
                         this.updateHUD();
                     }
                 } else {
@@ -936,12 +936,12 @@
             },
 
             castFireballAt(monster) {
-                if (this.player.mana < 15) {
+                if (this.player.mana < 12) {
                     this.showMessage('Not enough mana!');
                     return;
                 }
 
-                this.player.mana -= 15;
+                this.player.mana -= 12;
                 this.updateHUD();
 
                 // Create fireball
@@ -1027,7 +1027,7 @@
                             y: monster.y,
                             type: isHealth ? 'health' : 'mana',
                             emoji: isHealth ? '❤️' : '💙',
-                            amount: isHealth ? 30 : 25
+                            amount: isHealth ? 30 : 35
                         });
                     }
                     
