@@ -1019,17 +1019,14 @@
                 }, 1000);
 
                 if (monster.hp <= 0) {
-                    // Sometimes drop a potion when monster is defeated
-                    if (Math.random() > 0.5) {
-                        const isHealth = Math.random() > 0.5;
-                        this.potions.push({
-                            x: monster.x,
-                            y: monster.y,
-                            type: isHealth ? 'health' : 'mana',
-                            emoji: isHealth ? '❤️' : '💙',
-                            amount: isHealth ? 30 : 35
-                        });
-                    }
+                    // Always drop a mana potion when monster is defeated
+                    this.potions.push({
+                        x: monster.x,
+                        y: monster.y,
+                        type: 'mana',
+                        emoji: '💙',
+                        amount: 35
+                    });
                     
                     const index = this.monsters.indexOf(monster);
                     this.monsters.splice(index, 1);
