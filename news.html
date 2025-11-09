@@ -84,28 +84,23 @@
       grid-row: 2;
     }
 
-    .news-tweet {
+    .news-post {
       font-size: 15px;
       color: #000000;
       grid-column: 2;
       grid-row: 1 / 3;
       align-self: center;
+      line-height: 1.5;
     }
 
-    .view-original {
-      font-size: 13px;
-      color: #666666;
-      text-decoration: none;
-      border-bottom: 1px solid #cccccc;
-      transition: color 0.2s, border-color 0.2s;
-      display: inline-block;
-      margin-top: 5px;
+    .news-post a {
+      transition: opacity 0.2s;
     }
 
-    .view-original:hover {
-      color: #000000;
-      border-bottom-color: #000000;
+    .news-post a:hover {
+      opacity: 0.7;
     }
+
 
 
     .controls {
@@ -162,22 +157,19 @@
   <div class="container">
     <header>
       <h1>AI News Feed</h1>
-      <div class="subtitle">Tweets from tech leaders and AI pioneers</div>
+      <div class="subtitle">Latest AI updates from artificialintelligence-news.com</div>
     </header>
 
     <div class="controls">
       <div class="stats">
         <div>
-          <span class="stat-value" id="total-news">0</span> tweets
+          <span class="stat-value" id="total-news">0</span> posts
         </div>
         <div>
           Updated: <span class="stat-value" id="last-update">—</span>
         </div>
       </div>
-      <div style="display: flex; gap: 10px;">
-        <button class="refresh-btn" onclick="loadNews()">Refresh Time</button>
-        <button class="refresh-btn" onclick="generateNewFeed()">New Feed</button>
-      </div>
+      <button class="refresh-btn" onclick="loadNews()">Refresh</button>
     </div>
 
     <div id="loading" class="loading">
@@ -189,6 +181,10 @@
 
   <script>
     let allNews = [];
+    const CACHE_KEY = 'ai_news_cache';
+    const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
+    const RSS_FEED_URL = 'https://www.artificialintelligence-news.com/feed/';
+    const RSS2JSON_API = 'https://api.rss2json.com/v1/api.json';
 
     function formatDate(dateString) {
       const date = new Date(dateString);
@@ -208,180 +204,125 @@
       });
     }
 
+    function stripHtml(html) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || '';
+    }
+
+    function extractCategory(categories) {
+      if (!categories || categories.length === 0) return 'AI News';
+      return categories[0];
+    }
+
     function renderNews(newsToRender) {
       const container = document.getElementById('news-container');
       
       if (newsToRender.length === 0) {
-        container.innerHTML = '<div class="loading">No news items found</div>';
+        container.innerHTML = '<div class="loading">No news found. Try refreshing later.</div>';
         return;
       }
 
       container.innerHTML = newsToRender.map(item => `
         <li class="news-item">
           <div class="news-text">
-            <span class="news-author">${item.sourceName}</span>
-            <span class="news-tweet">
-              ${item.title}
-              <br>
-              <a href="${item.url}" target="_blank" rel="noopener" class="view-original">View original →</a>
+            <span class="news-author">
+              ${extractCategory(item.categories)}
             </span>
-            <span class="news-date">${formatDate(item.date)}</span>
+            <span class="news-post">
+              <a href="${item.link}" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">
+                ${item.title}
+              </a>
+            </span>
+            <span class="news-date">${formatDate(item.pubDate)}</span>
           </div>
         </li>
       `).join('');
     }
 
 
-    // Sample tweet templates
-    const TWEET_TEMPLATES = {
-      elonmusk: [
-        'xAI will open source Grok this week',
-        'Compute will be the currency of the future',
-        'AI will eventually exceed human intelligence in every way',
-        'The singularity is near',
-        'Neuralink will change everything',
-        'We need to be careful with AI development'
-      ],
-      sama: [
-        'The arc of AI progress continues to be remarkable',
-        'We are working on something that will be very surprising',
-        'AGI is closer than most people think',
-        'AI safety is our top priority at OpenAI',
-        'The pace of AI development is accelerating'
-      ],
-      sundarpichai: [
-        'Gemini 2.0 represents a major leap in multimodal AI capabilities',
-        'Google AI is helping researchers make breakthroughs in medicine',
-        'AI is transforming how we search and discover information'
-      ],
-      satyanadella: [
-        'Excited to share our vision for AI-powered future at Microsoft',
-        'Copilot is transforming how developers write code',
-        'AI will augment every role and every business'
-      ],
-      AravSrinivas: [
-        'Perplexity is redefining how we search and discover information',
-        'Answer engines are the future. Search is just the beginning.',
-        'Building the best answer engine in the world'
-      ],
-      miramurati: [
-        'Building safe and beneficial AI is the challenge of our generation',
-        'The best AI systems will be those that empower humans'
-      ],
-      zuck: [
-        'Meta AI is now available to billions of people worldwide',
-        'Llama 3 is our most powerful open source model yet',
-        'Open source AI will win in the long run'
-      ],
-      BillGates: [
-        'AI will be the most transformative technology of our lifetime',
-        'AI agents will revolutionize healthcare and education'
-      ],
-      sergeyb: [
-        'Back at Google working on AI. It feels like 1999 again.'
-      ],
-      larrypage: [
-        'The future of AI is about augmenting human intelligence, not replacing it'
-      ]
-    };
-
-    const AUTHORS = [
-      { name: 'Elon Musk', handle: 'elonmusk', avatar: 'https://upload.wikimedia.org/wikipedia/commons/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg' },
-      { name: 'Sam Altman', handle: 'sama', avatar: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Sam_Altman_TechCrunch_SF_2019_Day_2_Oct_3.jpg' },
-      { name: 'Sundar Pichai', handle: 'sundarpichai', avatar: 'https://upload.wikimedia.org/wikipedia/commons/d/da/Sundar_Pichai_Ted_2022.jpg' },
-      { name: 'Satya Nadella', handle: 'satyanadella', avatar: 'https://upload.wikimedia.org/wikipedia/commons/7/78/Satya_Nadella_2017.jpg' },
-      { name: 'Aravind Srinivas', handle: 'AravSrinivas', avatar: 'https://pbs.twimg.com/profile_images/1671900840805183488/6ILnOiZ4_400x400.jpg' },
-      { name: 'Mira Murati', handle: 'miramurati', avatar: 'https://pbs.twimg.com/profile_images/1638632020550811649/8LG4ASpO_400x400.jpg' },
-      { name: 'Mark Zuckerberg', handle: 'zuck', avatar: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Mark_Zuckerberg_F8_2019_Keynote.jpg' },
-      { name: 'Bill Gates', handle: 'BillGates', avatar: 'https://upload.wikimedia.org/wikipedia/commons/a/a8/Bill_Gates_2017_%28cropped%29.jpg' },
-      { name: 'Sergey Brin', handle: 'sergeyb', avatar: 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Sergey_Brin_cropped.jpg' },
-      { name: 'Larry Page', handle: 'larrypage', avatar: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/Larry_Page_in_the_European_Parliament%2C_17.06.2009.jpg' }
-    ];
-
-    // Fixed tweets stored in localStorage - never change across page reloads
-    const STORAGE_KEY = 'ai_news_fixed_tweets';
-    
-    function loadFixedTweets() {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        try {
-          return JSON.parse(stored);
-        } catch (e) {
-          console.error('Error parsing stored tweets:', e);
-          return null;
-        }
-      }
-      return null;
-    }
-
-    function saveFixedTweets(tweets) {
+    // RSS Feed via RSS2JSON API
+    function getCachedNews() {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(tweets));
+        const cached = localStorage.getItem(CACHE_KEY);
+        if (!cached) return null;
+
+        const { data, timestamp } = JSON.parse(cached);
+        const now = Date.now();
+
+        // Check if cache is still valid
+        if (now - timestamp < CACHE_DURATION) {
+          return data;
+        }
+        
+        // Cache expired
+        localStorage.removeItem(CACHE_KEY);
+        return null;
       } catch (e) {
-        console.error('Error saving tweets:', e);
+        console.error('Error reading cache:', e);
+        return null;
       }
     }
 
-    function generateTweets(count = 20) {
-      // Try to load existing fixed tweets
-      const fixedTweets = loadFixedTweets();
-      
-      if (fixedTweets && fixedTweets.length > 0) {
-        // Return existing tweets - timestamps are absolute and don't change
-        return fixedTweets.map(tweet => ({
-          ...tweet,
-          date: new Date(tweet.originalTimestamp)
+    function setCachedNews(data) {
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          data,
+          timestamp: Date.now()
         }));
+      } catch (e) {
+        console.error('Error saving cache:', e);
       }
-      
-      // First time generation - create fixed tweets with absolute timestamps
-      const tweets = [];
-      const now = Date.now();
-      const usedTweets = new Set();
-      
-      for (let i = 0; i < count; i++) {
-        let author, tweet, tweetKey;
-        let attempts = 0;
-        
-        do {
-          author = AUTHORS[Math.floor(Math.random() * AUTHORS.length)];
-          const templates = TWEET_TEMPLATES[author.handle];
-          tweet = templates[Math.floor(Math.random() * templates.length)];
-          tweetKey = `${author.handle}:${tweet}`;
-          attempts++;
-          
-          if (attempts > 50) break;
-        } while (usedTweets.has(tweetKey));
-        
-        usedTweets.add(tweetKey);
-        
-        // Fixed timestamp - each tweet exactly i*5 minutes old
-        const minutesAgo = i * 5; // 5 minute intervals for more variety
-        const timestamp = now - minutesAgo * 60 * 1000;
-        
-        tweets.push({
-          sourceName: author.name,
-          source: author.handle,
-          title: tweet,
-          url: `https://twitter.com/${author.handle}`,
-          date: new Date(timestamp),
-          originalTimestamp: timestamp
-        });
+    }
+
+    async function fetchAINews() {
+      // Try cache first
+      const cached = getCachedNews();
+      if (cached) {
+        console.log('Using cached data');
+        return cached;
       }
+
+      console.log('Fetching fresh data from AI News...');
       
-      // Save fixed tweets to localStorage
-      saveFixedTweets(tweets);
-      
-      return tweets;
+      try {
+        // Use RSS2JSON API to convert RSS feed to JSON (free tier, no API key needed)
+        const apiUrl = `${RSS2JSON_API}?rss_url=${encodeURIComponent(RSS_FEED_URL)}&count=40`;
+        
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          throw new Error(`RSS2JSON API error: ${response.status}`);
+        }
+        
+        const json = await response.json();
+        
+        if (json.status !== 'ok') {
+          throw new Error(`RSS feed error: ${json.message}`);
+        }
+        
+        // Extract items from feed
+        const items = json.items || [];
+        
+        // Cache the results
+        setCachedNews(items);
+        
+        return items;
+      } catch (error) {
+        console.error('Error fetching AI news:', error);
+        throw error;
+      }
     }
 
     async function loadNews() {
       const loading = document.getElementById('loading');
+      const container = document.getElementById('news-container');
       loading.style.display = 'block';
+      container.innerHTML = '';
 
       try {
-        // Generate fresh tweets (already in chronological order)
-        allNews = generateTweets(20);
+        // Fetch AI news from RSS feed
+        allNews = await fetchAINews();
 
         // Update stats
         document.getElementById('total-news').textContent = allNews.length;
@@ -395,25 +336,20 @@
 
       } catch (error) {
         console.error('Error loading news:', error);
-        loading.innerHTML = 'Error loading news. Please try again later.';
+        loading.innerHTML = 'Error loading AI news. Please try again later.';
+        loading.style.display = 'block';
       }
-    }
-
-    function generateNewFeed() {
-      // Clear stored tweets to generate a new feed
-      localStorage.removeItem(STORAGE_KEY);
-      loadNews();
     }
 
     // Load news on page load
     loadNews();
 
-    // Auto-refresh every 5 minutes
-    setInterval(loadNews, 5 * 60 * 1000);
+    // Auto-refresh every 10 minutes (respecting cache)
+    setInterval(loadNews, 10 * 60 * 1000);
 
-    console.log('%c🐦 AI Tweets Feed', 'font-size: 20px; font-weight: bold;');
-    console.log('This is a demo with sample data.');
-    console.log('In production, these would come from Twitter API with authentication.');
+    console.log('%c🤖 AI News Feed', 'font-size: 20px; font-weight: bold;');
+    console.log('Fetching news from artificialintelligence-news.com');
+    console.log('News is cached for 10 minutes to reduce API calls');
   </script>
 </body>
 </html>
