@@ -63,6 +63,20 @@
         aspect-ratio: 9 / 16;
         transform-style: preserve-3d;
         transition: transform 600ms cubic-bezier(.2,.8,.2,1);
+        cursor: pointer;
+      }
+
+      /* Desktop optimizations */
+      @media (min-width: 1024px) {
+        .card {
+          width: 85%;
+          max-width: 700px;
+          aspect-ratio: 16 / 10;
+        }
+
+        .card:hover {
+          filter: brightness(1.05);
+        }
       }
 
       .card.is-flipped {
@@ -80,6 +94,13 @@
         flex-direction: column;
         justify-content: space-between;
         box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      }
+
+      @media (min-width: 1024px) {
+        .face {
+          padding: 50px 60px 30px 60px;
+          border-radius: 32px;
+        }
       }
 
       .face.back {
@@ -101,11 +122,26 @@
         text-align: center;
       }
 
+      @media (min-width: 1024px) {
+        .question-text {
+          font-size: clamp(26px, 2.5vw, 34px);
+          line-height: 1.4;
+          margin-bottom: 30px;
+        }
+      }
+
       .answers {
         display: flex;
         flex-direction: column;
         gap: 10px;
         margin-bottom: 80px;
+      }
+
+      @media (min-width: 1024px) {
+        .answers {
+          gap: 14px;
+          margin-bottom: 100px;
+        }
       }
 
       .answer-btn {
@@ -122,6 +158,21 @@
         user-select: none;
         text-align: left;
         letter-spacing: -0.01em;
+      }
+
+      @media (min-width: 1024px) {
+        .answer-btn {
+          padding: 18px 28px;
+          font-size: clamp(18px, 1.5vw, 22px);
+          border-radius: 20px;
+        }
+
+        .answer-btn:hover:not(.disabled) {
+          background: rgba(255,255,255,0.25);
+          border-color: rgba(255,255,255,0.4);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
       }
 
       .answer-btn:active {
@@ -161,6 +212,13 @@
         justify-content: center;
       }
 
+      @media (min-width: 1024px) {
+        .translation {
+          font-size: clamp(28px, 2.8vw, 38px);
+          line-height: 1.4;
+        }
+      }
+
       /* Audio controls */
       .audio-controls {
         position: absolute;
@@ -186,6 +244,20 @@
         align-items: center;
         justify-content: center;
         user-select: none;
+      }
+
+      @media (min-width: 1024px) {
+        .btn-audio {
+          width: 58px;
+          height: 58px;
+          font-size: 26px;
+        }
+
+        .btn-audio:hover {
+          background: rgba(255,255,255,0.3);
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
       }
 
       .btn-audio:active {
@@ -217,6 +289,76 @@
         transition: width 0.3s ease;
       }
 
+      /* Keyboard hint for desktop */
+      .keyboard-hint {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0,0,0,0.8);
+        color: rgba(255,255,255,0.7);
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        backdrop-filter: blur(10px);
+        z-index: 100;
+        display: none;
+        opacity: 1;
+        transition: opacity 0.3s ease;
+      }
+
+      @media (min-width: 1024px) {
+        .keyboard-hint {
+          display: block;
+        }
+      }
+
+      .keyboard-hint kbd {
+        background: rgba(255,255,255,0.2);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 11px;
+      }
+
+      /* Tablet (iPad) optimizations */
+      @media (min-width: 641px) and (max-width: 1023px) {
+        .card {
+          width: 88%;
+          max-width: 600px;
+          aspect-ratio: 3 / 4;
+        }
+
+        .face {
+          padding: 45px 40px 25px 40px;
+        }
+
+        .question-text {
+          font-size: clamp(24px, 3.5vw, 30px);
+          margin-bottom: 25px;
+        }
+
+        .answers {
+          gap: 12px;
+          margin-bottom: 90px;
+        }
+
+        .answer-btn {
+          padding: 17px 24px;
+          font-size: clamp(17px, 2.5vw, 21px);
+          border-radius: 18px;
+        }
+
+        .translation {
+          font-size: clamp(26px, 4vw, 35px);
+        }
+
+        .btn-audio {
+          width: 56px;
+          height: 56px;
+          font-size: 25px;
+        }
+      }
+
       @media (max-width: 640px) {
         .card {
           padding: 24px 20px;
@@ -239,6 +381,10 @@
 
     <div class="progress-bar">
       <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="keyboard-hint">
+      <kbd>↑</kbd> <kbd>↓</kbd> Navigate • <kbd>Space</kbd> Flip • <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> Answer
     </div>
 
     <script>
@@ -751,6 +897,70 @@
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 2000);
       }
+
+      // Keyboard navigation for desktop
+      let keyboardHintShown = true;
+      
+      document.addEventListener('keydown', (e) => {
+        const currentIndex = Math.floor(container.scrollTop / window.innerHeight);
+        
+        // Hide hint on first key press
+        if (keyboardHintShown) {
+          const hint = document.querySelector('.keyboard-hint');
+          if (hint && ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ', 'Enter', '1', '2', '3'].includes(e.key)) {
+            hint.style.opacity = '0';
+            setTimeout(() => hint.style.display = 'none', 300);
+            keyboardHintShown = false;
+          }
+        }
+        
+        switch(e.key) {
+          case 'ArrowDown':
+          case 'PageDown':
+            e.preventDefault();
+            if (currentIndex < state.order.length - 1) {
+              container.scrollTo({
+                top: (currentIndex + 1) * window.innerHeight,
+                behavior: 'smooth'
+              });
+            }
+            break;
+            
+          case 'ArrowUp':
+          case 'PageUp':
+            e.preventDefault();
+            if (currentIndex > 0) {
+              container.scrollTo({
+                top: (currentIndex - 1) * window.innerHeight,
+                behavior: 'smooth'
+              });
+            }
+            break;
+            
+          case ' ':
+          case 'Enter':
+            e.preventDefault();
+            const currentCard = document.querySelector(`.card[data-index="${currentIndex}"]`);
+            if (currentCard) {
+              flipCard(currentCard);
+            }
+            break;
+            
+          case '1':
+          case '2':
+          case '3':
+            e.preventDefault();
+            const answerIndex = parseInt(e.key) - 1;
+            const slide = document.querySelector(`.card-slide[data-index="${currentIndex}"]`);
+            if (slide) {
+              const answerBtn = slide.querySelector(`.answer-btn[data-answer="${answerIndex}"]`);
+              if (answerBtn && !answerBtn.classList.contains('disabled')) {
+                handleAnswer(answerBtn);
+              }
+            }
+            break;
+        }
+      });
 
       document.addEventListener('DOMContentLoaded', () => {
         init();
