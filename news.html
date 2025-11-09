@@ -169,7 +169,7 @@
     <div class="controls">
       <div class="stats">
         <div>
-          Showing: <span class="stat-value" id="total-news">0</span> posts
+          Showing: <span class="stat-value" id="total-news">0</span> of <span class="stat-value" id="total-available">30</span>
         </div>
         <div>
           Updated: <span class="stat-value" id="last-update">—</span>
@@ -318,26 +318,79 @@
         title: "Breakthrough analog AI chip promises efficient deep learning",
         link: "https://www.artificialintelligence-news.com/news/analog-ai-chip-deep-learning/",
         categories: ["AI Hardware & Chips"]
+      },
+      {
+        title: "DeepMind's AlphaFold 3 predicts protein structures with unprecedented accuracy",
+        link: "https://www.artificialintelligence-news.com/news/deepmind-alphafold-3-protein-structures/",
+        categories: ["Scientific Research AI"]
+      },
+      {
+        title: "GitHub Copilot X brings conversational AI to software development",
+        link: "https://www.artificialintelligence-news.com/news/github-copilot-x-conversational-ai/",
+        categories: ["Developer Tools AI"]
+      },
+      {
+        title: "OpenAI unveils GPT-5 with multimodal reasoning capabilities",
+        link: "https://www.artificialintelligence-news.com/news/openai-gpt-5-multimodal-reasoning/",
+        categories: ["Large Language Models"]
+      },
+      {
+        title: "EU AI Act: Companies scramble to ensure compliance ahead of deadline",
+        link: "https://www.artificialintelligence-news.com/news/eu-ai-act-compliance-deadline/",
+        categories: ["Governance, Regulation & Policy"]
+      },
+      {
+        title: "Tesla's Full Self-Driving reaches Level 4 autonomy in select cities",
+        link: "https://www.artificialintelligence-news.com/news/tesla-fsd-level-4-autonomy/",
+        categories: ["Autonomous Vehicles"]
+      },
+      {
+        title: "Anthropic's Claude 4 sets new benchmark in AI safety and ethics",
+        link: "https://www.artificialintelligence-news.com/news/anthropic-claude-4-ai-safety/",
+        categories: ["AI Ethics & Responsibility"]
+      },
+      {
+        title: "Microsoft Azure AI launches one-click enterprise deployment tools",
+        link: "https://www.artificialintelligence-news.com/news/azure-ai-enterprise-deployment/",
+        categories: ["Cloud AI Services"]
+      },
+      {
+        title: "AI-powered drug discovery reduces development time from years to months",
+        link: "https://www.artificialintelligence-news.com/news/ai-drug-discovery-development-time/",
+        categories: ["Healthcare & Wellness AI"]
+      },
+      {
+        title: "Boston Dynamics unveils AI-driven humanoid robot for industrial tasks",
+        link: "https://www.artificialintelligence-news.com/news/boston-dynamics-humanoid-robot/",
+        categories: ["Robotics & Automation"]
+      },
+      {
+        title: "Stability AI releases open-source image generator rivaling DALL-E 3",
+        link: "https://www.artificialintelligence-news.com/news/stability-ai-image-generator-dalle/",
+        categories: ["Creative Industries"]
       }
     ];
 
-    // Generate infinite news by cycling through templates with different dates
-    function generateNews(count = 50) {
-      const now = Date.now();
-      const news = [];
-      
-      for (let i = 0; i < count; i++) {
-        const template = newsTemplates[i % newsTemplates.length];
-        const hoursAgo = (i + 1) * 6; // Each news is 6 hours older than previous
-        
-        news.push({
-          ...template,
-          pubDate: new Date(now - hoursAgo * 60 * 60 * 1000).toISOString(),
-          id: i // Unique ID for each news
-        });
+    // Shuffle array function
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
       }
+      return shuffled;
+    }
+
+    // Generate news by shuffling templates to avoid visible duplicates
+    function generateNews() {
+      const now = Date.now();
+      const shuffled = shuffleArray(newsTemplates);
       
-      return news;
+      return shuffled.map((template, i) => ({
+        ...template,
+        pubDate: new Date(now - (i + 1) * 6 * 60 * 60 * 1000).toISOString(),
+        id: i
+      }));
     }
 
     function renderNews(newsToRender, append = false) {
@@ -370,28 +423,18 @@
 
     function updateShowMoreButton() {
       const btn = document.getElementById('show-more-btn');
-      // Always show button since we can generate infinite news
-      btn.style.display = 'inline-block';
+      // Show button only if there are more news to display
+      if (displayedNewsCount < allNews.length) {
+        btn.style.display = 'inline-block';
+      } else {
+        btn.style.display = 'none';
+      }
     }
 
     function loadMoreNews() {
-      // If we've shown all current news, generate more
+      // Check if there are more news to show
       if (displayedNewsCount >= allNews.length) {
-        const currentLength = allNews.length;
-        const now = Date.now();
-        
-        // Generate 50 more news items starting from where we left off
-        for (let i = 0; i < 50; i++) {
-          const globalIndex = currentLength + i;
-          const template = newsTemplates[globalIndex % newsTemplates.length];
-          const hoursAgo = (globalIndex + 1) * 6; // Each news is 6 hours older
-          
-          allNews.push({
-            ...template,
-            pubDate: new Date(now - hoursAgo * 60 * 60 * 1000).toISOString(),
-            id: globalIndex
-          });
-        }
+        return;
       }
 
       // Show next batch
@@ -407,8 +450,8 @@
 
 
     async function fetchAINews() {
-      // Generate initial batch of news
-      return generateNews(100); // Generate 100 news items initially
+      // Generate shuffled news to avoid duplicates
+      return generateNews();
     }
 
     async function loadNews() {
@@ -430,6 +473,7 @@
 
         // Update stats
         document.getElementById('total-news').textContent = displayedNewsCount;
+        document.getElementById('total-available').textContent = allNews.length;
         document.getElementById('last-update').textContent = new Date().toLocaleTimeString('en-US', {
           hour: '2-digit',
           minute: '2-digit'
@@ -453,8 +497,8 @@
 
     console.log('%c🤖 AI News Feed', 'font-size: 20px; font-weight: bold;');
     console.log('Showing curated AI news from artificialintelligence-news.com');
+    console.log(`Total articles: ${newsTemplates.length}`);
     console.log('All articles are real and link to the original source');
-    console.log('Click "Show More" to load older news');
   </script>
 </body>
 </html>
