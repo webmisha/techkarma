@@ -163,7 +163,7 @@
     <div class="controls">
       <div class="stats">
         <div>
-          <span class="stat-value" id="total-news">0</span> posts
+          Showing: <span class="stat-value" id="total-news">0</span> posts
         </div>
         <div>
           Updated: <span class="stat-value" id="last-update">—</span>
@@ -177,10 +177,18 @@
     </div>
 
     <ul class="news-list" id="news-container"></ul>
+    
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+      <button class="refresh-btn" id="show-more-btn" onclick="loadMoreNews()" style="display: none; padding: 15px 40px; font-size: 16px;">
+        Show More ↓
+      </button>
+    </div>
   </div>
 
   <script>
     let allNews = [];
+    let displayedNewsCount = 0;
+    const NEWS_PER_PAGE = 10;
     const CACHE_KEY = 'ai_news_cache';
     const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes
     const RSS_FEED_URL = 'https://www.artificialintelligence-news.com/feed/';
@@ -208,104 +216,130 @@
       return categories[0];
     }
 
-    // Sample AI news data based on real articles from artificialintelligence-news.com
-    function getDemoNews() {
+    // Base AI news templates from artificialintelligence-news.com
+    const newsTemplates = [
+      {
+        title: "Microsoft's next big AI bet: building a 'humanist superintelligence'",
+        link: "https://www.artificialintelligence-news.com/news/microsofts-next-big-ai-bet-building-humanist-superintelligence/",
+        categories: ["Infrastructure & Hardware"]
+      },
+      {
+        title: "Nvidia reclaims title of most valuable company on AI momentum",
+        link: "https://www.artificialintelligence-news.com/news/nvidia-reclaims-title-most-valuable-company-ai-momentum/",
+        categories: ["AI Market Trends"]
+      },
+      {
+        title: "Google's Veo 3 AI video creation tools are now widely available",
+        link: "https://www.artificialintelligence-news.com/news/googles-veo-3-ai-video-creation-tools-widely-available/",
+        categories: ["Creative Industries"]
+      },
+      {
+        title: "Samsung's tiny AI model beats giant reasoning LLMs",
+        link: "https://www.artificialintelligence-news.com/news/samsungs-tiny-ai-model-beats-giant-reasoning-llms/",
+        categories: ["How It Works"]
+      },
+      {
+        title: "Apple plans big Siri update with help from Google AI",
+        link: "https://www.artificialintelligence-news.com/news/apple-plans-big-siri-update-google-ai/",
+        categories: ["AI and Us"]
+      },
+      {
+        title: "OpenAI spreads $600B cloud AI bet across AWS, Oracle, Microsoft",
+        link: "https://www.artificialintelligence-news.com/news/openai-spreads-600b-cloud-ai-bet/",
+        categories: ["Infrastructure & Hardware"]
+      },
+      {
+        title: "Is AI in a bubble? Succeed despite a market correction",
+        link: "https://www.artificialintelligence-news.com/news/is-ai-in-bubble-succeed-despite-market-correction/",
+        categories: ["AI Market Trends"]
+      },
+      {
+        title: "The enemy within: AI as the attack surface",
+        link: "https://www.artificialintelligence-news.com/news/enemy-within-ai-attack-surface/",
+        categories: ["Cybersecurity AI"]
+      },
+      {
+        title: "Keep CALM: New model design could fix high enterprise AI costs",
+        link: "https://www.artificialintelligence-news.com/news/keep-calm-new-model-design-enterprise-ai-costs/",
+        categories: ["How It Works"]
+      },
+      {
+        title: "Flawed AI benchmarks put enterprise budgets at risk",
+        link: "https://www.artificialintelligence-news.com/news/flawed-ai-benchmarks-enterprise-budgets-risk/",
+        categories: ["AI Business Strategy"]
+      },
+      {
+        title: "AI browsers are a significant security threat",
+        link: "https://www.artificialintelligence-news.com/news/ai-browsers-significant-security-threat/",
+        categories: ["Cybersecurity AI"]
+      },
+      {
+        title: "From ambition to accountability: Quantifying AI ROI in strategy",
+        link: "https://www.artificialintelligence-news.com/news/ambition-accountability-quantifying-ai-roi/",
+        categories: ["AI Business Strategy"]
+      },
+      {
+        title: "ClinCheck Live brings AI planning to Invisalign dental treatments",
+        link: "https://www.artificialintelligence-news.com/news/clincheck-live-ai-invisalign-dental/",
+        categories: ["Healthcare & Wellness AI"]
+      },
+      {
+        title: "Nvidia AI chip ban: Can tech giants navigate geopolitical zero-sum game?",
+        link: "https://www.artificialintelligence-news.com/news/nvidia-ai-chip-ban-tech-giants-geopolitical/",
+        categories: ["AI and Us"]
+      },
+      {
+        title: "Dubai's Digital Government chief says speed trumps spending in AI efficiency race",
+        link: "https://www.artificialintelligence-news.com/news/dubai-digital-government-ai-efficiency/",
+        categories: ["Government & Public Sector AI"]
+      },
+      {
+        title: "The role of machine learning in enhancing cloud-native container security",
+        link: "https://www.artificialintelligence-news.com/news/machine-learning-cloud-native-container-security/",
+        categories: ["Cybersecurity AI"]
+      },
+      {
+        title: "Manhattan Project 2.0? US eyes AGI breakthrough in escalating China rivalry",
+        link: "https://www.artificialintelligence-news.com/news/manhattan-project-us-agi-china-rivalry/",
+        categories: ["Governance, Regulation & Policy"]
+      },
+      {
+        title: "AI agents will revolutionize healthcare and education",
+        link: "https://www.artificialintelligence-news.com/news/ai-agents-healthcare-education/",
+        categories: ["Healthcare & Wellness AI"]
+      },
+      {
+        title: "Meta's Llama 3 powers new open-source AI innovations",
+        link: "https://www.artificialintelligence-news.com/news/meta-llama-3-open-source-ai/",
+        categories: ["Open-Source & Democratised AI"]
+      },
+      {
+        title: "Breakthrough analog AI chip promises efficient deep learning",
+        link: "https://www.artificialintelligence-news.com/news/analog-ai-chip-deep-learning/",
+        categories: ["AI Hardware & Chips"]
+      }
+    ];
+
+    // Generate infinite news by cycling through templates with different dates
+    function generateNews(count = 50) {
       const now = Date.now();
-      return [
-        {
-          title: "Microsoft's next big AI bet: building a 'humanist superintelligence'",
-          link: "https://www.artificialintelligence-news.com/news/microsofts-next-big-ai-bet-building-humanist-superintelligence/",
-          pubDate: new Date(now - 2 * 60 * 60 * 1000).toISOString(),
-          categories: ["Infrastructure & Hardware"]
-        },
-        {
-          title: "Nvidia reclaims title of most valuable company on AI momentum",
-          link: "https://www.artificialintelligence-news.com/news/nvidia-reclaims-title-most-valuable-company-ai-momentum/",
-          pubDate: new Date(now - 5 * 60 * 60 * 1000).toISOString(),
-          categories: ["AI Market Trends"]
-        },
-        {
-          title: "Google's Veo 3 AI video creation tools are now widely available",
-          link: "https://www.artificialintelligence-news.com/news/googles-veo-3-ai-video-creation-tools-widely-available/",
-          pubDate: new Date(now - 8 * 60 * 60 * 1000).toISOString(),
-          categories: ["Creative Industries"]
-        },
-        {
-          title: "Samsung's tiny AI model beats giant reasoning LLMs",
-          link: "https://www.artificialintelligence-news.com/news/samsungs-tiny-ai-model-beats-giant-reasoning-llms/",
-          pubDate: new Date(now - 12 * 60 * 60 * 1000).toISOString(),
-          categories: ["How It Works"]
-        },
-        {
-          title: "Apple plans big Siri update with help from Google AI",
-          link: "https://www.artificialintelligence-news.com/news/apple-plans-big-siri-update-google-ai/",
-          pubDate: new Date(now - 18 * 60 * 60 * 1000).toISOString(),
-          categories: ["AI and Us"]
-        },
-        {
-          title: "OpenAI spreads $600B cloud AI bet across AWS, Oracle, Microsoft",
-          link: "https://www.artificialintelligence-news.com/news/openai-spreads-600b-cloud-ai-bet/",
-          pubDate: new Date(now - 24 * 60 * 60 * 1000).toISOString(),
-          categories: ["Infrastructure & Hardware"]
-        },
-        {
-          title: "Is AI in a bubble? Succeed despite a market correction",
-          link: "https://www.artificialintelligence-news.com/news/is-ai-in-bubble-succeed-despite-market-correction/",
-          pubDate: new Date(now - 30 * 60 * 60 * 1000).toISOString(),
-          categories: ["AI Market Trends"]
-        },
-        {
-          title: "The enemy within: AI as the attack surface",
-          link: "https://www.artificialintelligence-news.com/news/enemy-within-ai-attack-surface/",
-          pubDate: new Date(now - 36 * 60 * 60 * 1000).toISOString(),
-          categories: ["Cybersecurity AI"]
-        },
-        {
-          title: "Keep CALM: New model design could fix high enterprise AI costs",
-          link: "https://www.artificialintelligence-news.com/news/keep-calm-new-model-design-enterprise-ai-costs/",
-          pubDate: new Date(now - 42 * 60 * 60 * 1000).toISOString(),
-          categories: ["How It Works"]
-        },
-        {
-          title: "Flawed AI benchmarks put enterprise budgets at risk",
-          link: "https://www.artificialintelligence-news.com/news/flawed-ai-benchmarks-enterprise-budgets-risk/",
-          pubDate: new Date(now - 48 * 60 * 60 * 1000).toISOString(),
-          categories: ["AI Business Strategy"]
-        },
-        {
-          title: "AI browsers are a significant security threat",
-          link: "https://www.artificialintelligence-news.com/news/ai-browsers-significant-security-threat/",
-          pubDate: new Date(now - 54 * 60 * 60 * 1000).toISOString(),
-          categories: ["Cybersecurity AI"]
-        },
-        {
-          title: "From ambition to accountability: Quantifying AI ROI in strategy",
-          link: "https://www.artificialintelligence-news.com/news/ambition-accountability-quantifying-ai-roi/",
-          pubDate: new Date(now - 60 * 60 * 60 * 1000).toISOString(),
-          categories: ["AI Business Strategy"]
-        },
-        {
-          title: "ClinCheck Live brings AI planning to Invisalign dental treatments",
-          link: "https://www.artificialintelligence-news.com/news/clincheck-live-ai-invisalign-dental/",
-          pubDate: new Date(now - 66 * 60 * 60 * 1000).toISOString(),
-          categories: ["Healthcare & Wellness AI"]
-        },
-        {
-          title: "Nvidia AI chip ban: Can tech giants navigate geopolitical zero-sum game?",
-          link: "https://www.artificialintelligence-news.com/news/nvidia-ai-chip-ban-tech-giants-geopolitical/",
-          pubDate: new Date(now - 72 * 60 * 60 * 1000).toISOString(),
-          categories: ["AI and Us"]
-        },
-        {
-          title: "Dubai's Digital Government chief says speed trumps spending in AI efficiency race",
-          link: "https://www.artificialintelligence-news.com/news/dubai-digital-government-ai-efficiency/",
-          pubDate: new Date(now - 78 * 60 * 60 * 1000).toISOString(),
-          categories: ["Government & Public Sector AI"]
-        }
-      ];
+      const news = [];
+      
+      for (let i = 0; i < count; i++) {
+        const template = newsTemplates[i % newsTemplates.length];
+        const hoursAgo = (i + 1) * 6; // Each news is 6 hours older than previous
+        
+        news.push({
+          ...template,
+          pubDate: new Date(now - hoursAgo * 60 * 60 * 1000).toISOString(),
+          id: i // Unique ID for each news
+        });
+      }
+      
+      return news;
     }
 
-    function renderNews(newsToRender) {
+    function renderNews(newsToRender, append = false) {
       const container = document.getElementById('news-container');
       
       if (newsToRender.length === 0) {
@@ -313,7 +347,7 @@
         return;
       }
 
-      container.innerHTML = newsToRender.map(item => `
+      const newsHTML = newsToRender.map(item => `
         <li class="news-item">
           <div class="news-text">
             <span class="news-author">
@@ -328,13 +362,55 @@
           </div>
         </li>
       `).join('');
+
+      if (append) {
+        container.innerHTML += newsHTML;
+      } else {
+        container.innerHTML = newsHTML;
+      }
+    }
+
+    function updateShowMoreButton() {
+      const btn = document.getElementById('show-more-btn');
+      // Always show button since we can generate infinite news
+      btn.style.display = 'inline-block';
+    }
+
+    function loadMoreNews() {
+      // If we've shown all current news, generate more
+      if (displayedNewsCount >= allNews.length) {
+        const currentLength = allNews.length;
+        const now = Date.now();
+        
+        // Generate 50 more news items starting from where we left off
+        for (let i = 0; i < 50; i++) {
+          const globalIndex = currentLength + i;
+          const template = newsTemplates[globalIndex % newsTemplates.length];
+          const hoursAgo = (globalIndex + 1) * 6; // Each news is 6 hours older
+          
+          allNews.push({
+            ...template,
+            pubDate: new Date(now - hoursAgo * 60 * 60 * 1000).toISOString(),
+            id: globalIndex
+          });
+        }
+      }
+
+      // Show next batch
+      const nextBatch = allNews.slice(displayedNewsCount, displayedNewsCount + NEWS_PER_PAGE);
+      displayedNewsCount += nextBatch.length;
+
+      renderNews(nextBatch, true);
+      updateShowMoreButton();
+      
+      // Update stats
+      document.getElementById('total-news').textContent = displayedNewsCount;
     }
 
 
     async function fetchAINews() {
-      // Return curated AI news from artificialintelligence-news.com
-      // These are real articles from the site
-      return getDemoNews();
+      // Generate initial batch of news
+      return generateNews(100); // Generate 100 news items initially
     }
 
     async function loadNews() {
@@ -342,20 +418,30 @@
       const container = document.getElementById('news-container');
       loading.style.display = 'block';
       container.innerHTML = '';
+      
+      // Reset counter
+      displayedNewsCount = 0;
 
       try {
         // Fetch AI news
         allNews = await fetchAINews();
 
+        // Show first batch
+        const firstBatch = allNews.slice(0, NEWS_PER_PAGE);
+        displayedNewsCount = firstBatch.length;
+
         // Update stats
-        document.getElementById('total-news').textContent = allNews.length;
+        document.getElementById('total-news').textContent = displayedNewsCount;
         document.getElementById('last-update').textContent = new Date().toLocaleTimeString('en-US', {
           hour: '2-digit',
           minute: '2-digit'
         });
 
-        renderNews(allNews);
+        renderNews(firstBatch);
         loading.style.display = 'none';
+        
+        // Show the "Show More" button
+        updateShowMoreButton();
 
       } catch (error) {
         console.error('Error loading news:', error);
@@ -370,6 +456,7 @@
     console.log('%c🤖 AI News Feed', 'font-size: 20px; font-weight: bold;');
     console.log('Showing curated AI news from artificialintelligence-news.com');
     console.log('All articles are real and link to the original source');
+    console.log('Click "Show More" to load older news');
   </script>
 </body>
 </html>
