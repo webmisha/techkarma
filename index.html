@@ -56,26 +56,6 @@
       padding-bottom: 10px;
     }
 
-    .links {
-      display: flex;
-      gap: 30px;
-      margin-bottom: 40px;
-    }
-
-    .links a {
-      color: #000000;
-      text-decoration: none;
-      font-size: 18px;
-      font-weight: 500;
-      border-bottom: 2px solid #000000;
-      padding-bottom: 2px;
-      transition: opacity 0.2s;
-    }
-
-    .links a:hover {
-      opacity: 0.6;
-    }
-
     .article-list {
       list-style: none;
     }
@@ -92,12 +72,13 @@
       display: block;
       padding: 10px 0;
       border-bottom: 1px solid #e0e0e0;
-      transition: padding-left 0.2s, border-color 0.2s;
+      transition: padding-left 0.2s, border-color 0.2s, color 0.2s;
     }
 
     .article-list a:hover {
       padding-left: 10px;
-      border-bottom-color: #000000;
+      border-bottom-color: #ff0000;
+      color: #ff0000;
     }
 
     .article-date {
@@ -130,15 +111,11 @@
       font-size: 16px;
       display: block;
       line-height: 1.6;
-      transition: opacity 0.2s;
+      transition: color 0.2s;
     }
 
     .project-list a:hover {
-      opacity: 0.6;
-    }
-
-    .project-list strong {
-      font-weight: 700;
+      color: #ff0000;
     }
 
     .book-list {
@@ -199,12 +176,13 @@
       font-weight: 600;
       border: 2px solid #000000;
       padding: 10px 25px;
-      transition: background-color 0.2s, color 0.2s;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
     }
 
     .book-link:hover {
-      background-color: #000000;
+      background-color: #ff0000;
       color: #ffffff;
+      border-color: #ff0000;
     }
 
     footer {
@@ -233,11 +211,6 @@
         font-size: 24px;
       }
 
-      .links {
-        flex-direction: column;
-        gap: 15px;
-      }
-
       .book-item {
         flex-direction: column;
         align-items: center;
@@ -254,15 +227,8 @@
   <div class="container">
     <header>
       <h1>Mikhail Sukhov</h1>
-      <div class="subtitle">Product Advisor with 20+ years of experience implementing operating models in Tech, E-com, Retail and Finance. Former Senior Product Manager with a Master's degree in Engineering. Skilled in OKRs, metrics, and Product Management. Passionate about Frameworks, Change Management and Vibe Coding. More details on <a href="https://www.linkedin.com/in/mikhailsukhov/" target="_blank" rel="noopener" style="color: #666666; text-decoration: underline;">LinkedIn</a>.</div>
+      <div class="subtitle">Product Advisor with 20+ years of experience implementing operating models in Tech, E-com, Retail and Finance. Former Senior Product Manager with a Master's degree in Engineering. Skilled in OKRs, metrics, and Product Management. Passionate about Frameworks, Change Management and Vibe Coding. More details on <a href="https://www.linkedin.com/in/mikhailsukhov/" target="_blank" rel="noopener" style="color: #666666; text-decoration: underline; transition: color 0.2s;" onmouseover="this.style.color='#ff0000'" onmouseout="this.style.color='#666666'">LinkedIn</a>.</div>
     </header>
-
-    <section>
-      <div class="links">
-        <a href="https://www.linkedin.com/in/mikhailsukhov/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://webmisha.medium.com/" target="_blank" rel="noopener">Medium</a>
-      </div>
-    </section>
 
   <section>
     <h2>Vibecoding Projects</h2>
@@ -270,22 +236,22 @@
       <ul class="project-list">
         <li>
           <a href="history.html" target="_blank" rel="noopener">
-            <strong>History Quiz:</strong> Educational quiz game with multiple-choice questions about history topics
+            History Quiz: Educational quiz game with multiple-choice questions about history topics
           </a>
         </li>
         <li>
           <a href="mage.html" target="_blank" rel="noopener">
-            <strong>Dungeon Mage:</strong> Top-down RPG game where a mage explores dungeons and battles monsters with fireballs
+            Dungeon Mage: Top-down RPG game where a mage explores dungeons and battles monsters with fireballs
           </a>
         </li>
         <li>
           <a href="news.html" target="_blank" rel="noopener">
-            <strong>AI News Feed:</strong> Curated feed of tweets from tech leaders and AI pioneers in chronological order
+            AI News Feed: Curated feed of tweets from tech leaders and AI pioneers in chronological order
           </a>
         </li>
         <li>
           <a href="helga.html" target="_blank" rel="noopener">
-            <strong>Helga AI:</strong> Landing page for an AI startup focused on enterprise solutions
+            Helga AI: Landing page for an AI startup focused on enterprise solutions
           </a>
         </li>
       </ul>
