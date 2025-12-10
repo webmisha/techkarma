@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Датские слова с переводом</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      min-height: 100vh;
+      color: #000000;
+      line-height: 1.45;
+      font-size: 18px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    h1 {
+      font-size: 50px;
+      color: #000000;
+      margin-bottom: 20px;
+      font-weight: bold;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      color: #666666;
+      font-size: 18px;
+      margin-bottom: 40px;
+      font-weight: normal;
+      line-height: 1.45;
+    }
+
+    .hint {
+      background: #f5f5f5;
+      border-left: 3px solid #1a0dab;
+      padding: 15px 20px;
+      margin-bottom: 40px;
+      font-size: 16px;
+      color: #333333;
+    }
+
+    .text-block {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 28px;
+      color: #000000;
+      margin-bottom: 25px;
+      margin-top: 50px;
+      font-weight: bold;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    p {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .word {
+      cursor: pointer;
+      color: #000000;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      position: relative;
+      display: inline;
+    }
+
+    .word:hover {
+      text-decoration: underline;
+    }
+
+    .word.active {
+      background: rgba(0, 0, 0, 0.05);
+      color: #000000;
+    }
+
+    /* Popup для перевода */
+    .translation-popup {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      padding: 25px 30px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      border-top: 2px solid #1a0dab;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .translation-popup.visible {
+      transform: translateY(0);
+    }
+
+    .popup-content {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .popup-text {
+      flex: 1;
+    }
+
+    .danish-word {
+      font-size: 28px;
+      color: #000000;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .russian-translation {
+      font-size: 22px;
+      color: #000000;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn-speak {
+      background: #1a0dab;
+      color: #fff;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-speak:hover {
+      background: #0000cc;
+    }
+
+    .btn-speak:active {
+      transform: scale(0.98);
+    }
+
+    .btn-close {
+      background: #f5f5f5;
+      color: #333333;
+      border: 1px solid #dddddd;
+      padding: 15px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-close:hover {
+      background: #eeeeee;
+    }
+
+    /* Статистика */
+    .stats {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #f5f5f5;
+      padding: 15px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #666666;
+    }
+
+    .stats span {
+      color: #1a0dab;
+      font-weight: bold;
+    }
+
+    /* iPad Pro / iPad Air (1024px и меньше) */
+    @media (max-width: 1024px) {
+      .container {
+        max-width: 700px;
+        padding: 50px 30px;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      .section-title {
+        font-size: 26px;
+      }
+    }
+
+    /* iPad Mini / iPad (768px - 834px) */
+    @media (max-width: 834px) {
+      .container {
+        padding: 40px 25px;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+
+      .section-title {
+        font-size: 24px;
+        margin-top: 40px;
+      }
+
+      .hint {
+        font-size: 15px;
+        padding: 12px 16px;
+      }
+
+      .word {
+        padding: 2px 0;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .popup-content {
+        gap: 15px;
+      }
+
+      .btn-speak,
+      .btn-close {
+        padding: 14px 22px;
+      }
+    }
+
+    /* iPhone Plus / iPhone Max (до 430px) */
+    @media (max-width: 430px) {
+      body {
+        font-size: 17px;
+      }
+
+      .container {
+        padding: 30px 20px;
+        padding-bottom: calc(30px + env(safe-area-inset-bottom));
+      }
+
+      h1 {
+        font-size: 32px;
+        margin-bottom: 15px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+
+      .section-title {
+        font-size: 22px;
+        margin-top: 35px;
+        margin-bottom: 20px;
+      }
+
+      .hint {
+        font-size: 14px;
+        padding: 12px 15px;
+        margin-bottom: 30px;
+      }
+
+      .text-block {
+        margin-bottom: 30px;
+      }
+
+      p {
+        margin-bottom: 16px;
+      }
+
+      .word {
+        padding: 3px 1px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .stats {
+        position: static;
+        margin-bottom: 25px;
+        padding: 12px 16px;
+        font-size: 13px;
+      }
+
+      /* Popup для iPhone */
+      .translation-popup {
+        padding: 20px 20px;
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+      }
+
+      .popup-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+
+      .danish-word {
+        font-size: 26px;
+      }
+
+      .russian-translation {
+        font-size: 20px;
+      }
+
+      .popup-buttons {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      .btn-speak {
+        flex: 1;
+        justify-content: center;
+        padding: 16px 20px;
+        font-size: 15px;
+      }
+
+      .btn-close {
+        padding: 16px 18px;
+        font-size: 15px;
+      }
+    }
+
+    /* iPhone SE / iPhone Mini (до 375px) */
+    @media (max-width: 375px) {
+      body {
+        font-size: 16px;
+      }
+
+      .container {
+        padding: 25px 16px;
+        padding-bottom: calc(25px + env(safe-area-inset-bottom));
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .subtitle {
+        font-size: 15px;
+      }
+
+      .section-title {
+        font-size: 20px;
+      }
+
+      .hint {
+        font-size: 13px;
+      }
+
+      .danish-word {
+        font-size: 24px;
+      }
+
+      .russian-translation {
+        font-size: 18px;
+      }
+
+      .btn-speak,
+      .btn-close {
+        padding: 14px 16px;
+        font-size: 14px;
+      }
+    }
+
+    /* Ландшафтная ориентация на iPhone */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        margin-bottom: 20px;
+      }
+
+      .section-title {
+        margin-top: 25px;
+        font-size: 20px;
+      }
+
+      .translation-popup {
+        padding: 15px 20px;
+      }
+
+      .popup-content {
+        flex-direction: row;
+        text-align: left;
+      }
+
+      .danish-word {
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+
+      .russian-translation {
+        font-size: 18px;
+      }
+
+      .popup-buttons {
+        flex-direction: row;
+      }
+
+      .btn-speak,
+      .btn-close {
+        padding: 12px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="stats">
+      Изучено: <span id="learned-count">0</span> слов
+    </div>
+
+    <h1>Højskolen</h1>
+    <p class="subtitle">Интерактивный текст для изучения датского языка</p>
+
+    <div class="hint">
+      💡 Нажмите на любое слово, чтобы увидеть перевод и прослушать произношение
+    </div>
+
+    <div class="text-block">
+      <h2 class="section-title">Højskolen: frihed, forberedelse, forandring</h2>
+      
+      <p>
+        <span class="word" data-ru="каждый">Hvert</span> 
+        <span class="word" data-ru="год">år</span> 
+        <span class="word" data-ru="выбирает">vælger</span> 
+        8-10% 
+        <span class="word" data-ru="из">af</span> 
+        <span class="word" data-ru="датских">danske</span> 
+        <span class="word" data-ru="молодых">unge</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="ехать/идти">tage</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="высшую народную школу">højskole</span>.
+      </p>
+
+      <p>
+        40-45.000 
+        <span class="word" data-ru="взрослых">voksne</span> 
+        <span class="word" data-ru="делает">gør</span> 
+        <span class="word" data-ru="то">det</span> 
+        <span class="word" data-ru="то же самое">samme</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="они (определённые)">De</span> 
+        <span class="word" data-ru="молодые">unge</span> 
+        <span class="word" data-ru="выбирает">vælger</span> 
+        <span class="word" data-ru="типично">typisk</span> 
+        <span class="word" data-ru="высших школ (род. п.)">højskolernes</span> 
+        <span class="word" data-ru="более длинные">længere</span> 
+        <span class="word" data-ru="программы">forløb</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="между">mellem</span> 
+        1 
+        <span class="word" data-ru="и">og</span> 
+        8 
+        <span class="word" data-ru="месяцев">måneder</span>, 
+        <span class="word" data-ru="в то время как">mens</span> 
+        <span class="word" data-ru="взрослые">voksne</span> 
+        <span class="word" data-ru="часто">ofte</span> 
+        <span class="word" data-ru="выбирает">vælger</span> 
+        <span class="word" data-ru="более короткие">kortere</span> 
+        <span class="word" data-ru="курсы">kurser</span>.
+      </p>
+    </div>
+
+    <div class="text-block">
+      <h2 class="section-title">Når du vil noget med dig selv</h2>
+      
+      <p>
+        <span class="word" data-ru="когда">Når</span> 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="хочешь">vil</span> 
+        <span class="word" data-ru="что-то">noget</span> 
+        <span class="word" data-ru="с">med</span> 
+        <span class="word" data-ru="тобой">dig</span> 
+        <span class="word" data-ru="сам">selv</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="высшая школа">Højskolen</span> 
+        <span class="word" data-ru="хочет">vil</span> 
+        <span class="word" data-ru="что-то">noget</span> 
+        <span class="word" data-ru="с">med</span> 
+        <span class="word" data-ru="тобой">dig</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="высшая школа">Højskolen</span> 
+        <span class="word" data-ru="хочет">vil</span> 
+        <span class="word" data-ru="делать">gøre</span> 
+        <span class="word" data-ru="тебя">dig</span> 
+        <span class="word" data-ru="лучше">bedre</span> 
+        <span class="word" data-ru="к/в">til</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="осознавать">erkende</span> 
+        <span class="word" data-ru="существования (род. п.)">tilværelsens</span> 
+        <span class="word" data-ru="противоречия">modsætninger</span>, 
+        <span class="word" data-ru="напряжения">spændinger</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="глубины">dybder</span>, 
+        <span class="word" data-ru="так что">så</span> 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="получаешь">får</span> 
+        <span class="word" data-ru="(неопред. артикль)">et</span> 
+        <span class="word" data-ru="инструмент">redskab</span> 
+        <span class="word" data-ru="к/в">til</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="справляться с">håndtere</span> 
+        <span class="word" data-ru="ту (определённый артикль)">den</span> 
+        <span class="word" data-ru="неуверенность">usikkerhed</span>, 
+        <span class="word" data-ru="которая">der</span> 
+        <span class="word" data-ru="есть">er</span> 
+        <span class="word" data-ru="(неопред. артикль)">et</span> 
+        <span class="word" data-ru="основное условие">grundvilkår</span> 
+        <span class="word" data-ru="в">i</span> 
+        <span class="word" data-ru="нашем">vores</span> 
+        <span class="word" data-ru="современном">moderne</span> 
+        <span class="word" data-ru="мире">verden</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="(неопред. артикль)">Et</span> 
+        <span class="word" data-ru="пребывание в высшей школе">højskoleophold</span> 
+        <span class="word" data-ru="есть">er</span> 
+        <span class="word" data-ru="(неопред. артикль)">en</span> 
+        <span class="word" data-ru="прямой">direkte</span> 
+        <span class="word" data-ru="путь">vej</span> 
+        <span class="word" data-ru="к/в">til</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="стать">blive</span> 
+        <span class="word" data-ru="умнее">klogere</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="ту (определённый артикль)">det</span> 
+        <span class="word" data-ru="жизнь">liv</span>, 
+        <span class="word" data-ru="мы">vi</span> 
+        <span class="word" data-ru="должны">skal</span> 
+        <span class="word" data-ru="жить">leve</span> 
+        <span class="word" data-ru="вместе">sammen</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="каждый">hver</span> 
+        <span class="word" data-ru="для">for</span> 
+        <span class="word" data-ru="себя">sig</span>.
+      </p>
+    </div>
+
+    <div class="text-block">
+      <h2 class="section-title">Når du vil forberede dig</h2>
+      
+      <p>
+        <span class="word" data-ru="многие">Mange</span> 
+        <span class="word" data-ru="имеет">har</span> 
+        <span class="word" data-ru="потребность в">brug for</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="стать">blive</span> 
+        <span class="word" data-ru="лучше">bedre</span> 
+        <span class="word" data-ru="к/в">til</span> 
+        <span class="word" data-ru="что-то">noget</span>, 
+        <span class="word" data-ru="прежде чем">inden</span> 
+        <span class="word" data-ru="они">de</span> 
+        <span class="word" data-ru="должны">skal</span> 
+        <span class="word" data-ru="дальше">videre</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="высшая школа">Højskolen</span> 
+        <span class="word" data-ru="есть">er</span> 
+        <span class="word" data-ru="место">stedet</span>, 
+        <span class="word" data-ru="где">hvor</span> 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="можешь">kan</span> 
+        <span class="word" data-ru="подготовить">forberede</span> 
+        <span class="word" data-ru="тебя">dig</span>, 
+        <span class="word" data-ru="так что">så</span> 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="есть">er</span> 
+        <span class="word" data-ru="лучше">bedre</span> 
+        <span class="word" data-ru="подготовлен">rustet</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="ты">Du</span> 
+        <span class="word" data-ru="можешь">kan</span> 
+        <span class="word" data-ru="улучшить">forbedre</span> 
+        <span class="word" data-ru="твои">dine</span> 
+        <span class="word" data-ru="профессиональные">faglige</span> 
+        <span class="word" data-ru="навыки">færdigheder</span>, 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="можешь">kan</span> 
+        <span class="word" data-ru="усилить">styrke</span> 
+        <span class="word" data-ru="твои">dine</span> 
+        <span class="word" data-ru="способности">evner</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="ресурсы">ressourcer</span>, 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="можешь">kan</span> 
+        <span class="word" data-ru="развивать">opdyrke</span> 
+        <span class="word" data-ru="новые">nye</span> 
+        <span class="word" data-ru="области">områder</span>, 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="можешь">kan</span> 
+        <span class="word" data-ru="развивать">udvikle</span> 
+        <span class="word" data-ru="тебя">dig</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="очень многие">De allerfleste</span> 
+        <span class="word" data-ru="студенты высшей школы">højskoleelever</span> 
+        <span class="word" data-ru="переживает">oplever</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="получить">få</span> 
+        <span class="word" data-ru="несколько">nogle</span> 
+        <span class="word" data-ru="личных">personlige</span> 
+        <span class="word" data-ru="дружбы">venskaber</span>, 
+        <span class="word" data-ru="которые">der</span> 
+        <span class="word" data-ru="получает">får</span> 
+        <span class="word" data-ru="значение">betydning</span> 
+        <span class="word" data-ru="для">for</span> 
+        <span class="word" data-ru="них">dem</span>, 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="которые">som</span> 
+        <span class="word" data-ru="они">de</span> 
+        <span class="word" data-ru="опирается на">trækker på</span> 
+        <span class="word" data-ru="в">i</span> 
+        <span class="word" data-ru="много">mange</span> 
+        <span class="word" data-ru="лет">år</span>.
+      </p>
+    </div>
+
+    <div class="text-block">
+      <h2 class="section-title">Når du vil turde noget mere</h2>
+      
+      <p>
+        <span class="word" data-ru="на">På</span> 
+        <span class="word" data-ru="(неопред. артикль)">et</span> 
+        <span class="word" data-ru="пребывание в высшей школе">højskoleophold</span> 
+        <span class="word" data-ru="ожидается">forventes</span> 
+        <span class="word" data-ru="это">det</span>, 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="студенты">eleverne</span> 
+        <span class="word" data-ru="вносит вклад">bidrager</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="занимает позицию">tager stilling</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="ты">Du</span> 
+        <span class="word" data-ru="учишься">lærer</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="брать">tage</span> 
+        <span class="word" data-ru="слово">ordet</span>, 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="стоять/выступать">stå</span> 
+        <span class="word" data-ru="вперёд">frem</span> 
+        <span class="word" data-ru="для">for</span> 
+        <span class="word" data-ru="(неопред. артикль)">en</span> 
+        <span class="word" data-ru="собрание">forsamling</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="делать">gøre</span> 
+        <span class="word" data-ru="тебя">dig</span> 
+        <span class="word" data-ru="значимым">gældende</span> 
+        <span class="word" data-ru="в">i</span> 
+        <span class="word" data-ru="(неопред. артикль)">et</span> 
+        <span class="word" data-ru="сотрудничество">samarbejde</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="ты">Du</span> 
+        <span class="word" data-ru="будешь">vil</span> 
+        <span class="word" data-ru="переживать">opleve</span>, 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="твоё">din</span> 
+        <span class="word" data-ru="мнение">mening</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="твоё">din</span> 
+        <span class="word" data-ru="усилие">indsats</span> 
+        <span class="word" data-ru="имеет">har</span> 
+        <span class="word" data-ru="значение">betydning</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="высшая школа">Højskolen</span> 
+        <span class="word" data-ru="будет">vil</span> 
+        <span class="word" data-ru="дать">give</span> 
+        <span class="word" data-ru="тебе">dig</span> 
+        <span class="word" data-ru="смелость">frimodighed</span>, 
+        <span class="word" data-ru="так что">så</span> 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="смеешь">tør</span> 
+        <span class="word" data-ru="быть">være</span> 
+        <span class="word" data-ru="тот (определённый артикль)">den</span>, 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="есть">er</span>.
+      </p>
+    </div>
+
+    <div class="text-block">
+      <h2 class="section-title">Når du vil have det sjovt</h2>
+      
+      <p>
+        <span class="word" data-ru="высшая школа">Højskolen</span> 
+        <span class="word" data-ru="будет">vil</span> 
+        <span class="word" data-ru="и то и другое">både</span> 
+        <span class="word" data-ru="приносить пользу">gavne</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="радовать">fornøje</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="мы">Vi</span> 
+        <span class="word" data-ru="будем">vil</span> 
+        <span class="word" data-ru="воодушевлять">begejstre</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="делать">gøre</span> 
+        <span class="word" data-ru="это">det</span> 
+        <span class="word" data-ru="веселее">sjovere</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="быть">være</span> 
+        <span class="word" data-ru="к/в">til</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="мы">Vi</span> 
+        <span class="word" data-ru="будем">vil</span> 
+        <span class="word" data-ru="делать">gøre</span> 
+        <span class="word" data-ru="серьёзность">alvoren</span> 
+        <span class="word" data-ru="весёлой">munter</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="жизнерадостность">livsglæden</span> 
+        <span class="word" data-ru="необходимой">nødvendig</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="поэтому">Derfor</span> 
+        <span class="word" data-ru="есть">er</span> 
+        <span class="word" data-ru="это">det</span> 
+        <span class="word" data-ru="весело">sjovt</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="ходить">gå</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="высшую школу">højskole</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="там">Der</span> 
+        <span class="word" data-ru="смеются">grines</span> 
+        <span class="word" data-ru="много">meget</span>, 
+        <span class="word" data-ru="потому что">fordi</span> 
+        <span class="word" data-ru="мы">vi</span> 
+        <span class="word" data-ru="трудимся">slider</span> 
+        <span class="word" data-ru="в">i</span> 
+        <span class="word" data-ru="это">det</span> 
+        <span class="word" data-ru="вместе">sammen</span>.
+      </p>
+    </div>
+
+    <div class="text-block">
+      <h2 class="section-title">Når du vil lære om livet</h2>
+      
+      <p>
+        <span class="word" data-ru="высшая школа">Højskolen</span> 
+        <span class="word" data-ru="строится">bygger</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="опыты/переживания">oplevelser</span>, 
+        <span class="word" data-ru="радость">glæde</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="мудрость">klogskab</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="мы">Vi</span> 
+        <span class="word" data-ru="будем">vil</span> 
+        <span class="word" data-ru="научить">lære</span> 
+        <span class="word" data-ru="тебя">dig</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="опираться">trække</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="опыт">erfaringer</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="переживания">oplevelser</span> 
+        <span class="word" data-ru="вне">uden for</span> 
+        <span class="word" data-ru="тот (определённый артикль)">det</span> 
+        <span class="word" data-ru="класс">klasselokale</span>, 
+        <span class="word" data-ru="ты">du</span> 
+        <span class="word" data-ru="до сих пор">hidtil</span> 
+        <span class="word" data-ru="знал">har kendt</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="мы">Vi</span> 
+        <span class="word" data-ru="будем">vil</span> 
+        <span class="word" data-ru="просвещать">oplyse</span> 
+        <span class="word" data-ru="тебя">dig</span> 
+        <span class="word" data-ru="о">om</span> 
+        <span class="word" data-ru="жизни">livet</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="дать">give</span> 
+        <span class="word" data-ru="тебе">dig</span> 
+        <span class="word" data-ru="(неопред. артикль)">et</span> 
+        <span class="word" data-ru="новый">nyt</span> 
+        <span class="word" data-ru="отправная точка">afsæt</span> 
+        <span class="word" data-ru="для">for</span> 
+        <span class="word" data-ru="(инф. частица)">at</span> 
+        <span class="word" data-ru="занять позицию">tage stilling</span> 
+        <span class="word" data-ru="к">til</span> 
+        <span class="word" data-ru="твоей">dit</span> 
+        <span class="word" data-ru="собственной">eget</span> 
+        <span class="word" data-ru="жизни">liv</span>, 
+        <span class="word" data-ru="твоему">din</span> 
+        <span class="word" data-ru="будущему">fremtid</span> 
+        <span class="word" data-ru="и">og</span> 
+        <span class="word" data-ru="обществу">samfundet</span> 
+        <span class="word" data-ru="вокруг">omkring</span> 
+        <span class="word" data-ru="тебя">dig</span>.
+      </p>
+    </div>
+
+    <div class="text-block">
+      <h2 class="section-title">Idemæssigt grundlag</h2>
+      
+      <p>
+        <span class="word" data-ru="все">Alle</span> 
+        <span class="word" data-ru="высшие школы">højskoler</span> 
+        <span class="word" data-ru="строится">bygger</span> 
+        <span class="word" data-ru="таким образом">således</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="том же">samme</span> 
+        <span class="word" data-ru="идейном">idemæssige</span> 
+        <span class="word" data-ru="основе">grundlag</span>, 
+        <span class="word" data-ru="но">men</span> 
+        <span class="word" data-ru="кроме того">derudover</span> 
+        <span class="word" data-ru="имеет">har</span> 
+        <span class="word" data-ru="отдельные (определённые)">de enkelte</span> 
+        <span class="word" data-ru="высшие школы">højskoler</span> 
+        <span class="word" data-ru="их">deres</span> 
+        <span class="word" data-ru="особый">særlige</span>, 
+        <span class="word" data-ru="профессиональный">faglige</span> 
+        <span class="word" data-ru="профиль">profil</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="некоторые">Nogle</span> 
+        <span class="word" data-ru="высшие школы">højskoler</span> 
+        <span class="word" data-ru="делает">lægger</span> 
+        <span class="word" data-ru="например">fx</span> 
+        <span class="word" data-ru="особый">særlig</span> 
+        <span class="word" data-ru="вес">vægt</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="музыкальные">musiske</span> 
+        <span class="word" data-ru="предметы">fag</span>, 
+        <span class="word" data-ru="в то время как">mens</span> 
+        <span class="word" data-ru="другие">andre</span> 
+        <span class="word" data-ru="фокусируется">fokuserer</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="спорт">idræt</span>.
+      </p>
+
+      <p>
+        <span class="word" data-ru="добро пожаловать">Velkommen</span> 
+        <span class="word" data-ru="на">på</span> 
+        <span class="word" data-ru="высшую школу">højskole</span>.
+      </p>
+    </div>
+  </div>
+
+  <!-- Popup для перевода -->
+  <div class="translation-popup" id="popup">
+    <div class="popup-content">
+      <div class="popup-text">
+        <div class="danish-word" id="popup-danish"></div>
+        <div class="russian-translation" id="popup-russian"></div>
+      </div>
+      <div class="popup-buttons">
+        <button class="btn-speak" onclick="speakWord()">
+          🔊 Произнести
+        </button>
+        <button class="btn-close" onclick="closePopup()">
+          ✕ Закрыть
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentWord = '';
+    let learnedWords = new Set();
+    const popup = document.getElementById('popup');
+    const popupDanish = document.getElementById('popup-danish');
+    const popupRussian = document.getElementById('popup-russian');
+
+    // Обработка кликов на слова
+    document.querySelectorAll('.word').forEach(word => {
+      word.addEventListener('click', function(e) {
+        e.stopPropagation();
+        
+        // Убираем активность с предыдущего слова
+        document.querySelectorAll('.word.active').forEach(w => w.classList.remove('active'));
+        
+        // Активируем текущее слово
+        this.classList.add('active');
+        
+        // Получаем данные
+        currentWord = this.textContent.trim();
+        const translation = this.dataset.ru;
+        
+        // Заполняем popup
+        popupDanish.textContent = currentWord;
+        popupRussian.textContent = translation;
+        
+        // Показываем popup
+        popup.classList.add('visible');
+        
+        // Добавляем в изученные
+        if (!learnedWords.has(currentWord.toLowerCase())) {
+          learnedWords.add(currentWord.toLowerCase());
+          document.getElementById('learned-count').textContent = learnedWords.size;
+        }
+      });
+    });
+
+    // Закрытие popup при клике вне
+    document.addEventListener('click', function(e) {
+      if (!popup.contains(e.target) && !e.target.classList.contains('word')) {
+        closePopup();
+      }
+    });
+
+    // Закрытие по Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closePopup();
+      }
+    });
+
+    function closePopup() {
+      popup.classList.remove('visible');
+      document.querySelectorAll('.word.active').forEach(w => w.classList.remove('active'));
+    }
+
+    function speakWord() {
+      if (!currentWord) return;
+      
+      // Используем Web Speech API
+      const utterance = new SpeechSynthesisUtterance(currentWord);
+      utterance.lang = 'da-DK';
+      utterance.rate = 0.8;
+      utterance.pitch = 1;
+      
+      // Пробуем найти датский голос
+      const voices = speechSynthesis.getVoices();
+      const danishVoice = voices.find(voice => voice.lang.startsWith('da'));
+      if (danishVoice) {
+        utterance.voice = danishVoice;
+      }
+      
+      speechSynthesis.speak(utterance);
+    }
+
+    // Загрузка голосов (для некоторых браузеров)
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = () => {};
+    }
+  </script>
+</body>
+</html>
+
