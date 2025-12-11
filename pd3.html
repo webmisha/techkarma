@@ -23,7 +23,7 @@
     .container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 60px 20px;
+      padding: 80px 20px 60px 20px;
     }
 
     h1 {
@@ -50,6 +50,91 @@
       margin-bottom: 40px;
       font-size: 16px;
       color: #333333;
+    }
+
+    /* Timer */
+    .timer-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #ffffff;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 12px 20px;
+      z-index: 1001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .timer-display {
+      font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+      font-size: 24px;
+      color: #000000;
+      font-weight: 500;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    .timer-btn {
+      background: none;
+      border: 1px solid #000000;
+      color: #000000;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    .timer-btn:hover {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    .timer-btn.active {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    /* Article Tabs */
+    .article-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .article-tab {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 16px;
+      color: #666666;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+
+    .article-tab:hover {
+      color: #000000;
+    }
+
+    .article-tab.active {
+      color: #000000;
+      border-bottom: 2px solid #000000;
+      font-weight: 500;
+    }
+
+    .article {
+      display: none;
+    }
+
+    .article.active {
+      display: block;
     }
 
     .text-block {
@@ -196,7 +281,7 @@
     @media (max-width: 1024px) {
       .container {
         max-width: 700px;
-        padding: 50px 30px;
+        padding: 70px 30px 50px 30px;
       }
 
       h1 {
@@ -211,7 +296,21 @@
     /* iPad Mini / iPad (768px - 834px) */
     @media (max-width: 834px) {
       .container {
-        padding: 40px 25px;
+        padding: 70px 25px 40px 25px;
+      }
+
+      .timer-display {
+        font-size: 20px;
+      }
+
+      .timer-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+      }
+
+      .article-tab {
+        padding: 10px 16px;
+        font-size: 15px;
       }
 
       h1 {
@@ -250,8 +349,28 @@
       }
 
       .container {
-        padding: 30px 20px;
+        padding: 65px 20px 30px 20px;
         padding-bottom: calc(30px + env(safe-area-inset-bottom));
+      }
+
+      .timer-bar {
+        padding: 10px 15px;
+        gap: 10px;
+      }
+
+      .timer-display {
+        font-size: 18px;
+        min-width: 70px;
+      }
+
+      .timer-btn {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+
+      .article-tab {
+        padding: 10px 14px;
+        font-size: 14px;
       }
 
       h1 {
@@ -342,8 +461,23 @@
       }
 
       .container {
-        padding: 25px 16px;
+        padding: 60px 16px 25px 16px;
         padding-bottom: calc(25px + env(safe-area-inset-bottom));
+      }
+
+      .timer-display {
+        font-size: 16px;
+        min-width: 60px;
+      }
+
+      .timer-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+      }
+
+      .article-tab {
+        padding: 8px 12px;
+        font-size: 13px;
       }
 
       h1 {
@@ -380,7 +514,15 @@
     /* Ландшафтная ориентация на iPhone */
     @media (max-height: 500px) and (orientation: landscape) {
       .container {
-        padding: 20px;
+        padding: 55px 20px 20px 20px;
+      }
+
+      .timer-bar {
+        padding: 8px 15px;
+      }
+
+      .timer-display {
+        font-size: 18px;
       }
 
       h1 {
@@ -427,12 +569,28 @@
   </style>
 </head>
 <body>
+  <div class="timer-bar">
+    <button class="timer-btn active" id="timer-toggle">⏸ Пауза</button>
+    <div class="timer-display" id="timer-display">00:00</div>
+    <button class="timer-btn" id="timer-reset">↺ Сброс</button>
+  </div>
+
   <div class="container">
     <div class="stats">
       Изучено: <span id="learned-count">0</span> слов
     </div>
 
-    <h1>Højskolen</h1>
+    <div class="article-tabs">
+      <button class="article-tab active" data-article="1">Højskolen</button>
+      <button class="article-tab" data-article="2">Parallelsamfund</button>
+      <button class="article-tab" data-article="3">Politiforbundet</button>
+      <button class="article-tab" data-article="4">Skifte branche</button>
+      <button class="article-tab" data-article="5">4-dages uge</button>
+    </div>
+
+    <!-- Статья 1: Højskolen -->
+    <div class="article active" id="article-1">
+      <h1>Højskolen</h1>
 
     <div class="text-block">
       <h2 class="section-title">Højskolen: frihed, forberedelse, forandring</h2>
@@ -879,6 +1037,2143 @@
         <span class="word" data-ru="высшую школу">højskole</span>.
       </p>
     </div>
+    </div>
+    <!-- /Статья 1 -->
+
+    <!-- Статья 2: Parallelsamfund -->
+    <div class="article" id="article-2">
+      <h1>Parallelsamfund</h1>
+
+      <div class="text-block">
+        <h2 class="section-title">Endnu et markant fald i antallet af parallelsamfund</h2>
+        
+        <p>
+          <span class="word" data-ru="после">Efter</span> 
+          <span class="word" data-ru="ещё один">endnu</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="заметное">markant</span> 
+          <span class="word" data-ru="падение">fald</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="количестве">antallet</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="параллельные общества">parallelsamfund</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="Дании">Danmark</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="сейчас">nu</span> 
+          <span class="word" data-ru="пять">fem</span> 
+          <span class="word" data-ru="обратно/осталось">tilbage</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="также">Også</span> 
+          <span class="word" data-ru="количество">antallet</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="уязвимые">udsatte</span> 
+          <span class="word" data-ru="жилые районы">boligområder</span> 
+          <span class="word" data-ru="падает">falder</span> 
+          <span class="word" data-ru="снова">igen</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="год">år</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="цель">Målet</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="более">længere</span> 
+          <span class="word" data-ru="находится">findes</span> 
+          <span class="word" data-ru="районы параллельных обществ">parallelsamfundsområder</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="Дании">Danmark</span> 
+          <span class="word" data-ru="в">i</span> 
+          2030.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Status over parallelsamfund</h2>
+        
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="сейчас">nu</span> 
+          <span class="word" data-ru="пять">fem</span> 
+          <span class="word" data-ru="районы параллельных обществ">parallelsamfundsområder</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="Дании">Danmark</span> 
+          <span class="word" data-ru="против">mod</span> 
+          <span class="word" data-ru="восемь">otte</span> 
+          <span class="word" data-ru="прошлый">sidste</span> 
+          <span class="word" data-ru="год">år</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="и">Og</span> 
+          <span class="word" data-ru="количество">antallet</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="уязвимые">udsatte</span> 
+          <span class="word" data-ru="жилые районы">boligområder</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="упало">faldet</span> — 
+          <span class="word" data-ru="от">fra</span> 
+          12 
+          <span class="word" data-ru="прошлый">sidste</span> 
+          <span class="word" data-ru="год">år</span> 
+          <span class="word" data-ru="до">til</span> 
+          <span class="word" data-ru="семь">syv</span> 
+          <span class="word" data-ru="районов">områder</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="год">år</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="показывает">viser</span> 
+          <span class="word" data-ru="те (определённый артикль)">de</span> 
+          <span class="word" data-ru="списки">lister</span>, 
+          <span class="word" data-ru="как/который">som</span> 
+          <span class="word" data-ru="социальный">social</span>- 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="жилищный министр">boligministeren</span> 
+          <span class="word" data-ru="сегодня">i dag</span> 
+          <span class="word" data-ru="публикует">offentliggør</span> 
+          <span class="word" data-ru="о">over</span> 
+          <span class="word" data-ru="параллельные общества">parallelsamfund</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="уязвимые">udsatte</span> 
+          <span class="word" data-ru="жилые районы">boligområder</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Områder der udgår</h2>
+        
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="новые">nye</span> 
+          <span class="word" data-ru="районы">områder</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="находить">finde</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="ни">hverken</span> 
+          <span class="word" data-ru="списке">listen</span> 
+          <span class="word" data-ru="о">over</span> 
+          <span class="word" data-ru="районы параллельных обществ">parallelsamfundsområder</span> 
+          <span class="word" data-ru="или">eller</span> 
+          <span class="word" data-ru="уязвимые">udsatte</span> 
+          <span class="word" data-ru="жилые районы">boligområder</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="Аскерёд">Askerød</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="Греве">Greve</span>, 
+          <span class="word" data-ru="Стенгорсвай">Stengårdsvej</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="Эсбьерге">Esbjerg</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="Сковвайен">Skovvejen</span>/<span class="word" data-ru="Сковпаркен">Skovparken</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="Кольдинге">Kolding</span> 
+          <span class="word" data-ru="выходит">udgår</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="списков">listerne</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="обоих">både</span> 
+          <span class="word" data-ru="параллельных обществ">parallelsamfund</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="уязвимых">udsatte</span> 
+          <span class="word" data-ru="жилых районов">boligområder</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="объясняется">skyldes</span> 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="доля">andelen</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="осуждённых">dømte</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="районах">områderne</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="упала">faldet</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Ministerens udtalelse</h2>
+        
+        <p>
+          <span class="word" data-ru="социальный">Social</span>- 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="жилищный министр">boligminister</span> 
+          <span class="word" data-ru="Софи Хэструп Андерсен">Sophie Hæstorp Andersen</span> 
+          <span class="word" data-ru="говорит">siger</span>:
+        </p>
+
+        <p>
+          "<span class="word" data-ru="моя">Min</span> 
+          <span class="word" data-ru="амбиция">ambition</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="ноль">nul</span> 
+          <span class="word" data-ru="параллельных обществ">parallelsamfund</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="Дании">Danmark</span>, 
+          <span class="word" data-ru="так что">så</span> 
+          <span class="word" data-ru="хотя">selvom</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="радуюсь">glæder</span> 
+          <span class="word" data-ru="меня">mig</span> 
+          <span class="word" data-ru="о">over</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="законодательство">lovgivningen</span> 
+          <span class="word" data-ru="работает">virker</span>, 
+          <span class="word" data-ru="так">så</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="осознающая">bevidst</span> 
+          <span class="word" data-ru="о">om</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="мы">vi</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="полностью">helt</span> 
+          <span class="word" data-ru="в цели">i mål</span> 
+          <span class="word" data-ru="ещё">endnu</span>."
+        </p>
+
+        <p>
+          "<span class="word" data-ru="мы">Vi</span> 
+          <span class="word" data-ru="должны">skal</span> 
+          <span class="word" data-ru="действительно">virkelig</span> 
+          <span class="word" data-ru="держать">holde</span> 
+          <span class="word" data-ru="крепко">fast</span>. 
+          <span class="word" data-ru="ибо">For</span> 
+          <span class="word" data-ru="меньше">færre</span> 
+          <span class="word" data-ru="уязвимых">udsatte</span> 
+          <span class="word" data-ru="жилых районов">boligområder</span> 
+          <span class="word" data-ru="означает">betyder</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="больше">flere</span> 
+          <span class="word" data-ru="детей">børn</span> 
+          <span class="word" data-ru="вырастает">vokser</span> 
+          <span class="word" data-ru="вверх">op</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="семьях">familier</span>, 
+          <span class="word" data-ru="где">hvor</span> 
+          <span class="word" data-ru="родители">forældrene</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="работу">arbejde</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="образование">uddannelse</span>."
+        </p>
+
+        <p>
+          "<span class="word" data-ru="что">At</span> 
+          <span class="word" data-ru="меньше">færre</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="соседей">naboer</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="осуждённые">dømt</span> 
+          <span class="word" data-ru="за">for</span> 
+          <span class="word" data-ru="преступность">kriminalitet</span>."
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Definition af udsatte boligområder</h2>
+        
+        <p>
+          <span class="word" data-ru="при">Ved</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="уязвимый">udsat</span> 
+          <span class="word" data-ru="жилой район">boligområde</span> 
+          <span class="word" data-ru="понимается">forstås</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="общее">alment</span> 
+          <span class="word" data-ru="жилой район">boligområde</span>, 
+          <span class="word" data-ru="где">hvor</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="живёт">bor</span> 
+          <span class="word" data-ru="как минимум">mindst</span> 
+          1.000 
+          <span class="word" data-ru="жителей">beboere</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="и">Og</span> 
+          <span class="word" data-ru="где">hvor</span> 
+          <span class="word" data-ru="минимум">minimum</span> 
+          <span class="word" data-ru="два">to</span> 
+          <span class="word" data-ru="из">ud</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="четырёх">fire</span> 
+          <span class="word" data-ru="следующих">følgende</span> 
+          <span class="word" data-ru="критериев">kriterier</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="выполнены">opfyldt</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">De fire kriterier</h2>
+        
+        <p>
+          1. <span class="word" data-ru="доля">Andelen</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="жителей">beboere</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="возрасте">alderen</span> 
+          18-64 
+          <span class="word" data-ru="лет">år</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="без">uden</span> 
+          <span class="word" data-ru="связи">tilknytning</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="рынку труда">arbejdsmarked</span> 
+          <span class="word" data-ru="или">eller</span> 
+          <span class="word" data-ru="образованию">uddannelse</span>, 
+          <span class="word" data-ru="превышает">overstiger</span> 
+          40%.
+        </p>
+
+        <p>
+          2. <span class="word" data-ru="доля">Andelen</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="жителей">beboere</span> 
+          <span class="word" data-ru="осуждённых">dømt</span> 
+          <span class="word" data-ru="за">for</span> 
+          <span class="word" data-ru="нарушение">overtrædelse</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="уголовного закона">straffeloven</span> 
+          <span class="word" data-ru="составляет">udgør</span> 
+          <span class="word" data-ru="как минимум">mindst</span> 
+          3 
+          <span class="word" data-ru="раза">gange</span> 
+          <span class="word" data-ru="среднего по стране">landsgennemsnittet</span>.
+        </p>
+
+        <p>
+          3. <span class="word" data-ru="доля">Andelen</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="жителей">beboere</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="возрасте">alderen</span> 
+          30-59 
+          <span class="word" data-ru="лет">år</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="только">alene</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="начальное образование">grunduddannelse</span>, 
+          <span class="word" data-ru="превышает">overstiger</span> 
+          60%.
+        </p>
+
+        <p>
+          4. <span class="word" data-ru="средний">Den gennemsnitlige</span> 
+          <span class="word" data-ru="брутто-доход">bruttoindkomst</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="налогоплательщиков">skattepligtige</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="меньше">mindre</span> 
+          <span class="word" data-ru="чем">end</span> 
+          55% 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="среднего">den gennemsnitlige</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="регионе">regionen</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Vejen frem</h2>
+        
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="важно">vigtigt</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="мы">vi</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="колеблемся">vakler</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="и">Og</span> 
+          <span class="word" data-ru="поэтому">derfor</span> 
+          <span class="word" data-ru="буду">vil</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="по-прежнему">fortsat</span> 
+          <span class="word" data-ru="иметь">have</span> 
+          <span class="word" data-ru="фокус">fokus</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="муниципалитеты">kommuner</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="жилищные организации">boligorganisationer</span> 
+          <span class="word" data-ru="продолжает">fortsætter</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="использовать">bruge</span> 
+          <span class="word" data-ru="инструменты">redskaberne</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="особенно">Særligt</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="той (определённый артикль)">den</span> 
+          <span class="word" data-ru="стратегической">strategiske</span> 
+          <span class="word" data-ru="трансформации">omdannelse</span>, 
+          <span class="word" data-ru="которая">der</span> 
+          <span class="word" data-ru="должна">skal</span> 
+          <span class="word" data-ru="обеспечить">sikre</span> 
+          <span class="word" data-ru="ту (определённый артикль)">den</span> 
+          <span class="word" data-ru="изменение">forandring</span>, 
+          <span class="word" data-ru="которая">der</span> 
+          <span class="word" data-ru="сейчас">nu</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="запущена">sat i gang</span>.
+        </p>
+      </div>
+    </div>
+    <!-- /Статья 2 -->
+
+    <!-- Статья 3: Politiforbundet -->
+    <div class="article" id="article-3">
+      <h1>Politiforbundet</h1>
+
+      <div class="text-block">
+        <h2 class="section-title">Politiforbundet tilfreds med aftale for politiet</h2>
+        
+        <p>
+          <span class="word" data-ru="(неопред. артикль)">En</span> 
+          <span class="word" data-ru="новое">ny</span> 
+          <span class="word" data-ru="многолетнее соглашение">flerårsaftale</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="полиции">politi</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="прокуратуры">anklagemyndighed</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="сейчас">nu</span> 
+          <span class="word" data-ru="заключено">indgået</span> 
+          <span class="word" data-ru="между">mellem</span> 
+          <span class="word" data-ru="правительством">regeringen</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="ряд">række</span> 
+          <span class="word" data-ru="политических">politiske</span> 
+          <span class="word" data-ru="партий">partier</span>.
+        </p>
+
+        <p>
+          – <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="хорошее">god</span> 
+          <span class="word" data-ru="соглашение">aftale</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="заметными">markante</span> 
+          <span class="word" data-ru="улучшениями">forbedringer</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="инвестициями">investeringer</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="полицию">politiet</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="ясными">klare</span> 
+          <span class="word" data-ru="отпечатками">aftryk</span> 
+          <span class="word" data-ru="от">fra</span> 
+          <span class="word" data-ru="Союза полиции">Politiforbundet</span>, 
+          <span class="word" data-ru="звучит">lyder</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="от">fra</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="довольного">tilfreds</span> 
+          <span class="word" data-ru="председателя">forbundsformand</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Aftalens indhold</h2>
+        
+        <p>
+          <span class="word" data-ru="соглашение">Aftalen</span> 
+          <span class="word" data-ru="действует">gælder</span> 
+          <span class="word" data-ru="от">fra</span> 
+          2026 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="пять">fem</span> 
+          <span class="word" data-ru="лет">år</span> 
+          <span class="word" data-ru="вперёд">frem</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="формирует">danner</span> 
+          <span class="word" data-ru="рамки">rammen</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="полиции">politiets</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="прокуратуры">anklagemyndighedens</span> 
+          <span class="word" data-ru="работы">arbejde</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="она">Den</span> 
+          <span class="word" data-ru="включает">indebærer</span> 
+          <span class="word" data-ru="среди прочего">blandt andet</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="продолжающееся">fortsat</span> 
+          <span class="word" data-ru="расширение">udvidelse</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="полицейских сил">politistyrken</span>, 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="новое">ny</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="продлённое">forlænget</span> 
+          <span class="word" data-ru="полицейское образование">politiuddannelse</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="зарплата">Løn</span> 
+          <span class="word" data-ru="вместо">i stedet for</span> 
+          <span class="word" data-ru="стипендии">SU</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="той (определённый артикль)">den</span> 
+          <span class="word" data-ru="последней">sidste</span> 
+          <span class="word" data-ru="части">del</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="образования">uddannelsen</span>, 
+          <span class="word" data-ru="улучшения">forbedringer</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="IT">IT</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="лучшая">bedre</span> 
+          <span class="word" data-ru="поддержка">støtte</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="полицейским">politifolk</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Flere polititjenestemænd</h2>
+        
+        <p>
+          <span class="word" data-ru="он">Han</span> 
+          <span class="word" data-ru="указывает">påpeger</span> 
+          <span class="word" data-ru="важность">vigtigheden</span> 
+          <span class="word" data-ru="(предлог)">af</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="этом">denne</span> 
+          <span class="word" data-ru="периоде соглашения">aftaleperiode</span> 
+          <span class="word" data-ru="добавляется">tilføres</span> 
+          <span class="word" data-ru="больше">flere</span> 
+          <span class="word" data-ru="полицейских служащих">polititjenestemænd</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="с">Med</span> 
+          <span class="word" data-ru="новым (определённый артикль)">den</span> 
+          <span class="word" data-ru="новым">nye</span> 
+          <span class="word" data-ru="многолетним соглашением">flerårsaftale</span> 
+          <span class="word" data-ru="должны">skal</span> 
+          <span class="word" data-ru="полицейские силы">politistyrken</span> 
+          <span class="word" data-ru="идти">gå</span> 
+          <span class="word" data-ru="от">fra</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="быть">være</span> 
+          <span class="word" data-ru="около">cirka</span> 
+          11.700 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="быть">være</span> 
+          <span class="word" data-ru="около">cirka</span> 
+          12.000.
+        </p>
+
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="обучается">uddannes</span> 
+          <span class="word" data-ru="одновременно">samtidig</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="совершенно">helt</span> 
+          <span class="word" data-ru="новая">ny</span> 
+          <span class="word" data-ru="профессиональная группа">faggruppe</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="следователей">efterforskere</span>, 
+          <span class="word" data-ru="которые">som</span> 
+          <span class="word" data-ru="должны">skal</span> 
+          <span class="word" data-ru="фокусироваться">fokusere</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="расследование">efterforskning</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="экономической">økonomisk</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="цифровой">digital</span> 
+          <span class="word" data-ru="преступности">kriminalitet</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Fokus på uddannelse</h2>
+        
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="соглашении">aftalen</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="выделено">afsat</span> 
+          <span class="word" data-ru="деньги">penge</span> 
+          <span class="word" data-ru="к/для">til</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="укрепить">styrke</span> 
+          <span class="word" data-ru="полицейскую компетентность">politifagligheden</span> 
+          <span class="word" data-ru="через">gennem</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="улучшенное">forbedret</span> 
+          <span class="word" data-ru="полицейское образование">politiuddannelse</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="именно">Netop</span> 
+          <span class="word" data-ru="образование">uddannelse</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="исследования">forskning</span> 
+          <span class="word" data-ru="было">har</span> 
+          <span class="word" data-ru="было">været</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="высоко">højt</span> 
+          <span class="word" data-ru="приоритетная">prioriteret</span> 
+          <span class="word" data-ru="область">område</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="Союза полиции">Politiforbundet</span>.
+        </p>
+
+        <p>
+          – <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="радует">glæder</span> 
+          <span class="word" data-ru="нас">os</span> 
+          <span class="word" data-ru="очень">meget</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="осознал">har indset</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="знания">viden</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="профессиональные">faglige</span> 
+          <span class="word" data-ru="компетенции">kompetencer</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="краеугольный камень">hjørnesten</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="умелой">dygtigt</span>, 
+          <span class="word" data-ru="хорошо функционирующей">velfungerende</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="профессионально">professionelt</span> 
+          <span class="word" data-ru="управляемой">drevet</span> 
+          <span class="word" data-ru="полиции">politi</span>, 
+          <span class="word" data-ru="говорит">siger</span> 
+          <span class="word" data-ru="Хайно Кегель">Heino Kegel</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Løn under uddannelsen</h2>
+        
+        <p>
+          <span class="word" data-ru="с">Med</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="соглашении">aftalen</span> 
+          <span class="word" data-ru="приходит">kommer</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="зарплата">løn</span> 
+          <span class="word" data-ru="под/во время">under</span> 
+          <span class="word" data-ru="тем (определённый артикль)">det</span> 
+          <span class="word" data-ru="последним">sidste</span> 
+          <span class="word" data-ru="теоретическим">teoretiske</span> 
+          <span class="word" data-ru="модулем">modul</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="полицейском образовании">politiuddannelsen</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="было">har</span> 
+          <span class="word" data-ru="было">været</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="важное дело">mærkesag</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="Союза полиции">Politiforbundet</span>, 
+          <span class="word" data-ru="который">som</span> 
+          <span class="word" data-ru="боролся">har kæmpet</span> 
+          <span class="word" data-ru="за">for</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="получить">få</span> 
+          <span class="word" data-ru="введённой">indført</span> 
+          <span class="word" data-ru="зарплату">løn</span> 
+          <span class="word" data-ru="под/во время">under</span> 
+          <span class="word" data-ru="всего">hele</span> 
+          <span class="word" data-ru="образования">uddannelsen</span>.
+        </p>
+
+        <p>
+          – <span class="word" data-ru="мы">Vi</span> 
+          <span class="word" data-ru="видели бы">så</span> 
+          <span class="word" data-ru="естественно">naturligvis</span> 
+          <span class="word" data-ru="охотнее всего">helst</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="вводил">indførte</span> 
+          <span class="word" data-ru="зарплату">løn</span> 
+          <span class="word" data-ru="под/во время">under</span> 
+          <span class="word" data-ru="всего">hele</span> 
+          <span class="word" data-ru="образования">uddannelsen</span>, 
+          <span class="word" data-ru="так как">da</span> 
+          <span class="word" data-ru="мы">vi</span> 
+          <span class="word" data-ru="считаем">mener</span>, 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="будет">vil</span> 
+          <span class="word" data-ru="способствовать">gavne</span> 
+          <span class="word" data-ru="набору">rekrutteringen</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Ubalance mellem opgaver og ressourcer</h2>
+        
+        <p>
+          – <span class="word" data-ru="в">I</span> 
+          <span class="word" data-ru="сегодня">dag</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="дисбаланс">ubalance</span> 
+          <span class="word" data-ru="между">mellem</span> 
+          <span class="word" data-ru="полиции">politiets</span> 
+          <span class="word" data-ru="количеством задач">opgavemængde</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="ресурсами">ressourcer</span>, 
+          <span class="word" data-ru="так что">så</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="решающее">afgørende</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="полицейские силы">politistyrken</span> 
+          <span class="word" data-ru="по-прежнему">fortsat</span> 
+          <span class="word" data-ru="растёт">vokser</span>, 
+          <span class="word" data-ru="говорит">siger</span> 
+          <span class="word" data-ru="председатель">forbundsformanden</span>.
+        </p>
+
+        <p>
+          – <span class="word" data-ru="мы">Vi</span> 
+          <span class="word" data-ru="хотели бы">havde</span> 
+          <span class="word" data-ru="охотно">gerne</span> 
+          <span class="word" data-ru="видели">set</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="должно было">skulle</span> 
+          <span class="word" data-ru="добавляться">tilføres</span> 
+          <span class="word" data-ru="ещё">endnu</span> 
+          <span class="word" data-ru="больше">flere</span> 
+          <span class="word" data-ru="полицейских служащих">polititjenestemænd</span>, 
+          <span class="word" data-ru="чем">end</span> 
+          <span class="word" data-ru="соглашение">aftalen</span> 
+          <span class="word" data-ru="предполагает">lægger op til</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="большое">stort</span> 
+          <span class="word" data-ru="давление">pres</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="наших">vores</span> 
+          <span class="word" data-ru="членов">medlemmer</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="сверхурочной работой">overarbejde</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="вызовами на работу">tilkaldevagter</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Hjælp til PTSD-ramte</h2>
+        
+        <p>
+          <span class="word" data-ru="соглашение">Aftalen</span> 
+          <span class="word" data-ru="включает">indebærer</span> 
+          <span class="word" data-ru="лучшую">bedre</span> 
+          <span class="word" data-ru="поддержку">støtte</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="полицейским">politifolk</span>, 
+          <span class="word" data-ru="которые">som</span> 
+          <span class="word" data-ru="получает">får</span> 
+          <span class="word" data-ru="психические">psykiske</span> 
+          <span class="word" data-ru="реакции на нагрузку">belastningsreaktioner</span> 
+          <span class="word" data-ru="как">som</span> 
+          <span class="word" data-ru="следствие">følge</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="их">deres</span> 
+          <span class="word" data-ru="работы">arbejde</span>.
+        </p>
+
+        <p>
+          – <span class="word" data-ru="всё">Alt</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="всё">alt</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="много">mange</span> 
+          <span class="word" data-ru="позитивных">positive</span> 
+          <span class="word" data-ru="нот">takter</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="новом (определённый артикль)">den</span> 
+          <span class="word" data-ru="новом">nye</span> 
+          <span class="word" data-ru="многолетнем соглашении">flerårsaftale</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="зарплатой">løn</span> 
+          <span class="word" data-ru="под/во время">under</span> 
+          <span class="word" data-ru="образования">uddannelse</span>, 
+          <span class="word" data-ru="больше">flere</span> 
+          <span class="word" data-ru="полицейских">politifolk</span>, 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="улучшенное">forbedret</span> 
+          <span class="word" data-ru="образование">uddannelse</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="больше">mere</span> 
+          <span class="word" data-ru="помощи">hjælp</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="поддержки">støtte</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="поражённым ПТСР">PTSD-ramte</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Om Politiforbundet</h2>
+        
+        <p>
+          <span class="word" data-ru="Союз полиции">Politiforbundet</span> 
+          <span class="word" data-ru="организует">organiserer</span> 
+          <span class="word" data-ru="всех">alle</span> 
+          <span class="word" data-ru="полицейских служащих">polititjenestemænd</span> — 
+          <span class="word" data-ru="от">fra</span> 
+          <span class="word" data-ru="курсанта">politielev</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="до">til</span> 
+          <span class="word" data-ru="главного полицейского инспектора">chefpolitiinspektør</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="мы">Vi</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="заметный">markant</span> 
+          <span class="word" data-ru="союз">forbund</span>, 
+          <span class="word" data-ru="который">som</span> 
+          <span class="word" data-ru="ставит">sætter</span> 
+          <span class="word" data-ru="ясные">klare</span> 
+          <span class="word" data-ru="отпечатки">aftryk</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="дебатах">debatter</span> 
+          <span class="word" data-ru="о">om</span> 
+          <span class="word" data-ru="безопасности">tryghed</span>, 
+          <span class="word" data-ru="благосостоянии">velfærd</span>, 
+          <span class="word" data-ru="правовой защите">retssikkerhed</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="демократии">demokrati</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="наша">vores</span> 
+          <span class="word" data-ru="задача">opgave</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="заботиться">passe</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="полицию">politiet</span>, 
+          <span class="word" data-ru="так что">så</span> 
+          <span class="word" data-ru="полиция">politiet</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="заботиться">passe</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="остальную часть">resten</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="общества">samfundet</span>.
+        </p>
+      </div>
+    </div>
+    <!-- /Статья 3 -->
+
+    <!-- Статья 4: At skifte branche -->
+    <div class="article" id="article-4">
+      <h1>At skifte branche</h1>
+
+      <div class="text-block">
+        <h2 class="section-title">Grunde til at skifte branche</h2>
+        
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="быть">være</span> 
+          <span class="word" data-ru="много">mange</span> 
+          <span class="word" data-ru="причин">grunde</span> 
+          <span class="word" data-ru="к">til</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="выбирает">vælger</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="менять">skifte</span> 
+          <span class="word" data-ru="отрасль">branche</span>, 
+          <span class="word" data-ru="хотя">selvom</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="посреди">midt</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="жизни">livet</span>, 
+          <span class="word" data-ru="рассказывает">fortæller</span> 
+          <span class="word" data-ru="Аск Нильсен">Ask Nielsen</span>, 
+          <span class="word" data-ru="который">der</span> 
+          <span class="word" data-ru="был">har været</span> 
+          <span class="word" data-ru="карьерным консультантом">karriererådgiver</span> 
+          <span class="word" data-ru="через/в течение">igennem</span> 
+          15 
+          <span class="word" data-ru="лет">år</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="одна">En</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="тех (определённый артикль)">de</span> 
+          <span class="word" data-ru="многих">mange</span> 
+          <span class="word" data-ru="клиентов">klienter</span>, 
+          <span class="word" data-ru="он">han</span> 
+          <span class="word" data-ru="помог">har hjulpet</span> 
+          <span class="word" data-ru="дальше">videre</span>, 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="Пиа Леман">Pia Lehmann</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="она">Hun</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="первоначально">oprindelig</span> 
+          <span class="word" data-ru="образованная">uddannet</span> 
+          <span class="word" data-ru="учитель">lærer</span>, 
+          <span class="word" data-ru="но">men</span> 
+          <span class="word" data-ru="после">efter</span> 
+          <span class="word" data-ru="некоторых">nogle</span> 
+          <span class="word" data-ru="лет">år</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="работе">jobbet</span> 
+          <span class="word" data-ru="осознала">indså</span> 
+          <span class="word" data-ru="она">hun</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="действительно">rigtig</span> 
+          <span class="word" data-ru="было">var</span> 
+          <span class="word" data-ru="что-то">noget</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="неё">hende</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Pia Lehmanns oplevelse som lærer</h2>
+        
+        <p>
+          "<span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="было">var</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="многих">mange</span> 
+          <span class="word" data-ru="способах">måder</span> 
+          <span class="word" data-ru="прекрасно">skønt</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="быть">være</span> 
+          <span class="word" data-ru="учителем">lærer</span>, 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="имела">havde</span> 
+          <span class="word" data-ru="некоторых">nogle</span> 
+          <span class="word" data-ru="замечательных">dejlige</span> 
+          <span class="word" data-ru="учеников">elever</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="хороших">gode</span> 
+          <span class="word" data-ru="коллег">kolleger</span>."
+        </p>
+
+        <p>
+          "<span class="word" data-ru="но">Men</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="имела">havde</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="тяжело">svært</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="всеми">alle</span> 
+          <span class="word" data-ru="теми (определённый артикль)">de</span> 
+          <span class="word" data-ru="требованиями">krav</span> 
+          <span class="word" data-ru="о">om</span> 
+          <span class="word" data-ru="административных">administrative</span> 
+          <span class="word" data-ru="задачах">opgaver</span>, 
+          <span class="word" data-ru="учебных планах">læreplaner</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="детализированных">detaljerede</span> 
+          <span class="word" data-ru="годовых планах">årsplaner</span>, 
+          <span class="word" data-ru="которые">som</span> 
+          <span class="word" data-ru="брали">tog</span> 
+          <span class="word" data-ru="время">tid</span> 
+          <span class="word" data-ru="от">fra</span> 
+          <span class="word" data-ru="моей">min</span> 
+          <span class="word" data-ru="основной задачи">kerneopgave</span> 
+          <span class="word" data-ru="как">som</span> 
+          <span class="word" data-ru="учитель">lærer</span>."
+        </p>
+
+        <p>
+          "<span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="делало">gjorde</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="имела">havde</span> 
+          <span class="word" data-ru="возможность">mulighed</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="быть">være</span> 
+          <span class="word" data-ru="так">så</span> 
+          <span class="word" data-ru="хорошим">god</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="учителем">lærer</span>, 
+          <span class="word" data-ru="как">som</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="охотно">gerne</span> 
+          <span class="word" data-ru="хотела">ville</span>."
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Ask Nielsens analyse</h2>
+        
+        <p>
+          <span class="word" data-ru="Пии Леманн">Pia Lehmanns</span> 
+          <span class="word" data-ru="история">historie</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="типичная">typisk</span>, 
+          <span class="word" data-ru="говорит">siger</span> 
+          <span class="word" data-ru="Аск Нильсен">Ask Nielsen</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="она">Hun</span> 
+          <span class="word" data-ru="испытывала">oplevede</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="возрастающее">tiltagende</span> 
+          <span class="word" data-ru="неудовлетворённость">utilfredshed</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="своей">sin</span> 
+          <span class="word" data-ru="рабочей ситуацией">jobsituation</span>, 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="она">hun</span> 
+          <span class="word" data-ru="фокусировалась">fokuserede</span> 
+          <span class="word" data-ru="преимущественно">overvejende</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="том">det</span>, 
+          <span class="word" data-ru="она">hun</span> 
+          <span class="word" data-ru="охотно">gerne</span> 
+          <span class="word" data-ru="хотела">ville</span> 
+          <span class="word" data-ru="быть">være</span> 
+          <span class="word" data-ru="свободной">fri</span> 
+          <span class="word" data-ru="для/от">for</span>.
+        </p>
+
+        <p>
+          "<span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="отличное">udmærket</span> 
+          <span class="word" data-ru="место">sted</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="начать">starte</span>, 
+          <span class="word" data-ru="но">men</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="достаточно">nok</span>, 
+          <span class="word" data-ru="если">hvis</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="хочет">vil</span> 
+          <span class="word" data-ru="иметь">have</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="удовлетворяющую">tilfredsstillende</span> 
+          <span class="word" data-ru="рабочую жизнь">arbejdsliv</span>," 
+          <span class="word" data-ru="говорит">siger</span> 
+          <span class="word" data-ru="он">han</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Vejen til journalistik</h2>
+        
+        <p>
+          <span class="word" data-ru="в">I</span> 
+          <span class="word" data-ru="том (определённый артикль)">det</span> 
+          <span class="word" data-ru="сотрудничестве">samarbejde</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="том (определённый артикль)">den</span> 
+          <span class="word" data-ru="процессе">proces</span>, 
+          <span class="word" data-ru="который">der</span> 
+          <span class="word" data-ru="следовал">fulgte</span>, 
+          <span class="word" data-ru="нашли">fandt</span> 
+          <span class="word" data-ru="они">de</span> 
+          <span class="word" data-ru="дальше/вперёд">frem</span> 
+          <span class="word" data-ru="к">til</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="Пиа Леман">Pia Lehmann</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="действительности">virkeligheden</span> 
+          <span class="word" data-ru="имела">havde</span> 
+          <span class="word" data-ru="желание">lyst</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="бросить вызов">udfordre</span> 
+          <span class="word" data-ru="себя">sig selv</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="новом">ny</span> 
+          <span class="word" data-ru="способе">måde</span>.
+        </p>
+
+        <p>
+          "<span class="word" data-ru="я">Jeg</span> 
+          <span class="word" data-ru="могла">kunne</span> 
+          <span class="word" data-ru="чувствовать">mærke</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="охотно">gerne</span> 
+          <span class="word" data-ru="хотела">ville</span> 
+          <span class="word" data-ru="попробовать">prøve</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="раскрыть">folde</span> 
+          <span class="word" data-ru="некоторые">nogle</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="моих">mine</span> 
+          <span class="word" data-ru="других">andre</span> 
+          <span class="word" data-ru="талантов">talenter</span> 
+          <span class="word" data-ru="наружу">ud</span>, 
+          <span class="word" data-ru="хотя">selvom</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="казалось">virkede</span> 
+          <span class="word" data-ru="пугающим">skræmmende</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="начать">starte</span> 
+          <span class="word" data-ru="с">med</span>."
+        </p>
+
+        <p>
+          "<span class="word" data-ru="я">Jeg</span> 
+          <span class="word" data-ru="хотела">ville</span> 
+          <span class="word" data-ru="писать">skrive</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="углубляться">fordybe</span> 
+          <span class="word" data-ru="меня">mig</span>. 
+          <span class="word" data-ru="поэтому">Derfor</span> 
+          <span class="word" data-ru="стала">blev</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="журналистом">journalist</span>, 
+          <span class="word" data-ru="но">men</span> 
+          <span class="word" data-ru="сначала">først</span> 
+          <span class="word" data-ru="после">efter</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="иметь">have</span> 
+          <span class="word" data-ru="взято">taget</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="особое">særlig</span> 
+          <span class="word" data-ru="дополнительное образование">tillægsuddannelse</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="Школе журналистики">Journalisthøjskolen</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="Орхусе">Aarhus</span>."
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Det gyldne bur</h2>
+        
+        <p>
+          <span class="word" data-ru="Пиа Леман">Pia Lehman</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="довольна">glad</span> 
+          <span class="word" data-ru="за">for</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="она">hun</span> 
+          <span class="word" data-ru="взяла">tog</span> 
+          <span class="word" data-ru="прыжок">springet</span> 
+          <span class="word" data-ru="наружу">ud</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="что-то">noget</span> 
+          <span class="word" data-ru="новое">nyt</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="но">Men</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="много">mange</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="избегает">undlader</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="менять">skifte</span> 
+          <span class="word" data-ru="карьеру">karriere</span>, 
+          <span class="word" data-ru="хотя">selvom</span> 
+          <span class="word" data-ru="они">de</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="чувствует">føler</span>, 
+          <span class="word" data-ru="они">de</span> 
+          <span class="word" data-ru="получает">får</span> 
+          <span class="word" data-ru="особенно">særlig</span> 
+          <span class="word" data-ru="много">meget</span> 
+          <span class="word" data-ru="из">ud</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="их">deres</span> 
+          <span class="word" data-ru="рабочей жизни">arbejdsliv</span>.
+        </p>
+
+        <p>
+          "<span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="некоторые">nogle</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="в основе">grundlæggende</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="неуверенные">usikre</span> 
+          <span class="word" data-ru="на/в">på</span>, 
+          <span class="word" data-ru="ли">om</span> 
+          <span class="word" data-ru="они">de</span> 
+          <span class="word" data-ru="действительно">virkelig</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="поднять">løfte</span> 
+          <span class="word" data-ru="некоторые">nogle</span> 
+          <span class="word" data-ru="совершенно">helt</span> 
+          <span class="word" data-ru="новые">nye</span> 
+          <span class="word" data-ru="задачи">opgaver</span>," 
+          <span class="word" data-ru="говорит">siger</span> 
+          <span class="word" data-ru="Аск Нильсен">Ask Nielsen</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="имеет">Har</span> 
+          <span class="word" data-ru="люди">folk</span> 
+          <span class="word" data-ru="работал">arbejdet</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="той же">samme</span> 
+          <span class="word" data-ru="работе">job</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="много">mange</span> 
+          <span class="word" data-ru="лет">år</span>, 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="часто">ofte</span> 
+          <span class="word" data-ru="пойман">fanget</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="том">det</span>, 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="называет">kalder</span> 
+          <span class="word" data-ru="Золотой клеткой">Det gyldne bur</span>.
+        </p>
+
+        <p>
+          "<span class="word" data-ru="в">I</span> 
+          <span class="word" data-ru="Золотой клетке">Det gyldne bur</span> 
+          <span class="word" data-ru="наслаждается">nyder</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="как">både</span> 
+          <span class="word" data-ru="большое">stor</span> 
+          <span class="word" data-ru="признание">anerkendelse</span> 
+          <span class="word" data-ru="от">fra</span> 
+          <span class="word" data-ru="своих">sine</span> 
+          <span class="word" data-ru="коллег">kolleger</span>, 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="из-за">på grund af</span> 
+          <span class="word" data-ru="своего">sin</span> 
+          <span class="word" data-ru="стажа">anciennitet</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="определённую">vis</span> 
+          <span class="word" data-ru="позицию">position</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="фирме">firmaet</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="получает">får</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="хорошую">god</span> 
+          <span class="word" data-ru="зарплату">løn</span>."
+        </p>
+
+        <p>
+          "<span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="поэтому">derfor</span> 
+          <span class="word" data-ru="часто">tit</span> 
+          <span class="word" data-ru="сложнее">sværere</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="менять">skifte</span> 
+          <span class="word" data-ru="карьеру">karriere</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="возрастом">alderen</span>," 
+          <span class="word" data-ru="говорит">siger</span> 
+          <span class="word" data-ru="Аск Нильсен">Ask Nielsen</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Fra journalist til konsulent</h2>
+        
+        <p>
+          <span class="word" data-ru="после">Efter</span> 
+          <span class="word" data-ru="четырёх">fire</span> 
+          <span class="word" data-ru="хороших">gode</span> 
+          <span class="word" data-ru="лет">år</span> 
+          <span class="word" data-ru="как">som</span> 
+          <span class="word" data-ru="журналист">journalist</span> 
+          <span class="word" data-ru="получила">fik</span> 
+          <span class="word" data-ru="Пиа Леман">Pia Lehmann</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="новую">nyt</span> 
+          <span class="word" data-ru="работу">job</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="министерстве">ministerium</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="однако">imidlertid</span> 
+          <span class="word" data-ru="не">ikke</span>, 
+          <span class="word" data-ru="что">hvad</span> 
+          <span class="word" data-ru="Аск Нильсен">Ask Nielsen</span> 
+          <span class="word" data-ru="назвал бы">ville kalde</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="действительное">egentligt</span> 
+          <span class="word" data-ru="сменой отрасли">brancheskifte</span>, 
+          <span class="word" data-ru="ибо">for</span> 
+          <span class="word" data-ru="она">hun</span> 
+          <span class="word" data-ru="работает">arbejder</span> 
+          <span class="word" data-ru="по-прежнему">stadig</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="языковой">sproglig</span> 
+          <span class="word" data-ru="коммуникацией">formidling</span>.
+        </p>
+
+        <p>
+          "<span class="word" data-ru="я">Jeg</span> 
+          <span class="word" data-ru="горю">brænder</span> 
+          <span class="word" data-ru="по-прежнему">stadig</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="коммуницировать">kommunikere</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="различных">forskellige</span> 
+          <span class="word" data-ru="способах">måder</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="различных">forskellige</span> 
+          <span class="word" data-ru="платформах">platforme</span>," 
+          <span class="word" data-ru="говорит">siger</span> 
+          <span class="word" data-ru="Пиа Леман">Pia Lehmann</span>.
+        </p>
+
+        <p>
+          "<span class="word" data-ru="но">Men</span> 
+          <span class="word" data-ru="как">som</span> 
+          <span class="word" data-ru="обычный">almindelig</span> 
+          <span class="word" data-ru="журналист">journalist</span> 
+          <span class="word" data-ru="должен">skal</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="между">ind imellem</span> 
+          <span class="word" data-ru="передавать">formidle</span> 
+          <span class="word" data-ru="истории">historier</span>, 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="сам">selv</span> 
+          <span class="word" data-ru="считает">synes</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="особенно">særlig</span> 
+          <span class="word" data-ru="захватывающими">spændende</span>."
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Det nye job i ministeriet</h2>
+        
+        <p>
+          "<span class="word" data-ru="поэтому">Derfor</span> 
+          <span class="word" data-ru="искала">søgte</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="работу">job</span> 
+          <span class="word" data-ru="как">som</span> 
+          <span class="word" data-ru="консультант">konsulent</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="ответственностью">ansvar</span> 
+          <span class="word" data-ru="за">for</span> 
+          <span class="word" data-ru="развитие">udvikling</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="совершенно">helt</span> 
+          <span class="word" data-ru="новый">ny</span> 
+          <span class="word" data-ru="веб-сайт">hjemmeside</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="министерстве">ministerium</span>, 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="имею">har</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="пожалела">fortrudt</span>."
+        </p>
+
+        <p>
+          "<span class="word" data-ru="здесь">Her</span> 
+          <span class="word" data-ru="чувствую">føler</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="как">både</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="я">jeg</span> 
+          <span class="word" data-ru="делаю">gør</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="разницу">forskel</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="использую">bruger</span> 
+          <span class="word" data-ru="мои">mine</span> 
+          <span class="word" data-ru="способности">evner</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="всех">alle</span> 
+          <span class="word" data-ru="возможных">mulige</span> 
+          <span class="word" data-ru="способах">måder</span>."
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Journalisters fordele</h2>
+        
+        <p>
+          <span class="word" data-ru="согласно">Ifølge</span> 
+          <span class="word" data-ru="Аску Нильсену">Ask Nielsen</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="журналисты">journalister</span> 
+          <span class="word" data-ru="более удачно">heldigere</span> 
+          <span class="word" data-ru="расположены">stillet</span> 
+          <span class="word" data-ru="чем">end</span> 
+          <span class="word" data-ru="много">mange</span> 
+          <span class="word" data-ru="других">andre</span> 
+          <span class="word" data-ru="профессиональных групп">faggrupper</span>.
+        </p>
+
+        <p>
+          "<span class="word" data-ru="журналисты">Journalister</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="некоторые">nogle</span> 
+          <span class="word" data-ru="очень">meget</span> 
+          <span class="word" data-ru="востребованные">efterspurgte</span> 
+          <span class="word" data-ru="компетенции">kompetencer</span>, 
+          <span class="word" data-ru="которые">som</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="применяться">anvendes</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="многих">mange</span> 
+          <span class="word" data-ru="контекстах">sammenhænge</span>," 
+          <span class="word" data-ru="говорит">siger</span> 
+          <span class="word" data-ru="Аск Нильсен">Ask Nielsen</span>.
+        </p>
+
+        <p>
+          "<span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="означает">betyder</span> 
+          <span class="word" data-ru="также">også</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="много">mange</span> 
+          <span class="word" data-ru="различных">forskellige</span> 
+          <span class="word" data-ru="работ">jobs</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="получить">få</span> 
+          <span class="word" data-ru="в рамках">inden for</span> 
+          <span class="word" data-ru="много">mange</span> 
+          <span class="word" data-ru="различных">forskellige</span> 
+          <span class="word" data-ru="областей">områder</span>."
+        </p>
+
+        <p>
+          <span class="word" data-ru="поэтому">Derfor</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="относительно">forholdsvist</span> 
+          <span class="word" data-ru="редко">sjældent</span>, 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="видит">ser</span> 
+          <span class="word" data-ru="журналистов">journalister</span> 
+          <span class="word" data-ru="менять">skifte</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="совершенно">helt</span> 
+          <span class="word" data-ru="другой">andet</span> 
+          <span class="word" data-ru="рабочей области">arbejdsområde</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="и">Og</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="Пиа Леман">Pia Lehmann</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="хороший">godt</span> 
+          <span class="word" data-ru="пример">eksempel</span> 
+          <span class="word" data-ru="на">på</span>.
+        </p>
+      </div>
+    </div>
+    <!-- /Статья 4 -->
+
+    <!-- Статья 5: Fire-dages arbejdsuge -->
+    <div class="article" id="article-5">
+      <h1>En fire-dages arbejdsuge?</h1>
+
+      <div class="text-block">
+        <h2 class="section-title">Historisk baggrund</h2>
+        
+        <p>
+          <span class="word" data-ru="с/от">Siden</span> 
+          <span class="word" data-ru="профсоюзов">fagforeningernes</span> 
+          <span class="word" data-ru="появления">opkomst</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="конце">slutningen</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="того (определённый артикль)">det</span> 
+          19. 
+          <span class="word" data-ru="века">århundrede</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="обсуждал">diskuteret</span> 
+          <span class="word" data-ru="наёмных работников">lønmodtagernes</span> 
+          <span class="word" data-ru="рабочее время">arbejdstid</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="но">Men</span> 
+          <span class="word" data-ru="с">siden</span> 
+          1990 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="рабочее время">arbejdstiden</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="Дании">Danmark</span> 
+          <span class="word" data-ru="фактически">faktisk</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="было">blevet</span> 
+          <span class="word" data-ru="урегулировано">reguleret</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="в">I</span> 
+          <span class="word" data-ru="более">mere</span> 
+          <span class="word" data-ru="чем">end</span> 
+          30 
+          <span class="word" data-ru="лет">år</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="рабочее время">arbejdstiden</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="тех (определённый артикль)">de</span> 
+          <span class="word" data-ru="большинства">fleste</span> 
+          <span class="word" data-ru="работающих полный день">fuldtidsansatte</span> 
+          <span class="word" data-ru="было">været</span> 
+          37 
+          <span class="word" data-ru="часов">timer</span>, 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="те (определённый артикль)">de</span> 
+          <span class="word" data-ru="большинство">fleste</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="работало">arbejdet</span> 
+          <span class="word" data-ru="пять">fem</span> 
+          <span class="word" data-ru="дней">dage</span> 
+          <span class="word" data-ru="в">om</span> 
+          <span class="word" data-ru="неделю">ugen</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Nye måder at organisere arbejdslivet</h2>
+        
+        <p>
+          <span class="word" data-ru="но">Men</span> 
+          <span class="word" data-ru="может быть">måske</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="организовать">organisere</span> 
+          <span class="word" data-ru="рабочую жизнь">arbejdslivet</span> 
+          <span class="word" data-ru="иначе">anderledes</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="постепенно">Efterhånden</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="часть">del</span> 
+          <span class="word" data-ru="предприятий">virksomheder</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="находит">finder</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="другие">andre</span> 
+          <span class="word" data-ru="способы">måder</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="организовать">tilrettelægge</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="рабочую неделю">arbejdsuge</span> 
+          <span class="word" data-ru="на">på</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="общее">Fælles</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="них">dem</span> 
+          <span class="word" data-ru="всех">alle</span> 
+          <span class="word" data-ru="есть">er</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="они">de</span> 
+          <span class="word" data-ru="охотно">gerne</span> 
+          <span class="word" data-ru="хотят">vil</span> 
+          <span class="word" data-ru="сделать">gøre</span> 
+          <span class="word" data-ru="рабочую неделю">arbejdsugen</span> 
+          <span class="word" data-ru="более">mere</span> 
+          <span class="word" data-ru="гибкой">fleksibel</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="тех (определённый артикль)">de</span> 
+          <span class="word" data-ru="сотрудников">ansatte</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="отчасти">Dels</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="легче">lettere</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="мочь">kunne</span> 
+          <span class="word" data-ru="удерживать">fastholde</span> 
+          <span class="word" data-ru="тех">dem</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="уже">allerede</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="нанят">ansat</span>, 
+          <span class="word" data-ru="отчасти">dels</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="легче">lettere</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="мочь">kunne</span> 
+          <span class="word" data-ru="набирать">rekruttere</span> 
+          <span class="word" data-ru="новые">nye</span>, 
+          <span class="word" data-ru="востребованные">efterspurgte</span> 
+          <span class="word" data-ru="силы">kræfter</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Fire-dages arbejdsugen får opmærksomhed</h2>
+        
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="поэтому">derfor</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="большая">stor</span> 
+          <span class="word" data-ru="задача">opgave</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="предприятия">virksomhed</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="организовать">organisere</span> 
+          <span class="word" data-ru="рабочую жизнь">arbejdslivet</span> 
+          <span class="word" data-ru="более">mere</span> 
+          <span class="word" data-ru="гибко">fleksibelt</span>, 
+          <span class="word" data-ru="так что">så</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="становится">bliver</span> 
+          <span class="word" data-ru="взято">taget</span> 
+          <span class="word" data-ru="учёт/внимание">hensyn</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="всем">alle</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="из">Af</span> 
+          <span class="word" data-ru="новых">nye</span> 
+          <span class="word" data-ru="способов">måder</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="организовать">organisere</span> 
+          <span class="word" data-ru="рабочую жизнь">arbejdslivet</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="особенно">særligt</span> 
+          <span class="word" data-ru="та (определённый артикль)">den</span> 
+          <span class="word" data-ru="четырёхдневная">fire-dages</span> 
+          <span class="word" data-ru="рабочая неделя">arbejdsuge</span>, 
+          <span class="word" data-ru="которая">der</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="привлекло">tiltrukket</span> 
+          <span class="word" data-ru="себя">sig</span> 
+          <span class="word" data-ru="внимание">opmærksomhed</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="тех (определённый артикль)">de</span> 
+          <span class="word" data-ru="последних">senere</span> 
+          <span class="word" data-ru="годах">år</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="с">Med</span> 
+          <span class="word" data-ru="той (определённый артикль)">den</span> 
+          <span class="word" data-ru="четырёхдневной">fire-dages</span> 
+          <span class="word" data-ru="рабочей неделей">arbejdsuge</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="речь">tale</span> 
+          <span class="word" data-ru="о">om</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="новое мышление">nytænkning</span> 
+          <span class="word" data-ru="(предлог)">af</span>, 
+          <span class="word" data-ru="как">hvordan</span> 
+          <span class="word" data-ru="повседневная">hverdags</span>- 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="рабочая жизнь">arbejdslivet</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="сочетаться">hænge sammen</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="разрыв">brud</span> 
+          <span class="word" data-ru="с">med</span> 
+          <span class="word" data-ru="идеей">idéen</span> 
+          <span class="word" data-ru="о">om</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="рабочая неделя">arbejdsugen</span> 
+          <span class="word" data-ru="идёт">går</span> 
+          <span class="word" data-ru="от">fra</span> 
+          <span class="word" data-ru="понедельника">mandag</span> 
+          <span class="word" data-ru="до">til</span> 
+          <span class="word" data-ru="пятницы">fredag</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">HK's synspunkt</h2>
+        
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="по-прежнему">stadig</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="так">så</span> 
+          <span class="word" data-ru="много">mange</span> 
+          <span class="word" data-ru="предприятий">virksomheder</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="предлагает">tilbyder</span> 
+          <span class="word" data-ru="систему">ordningen</span>, 
+          <span class="word" data-ru="но">men</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="становится">bliver</span> 
+          <span class="word" data-ru="больше">flere</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="больше">flere</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="согласно">Ifølge</span> 
+          <span class="word" data-ru="профсоюзом">fagforeningen</span> 
+          <span class="word" data-ru="HK">HK</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="именно">netop</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="четырёхдневная">fire-dages</span> 
+          <span class="word" data-ru="рабочая неделя">arbejdsuge</span> 
+          <span class="word" data-ru="быть">være</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="хорошим">godt</span> 
+          <span class="word" data-ru="инструментом">værktøj</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="решать">løse</span> 
+          <span class="word" data-ru="некоторые">nogle</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="этих">disse</span> 
+          <span class="word" data-ru="проблем">problemer</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="когда">Når</span> 
+          <span class="word" data-ru="рабочая неделя">arbejdsugen</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="выходные">weekenden</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="почти">næsten</span> 
+          <span class="word" data-ru="одинаково">lige</span> 
+          <span class="word" data-ru="длинные">lange</span>, 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="успеть">nå</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="прийти">komme</span> 
+          <span class="word" data-ru="вниз">ned</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="темп/скорость">gear</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="получить">få</span> 
+          <span class="word" data-ru="мысли">tankerne</span> 
+          <span class="word" data-ru="(неопред. артикль)">et</span> 
+          <span class="word" data-ru="совершенно">helt</span> 
+          <span class="word" data-ru="другое">andet</span> 
+          <span class="word" data-ru="место">sted</span> 
+          <span class="word" data-ru="туда">hen</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="и">Og</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="типично">typisk</span> 
+          <span class="word" data-ru="больше">mere</span> 
+          <span class="word" data-ru="сил/энергии">overskud</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="работать">arbejde</span> 
+          <span class="word" data-ru="сосредоточенно">koncentreret</span>, 
+          <span class="word" data-ru="когда">når</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="работе">arbejde</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Forskellige modeller</h2>
+        
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="просто">bare</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="совсем">helt</span> 
+          <span class="word" data-ru="однозначно">entydigt</span>, 
+          <span class="word" data-ru="что">hvad</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="четырёхдневная">fire-dages</span> 
+          <span class="word" data-ru="рабочая неделя">arbejdsuge</span> 
+          <span class="word" data-ru="собственно">egentlig</span> 
+          <span class="word" data-ru="есть">er</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="в">I</span> 
+          <span class="word" data-ru="некоторых">nogle</span> 
+          <span class="word" data-ru="предприятиях">virksomheder</span> 
+          <span class="word" data-ru="означает">betyder</span> 
+          <span class="word" data-ru="это">det</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="работает">arbejder</span> 
+          37 
+          <span class="word" data-ru="часов">timer</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="четыре">fire</span> 
+          <span class="word" data-ru="дня">dage</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="в">I</span> 
+          <span class="word" data-ru="других">andre</span> 
+          <span class="word" data-ru="означает">betyder</span> 
+          <span class="word" data-ru="это">det</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="(безличное)">man</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="работает">arbejder</span> 
+          <span class="word" data-ru="меньше">færre</span> 
+          <span class="word" data-ru="часов">timer</span> 
+          <span class="word" data-ru="в">om</span> 
+          <span class="word" data-ru="неделю">ugen</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="предприятия">virksomheder</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="просто">blot</span> 
+          <span class="word" data-ru="предлагает">tilbyder</span> 
+          <span class="word" data-ru="своим">deres</span> 
+          <span class="word" data-ru="сотрудникам">medarbejdere</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="четырёхдневную">fire-dages</span> 
+          <span class="word" data-ru="рабочую неделю">arbejdsuge</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="сокращённое">nedsat</span> 
+          <span class="word" data-ru="время">tid</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="зарплату">løn</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Balance mellem arbejde og fritid</h2>
+        
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="а именно">nemlig</span> 
+          <span class="word" data-ru="также">også</span> 
+          <span class="word" data-ru="больше">flere</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="больше">flere</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="желает">ønsker</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="они">De</span> 
+          <span class="word" data-ru="желает">ønsker</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="работа">arbejdet</span> 
+          <span class="word" data-ru="заполняет">fylder</span> 
+          <span class="word" data-ru="меньше">mindre</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="существовании">tilværelsen</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="даёт">giver</span> 
+          <span class="word" data-ru="им">dem</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="лучший">bedre</span> 
+          <span class="word" data-ru="баланс">balance</span> 
+          <span class="word" data-ru="между">mellem</span> 
+          <span class="word" data-ru="работой">arbejde</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="свободным временем">fritid</span>, 
+          <span class="word" data-ru="где">hvor</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="больше">mere</span> 
+          <span class="word" data-ru="времени">tid</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="семье">familien</span> 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="хобби">hobbyer</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Modstand og fordele</h2>
+        
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="однако">dog</span> 
+          <span class="word" data-ru="по-прежнему">stadig</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="определённое">vis</span> 
+          <span class="word" data-ru="сопротивление">modstand</span> 
+          <span class="word" data-ru="среди">blandt</span> 
+          <span class="word" data-ru="определённых">visse</span> 
+          <span class="word" data-ru="работодателей">arbejdsgivere</span> 
+          <span class="word" data-ru="против">mod</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="четырёхдневной">fire-dages</span> 
+          <span class="word" data-ru="рабочей недели">arbejdsuge</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="там">Der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="конкуренция">konkurrence</span> 
+          <span class="word" data-ru="о">om</span> 
+          <span class="word" data-ru="тех (определённый артикль)">de</span> 
+          <span class="word" data-ru="квалифицированных">kvalificerede</span> 
+          <span class="word" data-ru="сотрудниках">medarbejdere</span>, 
+          <span class="word" data-ru="и">og</span> 
+          <span class="word" data-ru="исследования">undersøgelser</span> 
+          <span class="word" data-ru="показывает">viser</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="сотрудники">medarbejderne</span> 
+          <span class="word" data-ru="становится">bliver</span> 
+          <span class="word" data-ru="более">mere</span> 
+          <span class="word" data-ru="лояльными">loyale</span> 
+          <span class="word" data-ru="по отношению к">over for</span> 
+          <span class="word" data-ru="предприятию">virksomheden</span>, 
+          <span class="word" data-ru="если">hvis</span> 
+          <span class="word" data-ru="они">de</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="должны">skal</span> 
+          <span class="word" data-ru="работать">arbejde</span> 
+          <span class="word" data-ru="так">så</span> 
+          <span class="word" data-ru="много">mange</span> 
+          <span class="word" data-ru="часов">timer</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="исследования">Undersøgelser</span> 
+          <span class="word" data-ru="показывает">viser</span> 
+          <span class="word" data-ru="также">også</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="стать">blive</span> 
+          <span class="word" data-ru="легче">lettere</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="набирать">rekruttere</span> 
+          <span class="word" data-ru="новых">nye</span> 
+          <span class="word" data-ru="сотрудников">medarbejdere</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="(неопред. артикль)">En</span> 
+          <span class="word" data-ru="четырёхдневная">fire-dages</span> 
+          <span class="word" data-ru="рабочая неделя">arbejdsuge</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="итак">altså</span> 
+          <span class="word" data-ru="быть">være</span> 
+          <span class="word" data-ru="(неопред. артикль)">en</span> 
+          <span class="word" data-ru="преимуществом">fordel</span> 
+          <span class="word" data-ru="в">i</span> 
+          <span class="word" data-ru="конкуренции">konkurrencen</span> 
+          <span class="word" data-ru="о">om</span> 
+          <span class="word" data-ru="сотрудниках">medarbejdere</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="относится">gælder</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="менее">mindst</span> 
+          <span class="word" data-ru="в рамках">inden for</span> 
+          <span class="word" data-ru="тех (определённый артикль)">de</span> 
+          <span class="word" data-ru="областей">områder</span>, 
+          <span class="word" data-ru="где">hvor</span> 
+          <span class="word" data-ru="там">der</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="нехватка">mangel</span> 
+          <span class="word" data-ru="на">på</span> 
+          <span class="word" data-ru="рабочей силе">arbejdskraft</span>.
+        </p>
+      </div>
+
+      <div class="text-block">
+        <h2 class="section-title">Fremtiden</h2>
+        
+        <p>
+          <span class="word" data-ru="интерес">Interessen</span> 
+          <span class="word" data-ru="для">for</span> 
+          <span class="word" data-ru="той (определённый артикль)">den</span> 
+          <span class="word" data-ru="четырёхдневной">fire-dages</span> 
+          <span class="word" data-ru="рабочей неделе">arbejdsuge</span> 
+          <span class="word" data-ru="указывает">tyder</span> 
+          <span class="word" data-ru="на">på</span>, 
+          <span class="word" data-ru="что">at</span> 
+          <span class="word" data-ru="больше">flere</span> 
+          <span class="word" data-ru="предприятий">virksomheder</span> 
+          <span class="word" data-ru="приходит">kommer</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="предлагать">tilbyde</span> 
+          <span class="word" data-ru="своим">deres</span> 
+          <span class="word" data-ru="сотрудникам">medarbejdere</span> 
+          <span class="word" data-ru="это">denne</span> 
+          <span class="word" data-ru="решение">løsning</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="но">Men</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="может быть">måske</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="только">kun</span> 
+          <span class="word" data-ru="предприятий">virksomhedernes</span> 
+          <span class="word" data-ru="организация">organisering</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="рабочей недели">arbejdsugen</span>, 
+          <span class="word" data-ru="которая">der</span> 
+          <span class="word" data-ru="приходит">kommer</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="(инф. частица)">at</span> 
+          <span class="word" data-ru="изменяться">forandre</span> 
+          <span class="word" data-ru="себя">sig</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="это">Det</span> 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="общество">samfundet</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="готово">klar</span> 
+          <span class="word" data-ru="к">til</span> 
+          <span class="word" data-ru="ещё">endnu</span>.
+        </p>
+
+        <p>
+          <span class="word" data-ru="на">På</span> 
+          <span class="word" data-ru="многих">mange</span> 
+          <span class="word" data-ru="(предлог)">af</span> 
+          <span class="word" data-ru="тех (определённый артикль)">de</span> 
+          <span class="word" data-ru="предприятиях">virksomheder</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="имеет">har</span> 
+          <span class="word" data-ru="четырёхдневную">fire-dages</span> 
+          <span class="word" data-ru="рабочую неделю">arbejdsuge</span>, 
+          <span class="word" data-ru="есть">er</span> 
+          <span class="word" data-ru="это">det</span> 
+          <span class="word" data-ru="поэтому">derfor</span> 
+          <span class="word" data-ru="не">ikke</span> 
+          <span class="word" data-ru="все">alle</span> 
+          <span class="word" data-ru="сотрудники">medarbejderne</span>, 
+          <span class="word" data-ru="которые">der</span> 
+          <span class="word" data-ru="может">kan</span> 
+          <span class="word" data-ru="иметь">have</span> 
+          <span class="word" data-ru="свободно">fri</span> 
+          <span class="word" data-ru="в">om</span> 
+          <span class="word" data-ru="пятницу">fredagen</span>.
+        </p>
+      </div>
+    </div>
+    <!-- /Статья 5 -->
+
   </div>
 
   <!-- Popup для перевода -->
@@ -900,6 +3195,83 @@
   </div>
 
   <script>
+    // Timer functionality
+    let timerSeconds = 0;
+    let timerInterval = null;
+    let timerRunning = true;
+    const timerDisplay = document.getElementById('timer-display');
+    const timerToggle = document.getElementById('timer-toggle');
+    const timerReset = document.getElementById('timer-reset');
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function updateTimerDisplay() {
+      timerDisplay.textContent = formatTime(timerSeconds);
+    }
+
+    function startTimer() {
+      if (!timerInterval) {
+        timerInterval = setInterval(() => {
+          timerSeconds++;
+          updateTimerDisplay();
+        }, 1000);
+      }
+      timerRunning = true;
+      timerToggle.textContent = '⏸ Пауза';
+      timerToggle.classList.add('active');
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerRunning = false;
+      timerToggle.textContent = '▶ Старт';
+      timerToggle.classList.remove('active');
+    }
+
+    function resetTimer() {
+      stopTimer();
+      timerSeconds = 0;
+      updateTimerDisplay();
+    }
+
+    timerToggle.addEventListener('click', () => {
+      if (timerRunning) {
+        stopTimer();
+      } else {
+        startTimer();
+      }
+    });
+
+    timerReset.addEventListener('click', resetTimer);
+
+    // Start timer on page load
+    startTimer();
+
+    // Article tabs functionality
+    const articleTabs = document.querySelectorAll('.article-tab');
+    const articles = document.querySelectorAll('.article');
+
+    articleTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        const articleId = this.dataset.article;
+        
+        // Remove active from all tabs and articles
+        articleTabs.forEach(t => t.classList.remove('active'));
+        articles.forEach(a => a.classList.remove('active'));
+        
+        // Add active to clicked tab and corresponding article
+        this.classList.add('active');
+        document.getElementById('article-' + articleId).classList.add('active');
+      });
+    });
+
     let currentWord = '';
     let learnedWords = new Set();
     const popup = document.getElementById('popup');
