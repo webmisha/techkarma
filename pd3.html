@@ -28,7 +28,7 @@
 
     h1 {
       font-size: 50px;
-      color: #000000;
+      color: #1a73e8;
       margin-bottom: 20px;
       font-weight: bold;
       letter-spacing: -0.02em;
@@ -98,35 +98,54 @@
       color: #ffffff;
     }
 
-    /* Article Tabs */
+    /* Article Tags - artlebedev style */
     .article-tabs {
-      display: flex;
-      gap: 0;
+      display: inline;
       margin-bottom: 30px;
-      border-bottom: 1px solid #e0e0e0;
+      line-height: 2.4;
+    }
+
+    .article-tag-wrapper {
+      display: inline;
+      white-space: nowrap;
     }
 
     .article-tab {
-      padding: 12px 20px;
-      background: none;
+      padding: 6px 12px;
+      background: #e8f4fc;
       border: none;
+      border-radius: 4px;
       font-family: Georgia, 'Times New Roman', serif;
-      font-size: 16px;
-      color: #666666;
+      font-size: 18px;
+      color: #1a73e8;
       cursor: pointer;
-      transition: all 0.2s ease;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .article-tab::before {
+      content: '# ';
+      color: inherit;
+    }
+
+    .article-tag-wrapper::after {
+      content: ', ';
+      color: #000000;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 22px;
+    }
+
+    .article-tag-wrapper:last-child::after {
+      content: '.';
     }
 
     .article-tab:hover {
-      color: #000000;
+      background: #d4e9f7;
     }
 
     .article-tab.active {
-      color: #000000;
-      border-bottom: 2px solid #000000;
-      font-weight: 500;
+      background: #000000;
+      color: #ffffff;
     }
 
     .article {
@@ -143,12 +162,18 @@
 
     .section-title {
       font-size: 28px;
-      color: #000000;
+      color: #1a73e8;
       margin-bottom: 25px;
       margin-top: 50px;
       font-weight: bold;
       letter-spacing: -0.01em;
       line-height: 1.2;
+    }
+
+    .section-number {
+      color: #999999;
+      font-weight: normal;
+      margin-right: 8px;
     }
 
     p {
@@ -309,8 +334,12 @@
       }
 
       .article-tab {
-        padding: 10px 16px;
-        font-size: 15px;
+        font-size: 16px;
+        padding: 5px 10px;
+      }
+
+      .article-tag-wrapper::after {
+        font-size: 20px;
       }
 
       h1 {
@@ -369,8 +398,16 @@
       }
 
       .article-tab {
-        padding: 10px 14px;
         font-size: 14px;
+        padding: 4px 8px;
+      }
+
+      .article-tag-wrapper::after {
+        font-size: 18px;
+      }
+
+      .article-tabs {
+        line-height: 2.2;
       }
 
       h1 {
@@ -476,8 +513,16 @@
       }
 
       .article-tab {
-        padding: 8px 12px;
         font-size: 13px;
+        padding: 4px 7px;
+      }
+
+      .article-tag-wrapper::after {
+        font-size: 16px;
+      }
+
+      .article-tabs {
+        line-height: 2.0;
       }
 
       h1 {
@@ -570,7 +615,7 @@
 </head>
 <body>
   <div class="timer-bar">
-    <button class="timer-btn active" id="timer-toggle">⏸ Пауза</button>
+    <button class="timer-btn" id="timer-toggle">▶ Старт</button>
     <div class="timer-display" id="timer-display">00:00</div>
     <button class="timer-btn" id="timer-reset">↺ Сброс</button>
   </div>
@@ -581,11 +626,11 @@
     </div>
 
     <div class="article-tabs">
-      <button class="article-tab active" data-article="1">Højskolen</button>
-      <button class="article-tab" data-article="2">Parallelsamfund</button>
-      <button class="article-tab" data-article="3">Politiforbundet</button>
-      <button class="article-tab" data-article="4">Skifte branche</button>
-      <button class="article-tab" data-article="5">4-dages uge</button>
+      <span class="article-tag-wrapper"><button class="article-tab active" data-article="1">Højskolen</button></span>
+      <span class="article-tag-wrapper"><button class="article-tab" data-article="2">Parallelsamfund</button></span>
+      <span class="article-tag-wrapper"><button class="article-tab" data-article="3">Politiforbundet</button></span>
+      <span class="article-tag-wrapper"><button class="article-tab" data-article="4">Skifte branche</button></span>
+      <span class="article-tag-wrapper"><button class="article-tab" data-article="5">4-dages uge</button></span>
     </div>
 
     <!-- Статья 1: Højskolen -->
@@ -3198,7 +3243,7 @@
     // Timer functionality
     let timerSeconds = 0;
     let timerInterval = null;
-    let timerRunning = true;
+    let timerRunning = false;
     const timerDisplay = document.getElementById('timer-display');
     const timerToggle = document.getElementById('timer-toggle');
     const timerReset = document.getElementById('timer-reset');
@@ -3251,8 +3296,9 @@
 
     timerReset.addEventListener('click', resetTimer);
 
-    // Start timer on page load
-    startTimer();
+    // Timer starts paused by default
+    timerToggle.textContent = '▶ Старт';
+    timerToggle.classList.remove('active');
 
     // Article tabs functionality
     const articleTabs = document.querySelectorAll('.article-tab');
@@ -3271,6 +3317,25 @@
         document.getElementById('article-' + articleId).classList.add('active');
       });
     });
+
+    // Add section numbering to all h2 titles
+    function addSectionNumbers() {
+      articles.forEach(article => {
+        const sections = article.querySelectorAll('.section-title');
+        const total = sections.length;
+        
+        sections.forEach((section, index) => {
+          const num = index + 1;
+          // Check if already has numbering
+          if (section.querySelector('.section-number')) return;
+          
+          const originalText = section.textContent;
+          section.innerHTML = `<span class="section-number">${num}/${total}</span>${originalText}`;
+        });
+      });
+    }
+    
+    addSectionNumbers();
 
     let currentWord = '';
     let learnedWords = new Set();
